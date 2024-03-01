@@ -18,8 +18,7 @@ type User struct {
 func (User) Fields() []ent.Field {
 	//カラムとしてvarcher型(255)のMailAdress,varcher型(255)のHandleName,varcher型(255)のName,varcher型(255)のHashedPassword,enum型のDepartment,datetime型のCreatedAt,datetime型のUpdatedAtを持たせる
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).
-			Default(func() uuid.UUID { return uuid.Must(uuid.NewRandom()) }),
+		field.UUID("id", uuid.UUID{}).Default(uuid.New).StorageKey("id").Unique(),
 		field.String("MailAdress").NotEmpty().MaxLen(255),
 		field.String("HandleName").NotEmpty().MaxLen(36),
 		field.String("Name").NotEmpty().MaxLen(36),

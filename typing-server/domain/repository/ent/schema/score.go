@@ -14,8 +14,7 @@ type Score struct {
 func (Score) Fields() []ent.Field {
 	//カラムとしてint型のkeystrokes,float型のaccuracy，float型のscore,datetime型のstartedAt,datetime型のendedAtを持たせる
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).
-			Default(func() uuid.UUID { return uuid.Must(uuid.NewRandom()) }),
+		field.UUID("id", uuid.UUID{}).Default(uuid.New).StorageKey("id").Unique(),
 		field.Int("keystrokes"),
 		field.Float("accuracy"),
 		field.Float("score").Comment("スコアはaccuracyとkeystrokesの積で計算される"),

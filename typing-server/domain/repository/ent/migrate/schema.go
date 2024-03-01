@@ -10,7 +10,7 @@ import (
 var (
 	// ScoresColumns holds the columns for the "scores" table.
 	ScoresColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "keystrokes", Type: field.TypeInt},
 		{Name: "accuracy", Type: field.TypeFloat64},
 		{Name: "score", Type: field.TypeFloat64},
@@ -34,7 +34,7 @@ var (
 	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "mail_adress", Type: field.TypeString, Size: 255},
 		{Name: "handle_name", Type: field.TypeString, Size: 36},
 		{Name: "name", Type: field.TypeString, Size: 36},
