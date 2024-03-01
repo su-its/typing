@@ -5,6 +5,8 @@ package ent
 import (
 	"ent/ent/schema"
 	"ent/ent/user"
+
+	"github.com/google/uuid"
 )
 
 // The init function reads all schema descriptors with runtime code
@@ -14,7 +16,7 @@ func init() {
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescMailAdress is the schema descriptor for MailAdress field.
-	userDescMailAdress := userFields[0].Descriptor()
+	userDescMailAdress := userFields[1].Descriptor()
 	// user.MailAdressValidator is a validator for the "MailAdress" field. It is called by the builders before save.
 	user.MailAdressValidator = func() func(string) error {
 		validators := userDescMailAdress.Validators
@@ -32,7 +34,7 @@ func init() {
 		}
 	}()
 	// userDescHandleName is the schema descriptor for HandleName field.
-	userDescHandleName := userFields[1].Descriptor()
+	userDescHandleName := userFields[2].Descriptor()
 	// user.HandleNameValidator is a validator for the "HandleName" field. It is called by the builders before save.
 	user.HandleNameValidator = func() func(string) error {
 		validators := userDescHandleName.Validators
@@ -50,7 +52,7 @@ func init() {
 		}
 	}()
 	// userDescName is the schema descriptor for Name field.
-	userDescName := userFields[2].Descriptor()
+	userDescName := userFields[3].Descriptor()
 	// user.NameValidator is a validator for the "Name" field. It is called by the builders before save.
 	user.NameValidator = func() func(string) error {
 		validators := userDescName.Validators
@@ -68,7 +70,7 @@ func init() {
 		}
 	}()
 	// userDescHashedPassword is the schema descriptor for HashedPassword field.
-	userDescHashedPassword := userFields[3].Descriptor()
+	userDescHashedPassword := userFields[4].Descriptor()
 	// user.HashedPasswordValidator is a validator for the "HashedPassword" field. It is called by the builders before save.
 	user.HashedPasswordValidator = func() func(string) error {
 		validators := userDescHashedPassword.Validators
@@ -85,4 +87,8 @@ func init() {
 			return nil
 		}
 	}()
+	// userDescID is the schema descriptor for id field.
+	userDescID := userFields[0].Descriptor()
+	// user.DefaultID holds the default value on creation for the id field.
+	user.DefaultID = userDescID.Default.(func() uuid.UUID)
 }

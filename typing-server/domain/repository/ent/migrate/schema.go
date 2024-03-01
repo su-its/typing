@@ -16,7 +16,7 @@ var (
 		{Name: "score", Type: field.TypeFloat64},
 		{Name: "started_at", Type: field.TypeTime},
 		{Name: "ended_at", Type: field.TypeTime},
-		{Name: "user_scores", Type: field.TypeInt, Nullable: true},
+		{Name: "user_scores", Type: field.TypeUUID, Nullable: true},
 	}
 	// ScoresTable holds the schema information for the "scores" table.
 	ScoresTable = &schema.Table{
@@ -34,10 +34,10 @@ var (
 	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeUUID},
 		{Name: "mail_adress", Type: field.TypeString, Size: 255},
-		{Name: "handle_name", Type: field.TypeString, Size: 255},
-		{Name: "name", Type: field.TypeString, Size: 255},
+		{Name: "handle_name", Type: field.TypeString, Size: 36},
+		{Name: "name", Type: field.TypeString, Size: 36},
 		{Name: "hashed_password", Type: field.TypeString, Size: 255},
 		{Name: "department", Type: field.TypeEnum, Enums: []string{"CS", "BI", "IA"}},
 		{Name: "created_at", Type: field.TypeTime},

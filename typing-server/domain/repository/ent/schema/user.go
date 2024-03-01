@@ -19,8 +19,8 @@ func (User) Fields() []ent.Field {
 		field.UUID("id", uuid.UUID{}).
 			Default(func() uuid.UUID { return uuid.Must(uuid.NewRandom()) }),
 		field.String("MailAdress").NotEmpty().MaxLen(255),
-		field.String("HandleName").NotEmpty().MaxLen(255),
-		field.String("Name").NotEmpty().MaxLen(255),
+		field.String("HandleName").NotEmpty().MaxLen(36),
+		field.String("Name").NotEmpty().MaxLen(36),
 		field.String("HashedPassword").NotEmpty().MaxLen(255),
 		field.Enum("Department").Values("CS", "BI", "IA"),
 		field.Time("CreatedAt").Immutable(),
