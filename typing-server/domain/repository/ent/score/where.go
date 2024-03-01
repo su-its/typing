@@ -3,11 +3,11 @@
 package score
 
 import (
-	"ent/ent/predicate"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/predicate"
 )
 
 // ID filters vertices based on their ID field.

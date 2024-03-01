@@ -4,8 +4,9 @@ package hook
 
 import (
 	"context"
-	"ent/ent"
 	"fmt"
+
+	"github.com/su-its/typing/typing-server/domain/repository/ent"
 )
 
 // The ScoreFunc type is an adapter to allow the use of ordinary

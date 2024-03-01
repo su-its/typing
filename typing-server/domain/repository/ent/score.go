@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"ent/ent/score"
 	"fmt"
 	"strings"
 	"time"
@@ -11,6 +10,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
 )
 
 // Score is the model entity for the Score schema.

@@ -4,13 +4,13 @@ package enttest
 
 import (
 	"context"
-	"ent/ent"
-	// required by schema hooks.
-	_ "ent/ent/runtime"
 
-	"ent/ent/migrate"
+	"github.com/su-its/typing/typing-server/domain/repository/ent"
+	// required by schema hooks.
+	_ "github.com/su-its/typing/typing-server/domain/repository/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/migrate"
 )
 
 type (

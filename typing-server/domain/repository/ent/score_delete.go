@@ -4,12 +4,12 @@ package ent
 
 import (
 	"context"
-	"ent/ent/predicate"
-	"ent/ent/score"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/predicate"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
 )
 
 // ScoreDelete is the builder for deleting a Score entity.

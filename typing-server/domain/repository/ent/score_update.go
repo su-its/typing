@@ -4,8 +4,6 @@ package ent
 
 import (
 	"context"
-	"ent/ent/predicate"
-	"ent/ent/score"
 	"errors"
 	"fmt"
 	"time"
@@ -13,6 +11,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/predicate"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
 )
 
 // ScoreUpdate is the builder for updating Score entities.

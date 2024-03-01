@@ -3,12 +3,12 @@
 package ent
 
 import (
-	"ent/ent/schema"
-	"ent/ent/score"
-	"ent/ent/user"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/schema"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
 // The init function reads all schema descriptors with runtime code
