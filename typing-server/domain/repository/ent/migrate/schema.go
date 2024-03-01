@@ -41,7 +41,7 @@ var (
 		{Name: "hashed_password", Type: field.TypeString, Size: 255},
 		{Name: "department", Type: field.TypeEnum, Enums: []string{"CS", "BI", "IA"}},
 		{Name: "created_at", Type: field.TypeTime},
-		{Name: "updated_at", Type: field.TypeTime, Nullable: true},
+		{Name: "updated_at", Type: field.TypeTime},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{

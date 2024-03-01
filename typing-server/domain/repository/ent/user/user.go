@@ -4,6 +4,7 @@ package user
 
 import (
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -25,9 +26,9 @@ const (
 	FieldHashedPassword = "hashed_password"
 	// FieldDepartment holds the string denoting the department field in the database.
 	FieldDepartment = "department"
-	// FieldCreatedAt holds the string denoting the createdat field in the database.
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
-	// FieldUpdatedAt holds the string denoting the updatedat field in the database.
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
 	// EdgeScores holds the string denoting the scores edge name in mutations.
 	EdgeScores = "scores"
@@ -73,6 +74,12 @@ var (
 	NameValidator func(string) error
 	// HashedPasswordValidator is a validator for the "HashedPassword" field. It is called by the builders before save.
 	HashedPasswordValidator func(string) error
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() time.Time
+	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
+	DefaultUpdatedAt func() time.Time
+	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
+	UpdateDefaultUpdatedAt func() time.Time
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
@@ -134,12 +141,12 @@ func ByDepartment(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDepartment, opts...).ToFunc()
 }
 
-// ByCreatedAt orders the results by the CreatedAt field.
+// ByCreatedAt orders the results by the created_at field.
 func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
 }
 
-// ByUpdatedAt orders the results by the UpdatedAt field.
+// ByUpdatedAt orders the results by the updated_at field.
 func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
 }

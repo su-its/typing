@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"time"
+
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
@@ -23,8 +25,8 @@ func (User) Fields() []ent.Field {
 		field.String("Name").NotEmpty().MaxLen(36),
 		field.String("HashedPassword").NotEmpty().MaxLen(255),
 		field.Enum("Department").Values("CS", "BI", "IA"),
-		field.Time("CreatedAt").Immutable(),
-		field.Time("UpdatedAt").Optional(),
+		field.Time("created_at").Immutable().Default(time.Now),
+		field.Time("updated_at").Default(time.Now).UpdateDefault(time.Now),
 	}
 }
 
