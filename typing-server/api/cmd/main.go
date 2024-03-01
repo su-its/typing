@@ -22,26 +22,25 @@ func main() {
 
 	mysqlConfig := &mysql.Config{
 		DBName:    "typing-db",
-		User:      "root",
-		Passwd:    "password",
-		Addr:      "localhost:3306",
-		Net:       "tcp",
+		User:      "user",
+		Passwd:    "password",       // 環境変数から取得するか、直接指定
+		Addr:      "db:33061", // Docker Compose内でのサービス名とポート
 		ParseTime: true,
 		Loc:       jst,
 	}
-
+	
 	entClient, err := ent.Open("mysql", mysqlConfig.FormatDSN())
 	if err != nil {
 		logger.Error("failed to open ent client", fmt.Errorf("error: %w", err))
+	} else {
+		logger.Info("ent client is opened")
 	}
-
-	logger.Info("ent client is opened")
 
 	if err := entClient.Schema.Create(context.Background()); err != nil {
 		logger.Error("failed to create schema", fmt.Errorf("error: %w", err))
+	} else {
+		logger.Info("schema is created")
 	}
-
-	logger.Info("schema is created")
 
 	presenter.RegisterRoutes()
 	go func() {

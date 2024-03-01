@@ -1,16 +1,4 @@
-version: '2.8'
 services:
-  db:
-    image: mysql:8.3.0
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: typing-db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: password
-    ports:
-      - "3305:3306"
-    volumes:
-      - db-data:/var/lib/mysql
   api:
     build:
       context: .
@@ -18,11 +6,32 @@ services:
     volumes:
       - ./api:/app
     ports:
-      - "8079:8080"
+      - "8080:8080"
+    networks:
+      app_net:
+        ipv4_address: '172.28.1.3'
+    extra_hosts:
+      - 'db:172.28.1.5'
+  db:
+    image: mysql:8.3.0
     environment:
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=password
-      - DB_NAME=devdb
+      MYSQL_DATABASE: typing-db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "33061:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      app_net:
+        ipv4_address: '172.28.1.5'
 volumes:
   db-data:
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.1.0/24
