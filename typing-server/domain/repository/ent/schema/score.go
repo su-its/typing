@@ -1,4 +1,3 @@
-// user.goと同じように、score.goも作成します。リレーションはuser.go→score.goでone to zero or oneの関係です。
 package schema
 
 import (
