@@ -24,6 +24,10 @@ const (
 	FieldHashedPassword = "hashed_password"
 	// FieldDepartment holds the string denoting the department field in the database.
 	FieldDepartment = "department"
+	// FieldCreatedAt holds the string denoting the createdat field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldUpdatedAt holds the string denoting the updatedat field in the database.
+	FieldUpdatedAt = "updated_at"
 	// EdgeScores holds the string denoting the scores edge name in mutations.
 	EdgeScores = "scores"
 	// Table holds the table name of the user in the database.
@@ -45,6 +49,8 @@ var Columns = []string{
 	FieldName,
 	FieldHashedPassword,
 	FieldDepartment,
+	FieldCreatedAt,
+	FieldUpdatedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -123,6 +129,16 @@ func ByHashedPassword(opts ...sql.OrderTermOption) OrderOption {
 // ByDepartment orders the results by the Department field.
 func ByDepartment(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDepartment, opts...).ToFunc()
+}
+
+// ByCreatedAt orders the results by the CreatedAt field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByUpdatedAt orders the results by the UpdatedAt field.
+func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
 }
 
 // ByScoresCount orders the results by scores count.
