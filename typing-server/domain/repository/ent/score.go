@@ -22,7 +22,7 @@ type Score struct {
 	Keystrokes int `json:"keystrokes,omitempty"`
 	// Accuracy holds the value of the "accuracy" field.
 	Accuracy float64 `json:"accuracy,omitempty"`
-	// Score holds the value of the "score" field.
+	// スコアはaccuracyとkeystrokesの積で計算される
 	Score float64 `json:"score,omitempty"`
 	// StartedAt holds the value of the "startedAt" field.
 	StartedAt time.Time `json:"startedAt,omitempty"`

@@ -18,7 +18,7 @@ func (Score) Fields() []ent.Field {
 			Default(func() uuid.UUID { return uuid.Must(uuid.NewRandom()) }),
 		field.Int("keystrokes"),
 		field.Float("accuracy"),
-		field.Float("score"),
+		field.Float("score").Comment("スコアはaccuracyとkeystrokesの積で計算される"),
 		field.Time("startedAt"),
 		field.Time("endedAt"),
 	}
