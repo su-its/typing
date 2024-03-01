@@ -14,6 +14,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/google/uuid"
 )
 
 // UserUpdate is the builder for updating User entities.
@@ -106,14 +107,14 @@ func (uu *UserUpdate) SetUpdatedAt(t time.Time) *UserUpdate {
 }
 
 // AddScoreIDs adds the "scores" edge to the Score entity by IDs.
-func (uu *UserUpdate) AddScoreIDs(ids ...int) *UserUpdate {
+func (uu *UserUpdate) AddScoreIDs(ids ...uuid.UUID) *UserUpdate {
 	uu.mutation.AddScoreIDs(ids...)
 	return uu
 }
 
 // AddScores adds the "scores" edges to the Score entity.
 func (uu *UserUpdate) AddScores(s ...*Score) *UserUpdate {
-	ids := make([]int, len(s))
+	ids := make([]uuid.UUID, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
@@ -132,14 +133,14 @@ func (uu *UserUpdate) ClearScores() *UserUpdate {
 }
 
 // RemoveScoreIDs removes the "scores" edge to Score entities by IDs.
-func (uu *UserUpdate) RemoveScoreIDs(ids ...int) *UserUpdate {
+func (uu *UserUpdate) RemoveScoreIDs(ids ...uuid.UUID) *UserUpdate {
 	uu.mutation.RemoveScoreIDs(ids...)
 	return uu
 }
 
 // RemoveScores removes "scores" edges to Score entities.
 func (uu *UserUpdate) RemoveScores(s ...*Score) *UserUpdate {
-	ids := make([]int, len(s))
+	ids := make([]uuid.UUID, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
@@ -250,7 +251,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.ScoresColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -263,7 +264,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.ScoresColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {
@@ -279,7 +280,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.ScoresColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {
@@ -384,14 +385,14 @@ func (uuo *UserUpdateOne) SetUpdatedAt(t time.Time) *UserUpdateOne {
 }
 
 // AddScoreIDs adds the "scores" edge to the Score entity by IDs.
-func (uuo *UserUpdateOne) AddScoreIDs(ids ...int) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddScoreIDs(ids ...uuid.UUID) *UserUpdateOne {
 	uuo.mutation.AddScoreIDs(ids...)
 	return uuo
 }
 
 // AddScores adds the "scores" edges to the Score entity.
 func (uuo *UserUpdateOne) AddScores(s ...*Score) *UserUpdateOne {
-	ids := make([]int, len(s))
+	ids := make([]uuid.UUID, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
@@ -410,14 +411,14 @@ func (uuo *UserUpdateOne) ClearScores() *UserUpdateOne {
 }
 
 // RemoveScoreIDs removes the "scores" edge to Score entities by IDs.
-func (uuo *UserUpdateOne) RemoveScoreIDs(ids ...int) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveScoreIDs(ids ...uuid.UUID) *UserUpdateOne {
 	uuo.mutation.RemoveScoreIDs(ids...)
 	return uuo
 }
 
 // RemoveScores removes "scores" edges to Score entities.
 func (uuo *UserUpdateOne) RemoveScores(s ...*Score) *UserUpdateOne {
-	ids := make([]int, len(s))
+	ids := make([]uuid.UUID, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
@@ -558,7 +559,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.ScoresColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -571,7 +572,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.ScoresColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {
@@ -587,7 +588,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.ScoresColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {

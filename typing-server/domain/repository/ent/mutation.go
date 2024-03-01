@@ -35,7 +35,7 @@ type ScoreMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *uuid.UUID
 	keystrokes    *int
 	addkeystrokes *int
 	accuracy      *float64
@@ -70,7 +70,7 @@ func newScoreMutation(c config, op Op, opts ...scoreOption) *ScoreMutation {
 }
 
 // withScoreID sets the ID field of the mutation.
-func withScoreID(id int) scoreOption {
+func withScoreID(id uuid.UUID) scoreOption {
 	return func(m *ScoreMutation) {
 		var (
 			err   error
@@ -120,9 +120,15 @@ func (m ScoreMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Score entities.
+func (m *ScoreMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *ScoreMutation) ID() (id int, exists bool) {
+func (m *ScoreMutation) ID() (id uuid.UUID, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -133,12 +139,12 @@ func (m *ScoreMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *ScoreMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *ScoreMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []uuid.UUID{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -688,8 +694,8 @@ type UserMutation struct {
 	created_at      *time.Time
 	updated_at      *time.Time
 	clearedFields   map[string]struct{}
-	scores          map[int]struct{}
-	removedscores   map[int]struct{}
+	scores          map[uuid.UUID]struct{}
+	removedscores   map[uuid.UUID]struct{}
 	clearedscores   bool
 	done            bool
 	oldValue        func(context.Context) (*User, error)
@@ -1053,9 +1059,9 @@ func (m *UserMutation) ResetUpdatedAt() {
 }
 
 // AddScoreIDs adds the "scores" edge to the Score entity by ids.
-func (m *UserMutation) AddScoreIDs(ids ...int) {
+func (m *UserMutation) AddScoreIDs(ids ...uuid.UUID) {
 	if m.scores == nil {
-		m.scores = make(map[int]struct{})
+		m.scores = make(map[uuid.UUID]struct{})
 	}
 	for i := range ids {
 		m.scores[ids[i]] = struct{}{}
@@ -1073,9 +1079,9 @@ func (m *UserMutation) ScoresCleared() bool {
 }
 
 // RemoveScoreIDs removes the "scores" edge to the Score entity by IDs.
-func (m *UserMutation) RemoveScoreIDs(ids ...int) {
+func (m *UserMutation) RemoveScoreIDs(ids ...uuid.UUID) {
 	if m.removedscores == nil {
-		m.removedscores = make(map[int]struct{})
+		m.removedscores = make(map[uuid.UUID]struct{})
 	}
 	for i := range ids {
 		delete(m.scores, ids[i])
@@ -1084,7 +1090,7 @@ func (m *UserMutation) RemoveScoreIDs(ids ...int) {
 }
 
 // RemovedScores returns the removed IDs of the "scores" edge to the Score entity.
-func (m *UserMutation) RemovedScoresIDs() (ids []int) {
+func (m *UserMutation) RemovedScoresIDs() (ids []uuid.UUID) {
 	for id := range m.removedscores {
 		ids = append(ids, id)
 	}
@@ -1092,7 +1098,7 @@ func (m *UserMutation) RemovedScoresIDs() (ids []int) {
 }
 
 // ScoresIDs returns the "scores" edge IDs in the mutation.
-func (m *UserMutation) ScoresIDs() (ids []int) {
+func (m *UserMutation) ScoresIDs() (ids []uuid.UUID) {
 	for id := range m.scores {
 		ids = append(ids, id)
 	}

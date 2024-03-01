@@ -4,6 +4,7 @@ package ent
 
 import (
 	"ent/ent/schema"
+	"ent/ent/score"
 	"ent/ent/user"
 	"time"
 
@@ -14,6 +15,12 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	scoreFields := schema.Score{}.Fields()
+	_ = scoreFields
+	// scoreDescID is the schema descriptor for id field.
+	scoreDescID := scoreFields[0].Descriptor()
+	// score.DefaultID holds the default value on creation for the id field.
+	score.DefaultID = scoreDescID.Default.(func() uuid.UUID)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescMailAdress is the schema descriptor for MailAdress field.

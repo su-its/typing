@@ -95,14 +95,14 @@ func (uc *UserCreate) SetNillableID(u *uuid.UUID) *UserCreate {
 }
 
 // AddScoreIDs adds the "scores" edge to the Score entity by IDs.
-func (uc *UserCreate) AddScoreIDs(ids ...int) *UserCreate {
+func (uc *UserCreate) AddScoreIDs(ids ...uuid.UUID) *UserCreate {
 	uc.mutation.AddScoreIDs(ids...)
 	return uc
 }
 
 // AddScores adds the "scores" edges to the Score entity.
 func (uc *UserCreate) AddScores(s ...*Score) *UserCreate {
-	ids := make([]int, len(s))
+	ids := make([]uuid.UUID, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
@@ -277,7 +277,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Columns: []string{user.ScoresColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {

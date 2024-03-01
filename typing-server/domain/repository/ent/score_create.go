@@ -11,6 +11,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/google/uuid"
 )
 
 // ScoreCreate is the builder for creating a Score entity.
@@ -50,6 +51,20 @@ func (sc *ScoreCreate) SetEndedAt(t time.Time) *ScoreCreate {
 	return sc
 }
 
+// SetID sets the "id" field.
+func (sc *ScoreCreate) SetID(u uuid.UUID) *ScoreCreate {
+	sc.mutation.SetID(u)
+	return sc
+}
+
+// SetNillableID sets the "id" field if the given value is not nil.
+func (sc *ScoreCreate) SetNillableID(u *uuid.UUID) *ScoreCreate {
+	if u != nil {
+		sc.SetID(*u)
+	}
+	return sc
+}
+
 // Mutation returns the ScoreMutation object of the builder.
 func (sc *ScoreCreate) Mutation() *ScoreMutation {
 	return sc.mutation
@@ -57,6 +72,7 @@ func (sc *ScoreCreate) Mutation() *ScoreMutation {
 
 // Save creates the Score in the database.
 func (sc *ScoreCreate) Save(ctx context.Context) (*Score, error) {
+	sc.defaults()
 	return withHooks(ctx, sc.sqlSave, sc.mutation, sc.hooks)
 }
 
@@ -79,6 +95,14 @@ func (sc *ScoreCreate) Exec(ctx context.Context) error {
 func (sc *ScoreCreate) ExecX(ctx context.Context) {
 	if err := sc.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (sc *ScoreCreate) defaults() {
+	if _, ok := sc.mutation.ID(); !ok {
+		v := score.DefaultID()
+		sc.mutation.SetID(v)
 	}
 }
 
@@ -113,8 +137,13 @@ func (sc *ScoreCreate) sqlSave(ctx context.Context) (*Score, error) {
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != nil {
+		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
+		}
+	}
 	sc.mutation.id = &_node.ID
 	sc.mutation.done = true
 	return _node, nil
@@ -123,8 +152,12 @@ func (sc *ScoreCreate) sqlSave(ctx context.Context) (*Score, error) {
 func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Score{config: sc.config}
-		_spec = sqlgraph.NewCreateSpec(score.Table, sqlgraph.NewFieldSpec(score.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(score.Table, sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID))
 	)
+	if id, ok := sc.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = &id
+	}
 	if value, ok := sc.mutation.Keystrokes(); ok {
 		_spec.SetField(score.FieldKeystrokes, field.TypeInt, value)
 		_node.Keystrokes = value
@@ -166,6 +199,7 @@ func (scb *ScoreCreateBulk) Save(ctx context.Context) ([]*Score, error) {
 	for i := range scb.builders {
 		func(i int, root context.Context) {
 			builder := scb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*ScoreMutation)
 				if !ok {
@@ -192,10 +226,6 @@ func (scb *ScoreCreateBulk) Save(ctx context.Context) ([]*Score, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil {
-					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
-				}
 				mutation.done = true
 				return nodes[i], nil
 			})

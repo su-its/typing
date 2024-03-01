@@ -10,7 +10,7 @@ import (
 var (
 	// ScoresColumns holds the columns for the "scores" table.
 	ScoresColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeUUID},
 		{Name: "keystrokes", Type: field.TypeInt},
 		{Name: "accuracy", Type: field.TypeFloat64},
 		{Name: "score", Type: field.TypeFloat64},

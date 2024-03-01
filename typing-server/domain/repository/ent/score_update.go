@@ -152,7 +152,7 @@ func (su *ScoreUpdate) ExecX(ctx context.Context) {
 }
 
 func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := sqlgraph.NewUpdateSpec(score.Table, score.Columns, sqlgraph.NewFieldSpec(score.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(score.Table, score.Columns, sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID))
 	if ps := su.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -341,7 +341,7 @@ func (suo *ScoreUpdateOne) ExecX(ctx context.Context) {
 }
 
 func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error) {
-	_spec := sqlgraph.NewUpdateSpec(score.Table, score.Columns, sqlgraph.NewFieldSpec(score.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(score.Table, score.Columns, sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID))
 	id, ok := suo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Score.id" for update`)}

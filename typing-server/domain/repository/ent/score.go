@@ -17,7 +17,7 @@ import (
 type Score struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID uuid.UUID `json:"id,omitempty"`
 	// Keystrokes holds the value of the "keystrokes" field.
 	Keystrokes int `json:"keystrokes,omitempty"`
 	// Accuracy holds the value of the "accuracy" field.
@@ -39,10 +39,12 @@ func (*Score) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case score.FieldAccuracy, score.FieldScore:
 			values[i] = new(sql.NullFloat64)
-		case score.FieldID, score.FieldKeystrokes:
+		case score.FieldKeystrokes:
 			values[i] = new(sql.NullInt64)
 		case score.FieldStartedAt, score.FieldEndedAt:
 			values[i] = new(sql.NullTime)
+		case score.FieldID:
+			values[i] = new(uuid.UUID)
 		case score.ForeignKeys[0]: // user_scores
 			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
 		default:
@@ -61,11 +63,11 @@ func (s *Score) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case score.FieldID:
-			value, ok := values[i].(*sql.NullInt64)
-			if !ok {
-				return fmt.Errorf("unexpected type %T for field id", value)
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field id", values[i])
+			} else if value != nil {
+				s.ID = *value
 			}
-			s.ID = int(value.Int64)
 		case score.FieldKeystrokes:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field keystrokes", values[i])

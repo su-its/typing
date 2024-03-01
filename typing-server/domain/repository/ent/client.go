@@ -270,7 +270,7 @@ func (c *ScoreClient) UpdateOne(s *Score) *ScoreUpdateOne {
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *ScoreClient) UpdateOneID(id int) *ScoreUpdateOne {
+func (c *ScoreClient) UpdateOneID(id uuid.UUID) *ScoreUpdateOne {
 	mutation := newScoreMutation(c.config, OpUpdateOne, withScoreID(id))
 	return &ScoreUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
@@ -287,7 +287,7 @@ func (c *ScoreClient) DeleteOne(s *Score) *ScoreDeleteOne {
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *ScoreClient) DeleteOneID(id int) *ScoreDeleteOne {
+func (c *ScoreClient) DeleteOneID(id uuid.UUID) *ScoreDeleteOne {
 	builder := c.Delete().Where(score.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
@@ -304,12 +304,12 @@ func (c *ScoreClient) Query() *ScoreQuery {
 }
 
 // Get returns a Score entity by its id.
-func (c *ScoreClient) Get(ctx context.Context, id int) (*Score, error) {
+func (c *ScoreClient) Get(ctx context.Context, id uuid.UUID) (*Score, error) {
 	return c.Query().Where(score.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *ScoreClient) GetX(ctx context.Context, id int) *Score {
+func (c *ScoreClient) GetX(ctx context.Context, id uuid.UUID) *Score {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)

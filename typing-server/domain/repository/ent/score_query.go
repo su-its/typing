@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/google/uuid"
 )
 
 // ScoreQuery is the builder for querying Score entities.
@@ -82,8 +83,8 @@ func (sq *ScoreQuery) FirstX(ctx context.Context) *Score {
 
 // FirstID returns the first Score ID from the query.
 // Returns a *NotFoundError when no Score ID was found.
-func (sq *ScoreQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (sq *ScoreQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
+	var ids []uuid.UUID
 	if ids, err = sq.Limit(1).IDs(setContextOp(ctx, sq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -95,7 +96,7 @@ func (sq *ScoreQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (sq *ScoreQuery) FirstIDX(ctx context.Context) int {
+func (sq *ScoreQuery) FirstIDX(ctx context.Context) uuid.UUID {
 	id, err := sq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -133,8 +134,8 @@ func (sq *ScoreQuery) OnlyX(ctx context.Context) *Score {
 // OnlyID is like Only, but returns the only Score ID in the query.
 // Returns a *NotSingularError when more than one Score ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (sq *ScoreQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (sq *ScoreQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
+	var ids []uuid.UUID
 	if ids, err = sq.Limit(2).IDs(setContextOp(ctx, sq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -150,7 +151,7 @@ func (sq *ScoreQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (sq *ScoreQuery) OnlyIDX(ctx context.Context) int {
+func (sq *ScoreQuery) OnlyIDX(ctx context.Context) uuid.UUID {
 	id, err := sq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -178,7 +179,7 @@ func (sq *ScoreQuery) AllX(ctx context.Context) []*Score {
 }
 
 // IDs executes the query and returns a list of Score IDs.
-func (sq *ScoreQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (sq *ScoreQuery) IDs(ctx context.Context) (ids []uuid.UUID, err error) {
 	if sq.ctx.Unique == nil && sq.path != nil {
 		sq.Unique(true)
 	}
@@ -190,7 +191,7 @@ func (sq *ScoreQuery) IDs(ctx context.Context) (ids []int, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (sq *ScoreQuery) IDsX(ctx context.Context) []int {
+func (sq *ScoreQuery) IDsX(ctx context.Context) []uuid.UUID {
 	ids, err := sq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -369,7 +370,7 @@ func (sq *ScoreQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (sq *ScoreQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(score.Table, score.Columns, sqlgraph.NewFieldSpec(score.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(score.Table, score.Columns, sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID))
 	_spec.From = sq.sql
 	if unique := sq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

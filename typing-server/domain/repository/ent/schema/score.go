@@ -4,6 +4,7 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
+	"github.com/google/uuid"
 )
 
 type Score struct {
@@ -13,6 +14,8 @@ type Score struct {
 func (Score) Fields() []ent.Field {
 	//カラムとしてint型のkeystrokes,float型のaccuracy，float型のscore,datetime型のstartedAt,datetime型のendedAtを持たせる
 	return []ent.Field{
+		field.UUID("id", uuid.UUID{}).
+			Default(func() uuid.UUID { return uuid.Must(uuid.NewRandom()) }),
 		field.Int("keystrokes"),
 		field.Float("accuracy"),
 		field.Float("score"),
