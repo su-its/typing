@@ -4,8 +4,6 @@ package ent
 
 import (
 	"context"
-	"ent/ent/predicate"
-	"ent/ent/score"
 	"fmt"
 	"math"
 
@@ -13,6 +11,8 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/predicate"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
 )
 
 // ScoreQuery is the builder for querying Score entities.

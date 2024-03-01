@@ -5,9 +5,6 @@ package ent
 import (
 	"context"
 	"database/sql/driver"
-	"ent/ent/predicate"
-	"ent/ent/score"
-	"ent/ent/user"
 	"fmt"
 	"math"
 
@@ -15,6 +12,9 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/predicate"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
 // UserQuery is the builder for querying User entities.

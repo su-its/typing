@@ -4,8 +4,6 @@ package ent
 
 import (
 	"context"
-	"ent/ent/score"
-	"ent/ent/user"
 	"errors"
 	"fmt"
 	"reflect"
@@ -14,6 +12,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
 // ent aliases to avoid import conflicts in user's code.

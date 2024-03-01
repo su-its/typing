@@ -3,12 +3,12 @@
 package user
 
 import (
-	"ent/ent/predicate"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/predicate"
 )
 
 // ID filters vertices based on their ID field.

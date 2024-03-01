@@ -9,16 +9,15 @@ import (
 	"log"
 	"reflect"
 
-	"ent/ent/migrate"
-
-	"ent/ent/score"
-	"ent/ent/user"
+	"github.com/google/uuid"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/migrate"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/google/uuid"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
 // Client is the client that holds all ent builders.

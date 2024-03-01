@@ -4,7 +4,6 @@ package ent
 
 import (
 	"context"
-	"ent/ent/score"
 	"errors"
 	"fmt"
 	"time"
@@ -12,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
 )
 
 // ScoreCreate is the builder for creating a Score entity.

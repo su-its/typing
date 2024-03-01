@@ -4,9 +4,6 @@ package ent
 
 import (
 	"context"
-	"ent/ent/predicate"
-	"ent/ent/score"
-	"ent/ent/user"
 	"errors"
 	"fmt"
 	"sync"
@@ -15,6 +12,9 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/predicate"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
 const (
