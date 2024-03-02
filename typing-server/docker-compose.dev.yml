@@ -1,7 +1,8 @@
 services:
   api:
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     build:
       context: .
       dockerfile: Dockerfile
@@ -15,6 +16,12 @@ services:
     extra_hosts:
       - 'db:172.28.1.5'
   db:
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 10
+      start_period: 30s
+
     image: mysql:8.3.0
     environment:
       MYSQL_DATABASE: typing-db
