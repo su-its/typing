@@ -79,7 +79,8 @@ func main() {
 		// シグナルを待機
 		<-sigChan
 		logger.Info("shutting down the server...")
-		if err := server.Shutdown(nil); err != nil {
+		ctx := context.TODO() // Use context.TODO() as a temporary placeholder
+		if err := server.Shutdown(ctx); err != nil {
 			logger.Error("error during server shutdown: %v", err)
 			errChan <- err // エラーをチャネルに送信
 		}
