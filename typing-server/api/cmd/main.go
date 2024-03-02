@@ -4,7 +4,10 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"os"
+	"os/signal"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
@@ -56,17 +59,40 @@ func main() {
 
 	// WaitGroupの宣言
 	var wg sync.WaitGroup
-
+	// エラーを通知するためのチャネル
+	errChan := make(chan error, 1)
+	// シグナルハンドリングの準備
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	// HTTPサーバーの非同期起動
 	wg.Add(1)
 	go func() {
 		defer wg.Done() // 関数終了時にWaitGroupをデクリメント
-		logger.Info("server is running at http://localhost:8080")
-		if err := http.ListenAndServe(":8080", nil); err != nil {
-			logger.Error("failed to listen and serve: %v", err)
-			return
+		// サーバーの設定
+		server := &http.Server{Addr: ":8080"}
+		// 非同期でサーバーを開始
+		go func() {
+			logger.Info("server is running at Addr :8080")
+			if err := server.ListenAndServe(); err != http.ErrServerClosed {
+				logger.Error("failed to listen and serve: %v", err)
+				errChan <- err // エラーをチャネルに送信
+			}
+		}()
+		// シグナルを待機
+		<-sigChan
+		logger.Info("shutting down the server...")
+		if err := server.Shutdown(nil); err != nil {
+			logger.Error("error during server shutdown: %v", err)
+			errChan <- err // エラーをチャネルに送信
 		}
 	}()
-
+	select {
+	case <-errChan: // エラーが発生した場合
+		logger.Error("server stopped due to an error")
+	case sig := <-sigChan: // シグナルを受信した場合
+		logger.Info("received signal: %s", sig)
+	}
 	wg.Wait() // HTTPサーバーの終了を待機
+	close(errChan)
+	logger.Info("server exited")
 }
