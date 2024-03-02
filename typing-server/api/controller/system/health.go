@@ -1,7 +1,7 @@
 package system
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 )
 
@@ -14,7 +14,7 @@ func HealthCheck(w http.ResponseWriter, r *http.Request) {
 		// 実際には、この時点でレスポンスヘッダーやボディがクライアントに送信されている可能性が高いため、
 		// http.Errorを呼び出すことは推奨されません。
 		// 代わりに、ログに記録するなどのサーバー側での対応が適切です。
-		log.Printf("failed to write response: %v", err)
+		slog.Error("failed to write response: %v", err)
 	}
 }
 
