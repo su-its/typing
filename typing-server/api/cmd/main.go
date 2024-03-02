@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"log/slog"
+	"log"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
@@ -13,41 +13,60 @@ import (
 )
 
 func main() {
-	logger := slog.Default()
+	// 標準のログパッケージを使用
+	logger := log.Default()
 
+	// タイムゾーンの設定
 	jst, err := time.LoadLocation("Asia/Tokyo")
 	if err != nil {
-		logger.Error("failed to load location", fmt.Errorf("error: %w", err))
+		logger.Printf("failed to load location: %v", err)
+		return
 	}
 
+	// MySQLの接続設定
 	mysqlConfig := &mysql.Config{
-		DBName:    "typing-db",
-		User:      "user",
-		Passwd:    "password", // 環境変数から取得するか、直接指定
-		Net:       "tcp",
-		Addr:      "db:3306", // Docker Compose内でのサービス名とポート
-		ParseTime: true,
-		Loc:       jst,
+		DBName:    "typing-db", // データベース名
+		User:      "user",      // ユーザー名
+		Passwd:    "password",  // パスワード
+		Net:       "tcp",       // ネットワークタイプ
+		Addr:      "db:3306",   // アドレス（Docker Compose内でのサービス名とポート）
+		ParseTime: true,        // 時刻をtime.Timeで解析する
+		Loc:       jst,         // タイムゾーン
 	}
 
+	// entクライアントの初期化
 	entClient, err := ent.Open("mysql", mysqlConfig.FormatDSN())
 	if err != nil {
-		logger.Error("failed to open ent client", fmt.Errorf("error: %w", err))
+		logger.Printf("failed to open ent client: %v", err)
+		return
 	} else {
-		logger.Info("ent client is opened")
+		logger.Println("ent client is opened")
 	}
 
+	// スキーマの作成
 	if err := entClient.Schema.Create(context.Background()); err != nil {
-		logger.Error("failed to create schema", fmt.Errorf("error: %w", err))
+		logger.Printf("failed to create schema: %v", err)
+		return
 	} else {
-		logger.Info("schema is created")
+		logger.Println("schema is created")
 	}
 
+	// ルートの登録
 	presenter.RegisterRoutes()
+
+	// WaitGroupの宣言
+	var wg sync.WaitGroup
+
+	// HTTPサーバーの非同期起動
+	wg.Add(1)
 	go func() {
-		logger.Info("server is running")
+		defer wg.Done() // 関数終了時にWaitGroupをデクリメント
+
+		logger.Println("server is running at http://localhost:8080")
 		if err := http.ListenAndServe(":8080", nil); err != nil {
-			logger.Error("failed to listen and serve", fmt.Errorf("error: %w", err))
+			logger.Printf("failed to listen and serve: %v", err)
 		}
 	}()
+
+	wg.Wait() // HTTPサーバーの終了を待機
 }
