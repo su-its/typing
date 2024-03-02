@@ -23,12 +23,13 @@ func main() {
 	mysqlConfig := &mysql.Config{
 		DBName:    "typing-db",
 		User:      "user",
-		Passwd:    "password",       // 環境変数から取得するか、直接指定
-		Addr:      "db:33061", // Docker Compose内でのサービス名とポート
+		Passwd:    "password", // 環境変数から取得するか、直接指定
+		Net:       "tcp",
+		Addr:      "db:3306", // Docker Compose内でのサービス名とポート
 		ParseTime: true,
 		Loc:       jst,
 	}
-	
+
 	entClient, err := ent.Open("mysql", mysqlConfig.FormatDSN())
 	if err != nil {
 		logger.Error("failed to open ent client", fmt.Errorf("error: %w", err))

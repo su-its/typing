@@ -1,5 +1,7 @@
 services:
   api:
+    depends_on:
+      - db
     build:
       context: .
       dockerfile: Dockerfile
@@ -20,7 +22,7 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - db-data:/var/lib/mysql
     networks:
