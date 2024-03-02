@@ -16,7 +16,6 @@ import (
 )
 
 func main() {
-	// 標準のログパッケージを使用
 	logger := slog.Default()
 
 	// タイムゾーンの設定
@@ -43,9 +42,8 @@ func main() {
 		logger.Error("failed to open ent client: %v", err)
 		return
 	}
-	logger.Info("ent client is opened")
-
 	defer entClient.Close()
+	logger.Info("ent client is opened")
 
 	// スキーマの作成
 	if err := entClient.Schema.Create(context.Background()); err != nil {
