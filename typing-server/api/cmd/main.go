@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"log"
+	"log/slog"
 	"net/http"
 	"sync"
 	"time"
@@ -14,12 +14,12 @@ import (
 
 func main() {
 	// 標準のログパッケージを使用
-	logger := log.Default()
+	logger := slog.Default()
 
 	// タイムゾーンの設定
 	jst, err := time.LoadLocation("Asia/Tokyo")
 	if err != nil {
-		logger.Printf("failed to load location: %v", err)
+		logger.Error("failed to load location: %v", err)
 		return
 	}
 
@@ -37,19 +37,19 @@ func main() {
 	// entクライアントの初期化
 	entClient, err := ent.Open("mysql", mysqlConfig.FormatDSN())
 	if err != nil {
-		logger.Printf("failed to open ent client: %v", err)
+		logger.Error("failed to open ent client: %v", err)
 		return
-	} else {
-		logger.Println("ent client is opened")
 	}
+	logger.Info("ent client is opened")
+
+	defer entClient.Close()
 
 	// スキーマの作成
 	if err := entClient.Schema.Create(context.Background()); err != nil {
-		logger.Printf("failed to create schema: %v", err)
+		logger.Error("failed to create schema: %v", err)
 		return
-	} else {
-		logger.Println("schema is created")
 	}
+	logger.Info("schema is created")
 
 	// ルートの登録
 	presenter.RegisterRoutes()
@@ -61,10 +61,10 @@ func main() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done() // 関数終了時にWaitGroupをデクリメント
-
-		logger.Println("server is running at http://localhost:8080")
+		logger.Info("server is running at http://localhost:8080")
 		if err := http.ListenAndServe(":8080", nil); err != nil {
-			logger.Printf("failed to listen and serve: %v", err)
+			logger.Error("failed to listen and serve: %v", err)
+			return
 		}
 	}()
 
