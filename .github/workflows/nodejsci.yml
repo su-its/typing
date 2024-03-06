@@ -5,13 +5,15 @@ on:
     branches:
       - develop
       - main
+    paths:
+      - "typing-app/**"
   pull_request:
     branches:
       - develop
       - main
+    paths:
+      - "typing-app/**"
   workflow_dispatch:
-  paths:
-    - "typing-app/**"
 
 defaults:
   run:
