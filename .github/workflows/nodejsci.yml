@@ -3,15 +3,19 @@ name: CI (typing-app)
 on:
   push:
     branches:
+      - "ci/**"
       - develop
       - main
     paths:
+      - .github/workflows/nodejsci.yml
       - "typing-app/**"
   pull_request:
     branches:
+      - "ci/**"
       - develop
       - main
     paths:
+      - .github/workflows/nodejsci.yml
       - "typing-app/**"
   workflow_dispatch:
 
