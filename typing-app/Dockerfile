@@ -4,7 +4,7 @@ ENV NODE_ENV production
 
 FROM base as deps
 COPY package.json bun.lockb ./
-RUN bun i
+RUN bun install
 
 # bypass node image on build and use bun on runtime
 # https://github.com/oven-sh/bun/issues/4795
@@ -16,9 +16,11 @@ COPY . .
 RUN npm run build
 
 FROM base as final
-COPY --from=build /app/public ./public
-COPY --from=build /app/.next/standalone ./
-COPY --from=build /app/.next/static ./.next/static
+USER bun
+
+COPY --from=build --chown=bun:bun /app/public ./public
+COPY --from=build --chown=bun:bun /app/.next/standalone ./
+COPY --from=build --chown=bun:bun /app/.next/static ./.next/static
 
 EXPOSE 3000
 ENV PORT 3000
