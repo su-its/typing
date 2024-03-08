@@ -16,7 +16,7 @@ runs:
       id: cache
       with:
         path: |
-          ~/.bun/install/cache
+          ${{ inputs.root }}/node_modules
           ${{ inputs.root }}/.next/cache
         key: ${{ runner.os }}-bun-cache-${{ hashFiles('bun.lockb') }}
         restore-keys: ${{ runner.os }}-bun-cache-
