@@ -3,7 +3,6 @@ name: nodejsci
 on:
   push:
     branches:
-      - "ci/**"
       - develop
       - main
     paths:
