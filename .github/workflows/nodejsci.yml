@@ -29,21 +29,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v4
-        id: cache
+      - uses: ./.github/actions/prepare-nodemodules
         with:
-          path: |
-            ${{ github.workspace }}/typing-app/node_modules
-            ${{ github.workspace }}/typing-app/.next/cache
-          key: ${{ runner.os }}-bun-cache-${{ hashFiles('typing-app/bun.lockb') }}
-          restore-keys: ${{ runner.os }}-bun-cache-
-      - uses: oven-sh/setup-bun@v1
-        if: steps.cache.outputs.cache-hit != 'true'
-        with:
-          bun-version: latest
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: bun install
+          root: ${{ github.workspace }}/typing-app
       - name: Try to build
         run: npm run build
 

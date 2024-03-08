@@ -1,0 +1,31 @@
+name: Prepare node_modules
+
+description: Install Dependencies using Bun. If cache hit, do nothing.
+
+inputs:
+  root:
+    description: |-
+      An absolute path to the directory where contains package.json.
+      Required
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@v4
+      id: cache
+      working-directory: ${{ inputs.root }}
+      with:
+        path: |
+          ~/.bun/install/cache
+          ${{ inputs.root }}/.next/cache
+        key: ${{ runner.os }}-bun-cache-${{ hashFiles('bun.lockb') }}
+        restore-keys: ${{ runner.os }}-bun-cache-
+    - uses: oven-sh/setup-bun@v1
+      if: steps.cache.outputs.cache-hit != 'true'
+      with:
+        bun-version: latest
+    - name: Install dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      working-directory: ${{ inputs.root }}
+      run: bun install
