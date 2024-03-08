@@ -18,9 +18,16 @@ on:
       - "typing-app/**"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 defaults:
   run:
-    working-directory: ./typing-app
+    working-directory: typing-app
 
 jobs:
   build:
@@ -28,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/prepare-nodemodules
+      - uses: .github/actions/prepare-nodemodules
         with:
           root: ${{ github.workspace }}/typing-app
       - name: Try to build
