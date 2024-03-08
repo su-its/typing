@@ -14,7 +14,7 @@ runs:
   steps:
     - uses: actions/cache@v4
       id: cache
-      working-directory: ${{ inputs.root }}
+      shell: bash
       with:
         path: |
           ~/.bun/install/cache
@@ -26,6 +26,7 @@ runs:
       with:
         bun-version: latest
     - name: Install dependencies
+      shell: bash
       if: steps.cache.outputs.cache-hit != 'true'
       working-directory: ${{ inputs.root }}
       run: bun install
