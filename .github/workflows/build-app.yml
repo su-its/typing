@@ -1,4 +1,4 @@
-name: nodejsci
+name: build-app
 
 on:
   pull_request:
@@ -6,12 +6,9 @@ on:
       - develop
       - main
     paths:
-      - .github/workflows/nodejsci.yml
+      - .github/workflows/build-app.yml
       - "typing-app/**"
   workflow_dispatch:
-
-permissions:
-  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,10 +22,12 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare-nodemodules
         with:
           root: ${{ github.workspace }}/typing-app
-      - name: Try to build
+      - name: Build Next.js Project
         run: npm run build
