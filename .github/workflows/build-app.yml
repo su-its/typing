@@ -1,0 +1,33 @@
+name: build-app
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - .github/workflows/build-app.yml
+      - "typing-app/**"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: typing-app
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/prepare-nodemodules
+        with:
+          root: ${{ github.workspace }}/typing-app
+      - name: Build Next.js Project
+        run: npm run build
