@@ -1,13 +1,6 @@
 name: nodejsci
 
 on:
-  push:
-    branches:
-      - develop
-      - main
-    paths:
-      - .github/workflows/nodejsci.yml
-      - "typing-app/**"
   pull_request:
     branches:
       - develop
