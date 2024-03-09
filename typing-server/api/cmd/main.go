@@ -25,15 +25,20 @@ func main() {
 		return
 	}
 
+	var addr = os.Getenv("DB_ADDR")
+	if addr == "" {
+		addr = "db:3306" // アドレス（Docker Compose内でのサービス名とポート）
+	}
+
 	// MySQLの接続設定
 	mysqlConfig := &mysql.Config{
 		DBName:    "typing-db", // データベース名
 		User:      "user",      // ユーザー名
 		Passwd:    "password",  // パスワード
 		Net:       "tcp",       // ネットワークタイプ
-		Addr:      "db:3306",   // アドレス（Docker Compose内でのサービス名とポート）
-		ParseTime: true,        // 時刻をtime.Timeで解析する
-		Loc:       jst,         // タイムゾーン
+		Addr:      addr,
+		ParseTime: true, // 時刻をtime.Timeで解析する
+		Loc:       jst,  // タイムゾーン
 	}
 
 	// entクライアントの初期化
