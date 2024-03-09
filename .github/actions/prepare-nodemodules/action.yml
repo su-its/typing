@@ -18,7 +18,7 @@ runs:
         path: |
           ${{ inputs.root }}/node_modules
           ${{ inputs.root }}/.next/cache
-        key: ${{ runner.os }}-bun-cache-${{ hashFiles('bun.lockb') }}
+        key: ${{ runner.os }}-bun-cache-${{ hashFiles('**/bun.lockb') }}
         restore-keys: ${{ runner.os }}-bun-cache-
     - uses: oven-sh/setup-bun@v1
       if: steps.cache.outputs.cache-hit != 'true'
