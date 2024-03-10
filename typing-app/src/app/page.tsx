@@ -1,3 +1,4 @@
+import "../styles/main.scss";
 import Header from "../components/organism/header/";
 import Footer from "../components/organism/footer/";
 
