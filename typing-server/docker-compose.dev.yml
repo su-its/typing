@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./api:/app
+    environment:
+      DB_ADDR: ${DB_ADDR:-db:3306}
     ports:
       - "8080:8080"
     networks:
