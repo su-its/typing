@@ -1,10 +1,20 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: "Meiryo", sans-serif;
+  box-sizing: border-box;
 }
 
 body {
   font-size: 14px;
-  background-color: #000;
+  background-color: #263238;
   color: #fff;
+}
+
+.main {
+  width: 100%;
+  height: calc(100% - 90px - 60px);
+  position: fixed;
+  left: 0;
+  top: 90px;
 }
