@@ -1,0 +1,19 @@
+@import "color";
+
+.box {
+  width: 70%;
+  height: calc(100% - 200px);
+  margin: 0 auto;
+  position: absolute;
+  left: 15%;
+  top: 100px;
+  background-color: $bluegray-900;
+  border: solid 4px #fff;
+  overflow-y: scroll;
+
+  .text {
+    padding: 40px;
+    font-size: 32px;
+    line-height: 48px;
+  }
+}
