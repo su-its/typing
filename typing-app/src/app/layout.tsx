@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import Header from "../components/organism/Header";
 import Footer from "../components/organism/Footer";
 import "./globals.css";
-import { Box } from "@chakra-ui/react";
+import { Box, ChakraProvider } from "@chakra-ui/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,13 +19,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Box minH="100vh" display="flex" flexDirection="column">
-          <Header />
-          <Box flex="1" bg="gray.100" py={2}>
-            {children}
+        <ChakraProvider>
+          <Box minH="100vh" display="flex" flexDirection="column">
+            <Header />
+            <Box flex="1" bg="gray.100" py={2}>
+              {children}
+            </Box>
+            <Footer />
           </Box>
-          <Footer />
-        </Box>
+        </ChakraProvider>
       </body>
     </html>
   );
