@@ -1,3 +1,5 @@
+import RankingPage from "@/components/pages/Ranking";
+
 export default function Ranking() {
-  return <div>Ranking View</div>;
+  return <RankingPage />;
 }

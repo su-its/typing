@@ -1,4 +1,3 @@
-// src/components/organisms/Footer.tsx
 import React from "react";
 import { Flex, Box } from "@chakra-ui/react";
 import BrandText from "../molecules/BrandText";
