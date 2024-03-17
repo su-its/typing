@@ -3,7 +3,7 @@ import { Box, Flex } from "@chakra-ui/react";
 // import { useAuth } from "@/hooks/useAuth";　// TODO: 実装
 import Banner from "@/components/atoms/Banner";
 import UserCard from "@/components/molecules/UserCard";
-import Separator from "../atoms/Separater";
+import Separator from "@/components/atoms/Separater";
 
 const Header: React.FC = () => {
   return (
