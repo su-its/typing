@@ -17,8 +17,14 @@ const GamePage: React.FC = () => {
   }
 
   const [screenIndex, setScreenIndex] = useState<ScreenIndex>(ScreenIndex.IDX_PRE);
+  const [subjectTextData, setSubjectTextData] = useState<string>("");  // 課題となるテキストデータ
+
   const subPageList = [
-    <GamePre key={ScreenIndex.IDX_PRE} nextPage={() => setScreenIndex(ScreenIndex.IDX_TYPING)} />,
+    <GamePre
+      key={ScreenIndex.IDX_PRE}
+      nextPage={() => setScreenIndex(ScreenIndex.IDX_TYPING)}
+      setSubjectTextData={setSubjectTextData} // propsとして課題となるテキストデータを渡す
+    />,
     <GameTyping key={ScreenIndex.IDX_TYPING} nextPage={() => setScreenIndex(ScreenIndex.IDX_RESULT)} />,
     <GameResult key={ScreenIndex.IDX_RESULT} nextPage={() => setScreenIndex(ScreenIndex.IDX_PRE)} />,
   ];
