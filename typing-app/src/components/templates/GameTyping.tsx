@@ -8,7 +8,7 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
   const [count, setCount] = useState(totalSeconds);
 
   useEffect(() => {
-    if (count === 0) {
+    if (count <= 0) {
       axios
         .post(
           /*送信先URL*/ {
