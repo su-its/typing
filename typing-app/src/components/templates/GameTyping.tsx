@@ -1,20 +1,28 @@
-import { Box, Button, Text, Progress } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
+import RegisterScore from "@/types/RegisterScore";
+import { Box, Button, Progress, Text } from "@chakra-ui/react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { SubGamePageProps } from "../pages/Game";
 
 const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
   const totalSeconds = 20;
   const [count, setCount] = useState(totalSeconds);
+  const damyScoreData = {
+    Keystrokes: 123,
+    Accuracy: 456.7,
+    Score: 890.1,
+    StartedAt: new Date(),
+    EndedAt: new Date(),
+  } as RegisterScore;
+  const damyUserId = "damyId";
+
+  const userId = damyUserId; // ToDo: 要変更
+  const scoreData = damyScoreData; // ToDo: 要変更
 
   useEffect(() => {
     if (count <= 0) {
       axios
-        .post(
-          /*送信先URL*/ {
-            /*送信するデータ*/
-          }
-        )
+        .post(`http://localhost:8080/users/${userId}/scores`, scoreData)
         .then((res) => {
           console.log(res.data);
           nextPage();
