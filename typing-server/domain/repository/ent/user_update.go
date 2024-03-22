@@ -30,16 +30,16 @@ func (uu *UserUpdate) Where(ps ...predicate.User) *UserUpdate {
 	return uu
 }
 
-// SetMailAdress sets the "MailAdress" field.
-func (uu *UserUpdate) SetMailAdress(s string) *UserUpdate {
-	uu.mutation.SetMailAdress(s)
+// SetStudentNumber sets the "StudentNumber" field.
+func (uu *UserUpdate) SetStudentNumber(s string) *UserUpdate {
+	uu.mutation.SetStudentNumber(s)
 	return uu
 }
 
-// SetNillableMailAdress sets the "MailAdress" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableMailAdress(s *string) *UserUpdate {
+// SetNillableStudentNumber sets the "StudentNumber" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableStudentNumber(s *string) *UserUpdate {
 	if s != nil {
-		uu.SetMailAdress(*s)
+		uu.SetStudentNumber(*s)
 	}
 	return uu
 }
@@ -54,48 +54,6 @@ func (uu *UserUpdate) SetHandleName(s string) *UserUpdate {
 func (uu *UserUpdate) SetNillableHandleName(s *string) *UserUpdate {
 	if s != nil {
 		uu.SetHandleName(*s)
-	}
-	return uu
-}
-
-// SetName sets the "Name" field.
-func (uu *UserUpdate) SetName(s string) *UserUpdate {
-	uu.mutation.SetName(s)
-	return uu
-}
-
-// SetNillableName sets the "Name" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableName(s *string) *UserUpdate {
-	if s != nil {
-		uu.SetName(*s)
-	}
-	return uu
-}
-
-// SetHashedPassword sets the "HashedPassword" field.
-func (uu *UserUpdate) SetHashedPassword(s string) *UserUpdate {
-	uu.mutation.SetHashedPassword(s)
-	return uu
-}
-
-// SetNillableHashedPassword sets the "HashedPassword" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableHashedPassword(s *string) *UserUpdate {
-	if s != nil {
-		uu.SetHashedPassword(*s)
-	}
-	return uu
-}
-
-// SetDepartment sets the "Department" field.
-func (uu *UserUpdate) SetDepartment(u user.Department) *UserUpdate {
-	uu.mutation.SetDepartment(u)
-	return uu
-}
-
-// SetNillableDepartment sets the "Department" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableDepartment(u *user.Department) *UserUpdate {
-	if u != nil {
-		uu.SetDepartment(*u)
 	}
 	return uu
 }
@@ -185,29 +143,14 @@ func (uu *UserUpdate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (uu *UserUpdate) check() error {
-	if v, ok := uu.mutation.MailAdress(); ok {
-		if err := user.MailAdressValidator(v); err != nil {
-			return &ValidationError{Name: "MailAdress", err: fmt.Errorf(`ent: validator failed for field "User.MailAdress": %w`, err)}
+	if v, ok := uu.mutation.StudentNumber(); ok {
+		if err := user.StudentNumberValidator(v); err != nil {
+			return &ValidationError{Name: "StudentNumber", err: fmt.Errorf(`ent: validator failed for field "User.StudentNumber": %w`, err)}
 		}
 	}
 	if v, ok := uu.mutation.HandleName(); ok {
 		if err := user.HandleNameValidator(v); err != nil {
 			return &ValidationError{Name: "HandleName", err: fmt.Errorf(`ent: validator failed for field "User.HandleName": %w`, err)}
-		}
-	}
-	if v, ok := uu.mutation.Name(); ok {
-		if err := user.NameValidator(v); err != nil {
-			return &ValidationError{Name: "Name", err: fmt.Errorf(`ent: validator failed for field "User.Name": %w`, err)}
-		}
-	}
-	if v, ok := uu.mutation.HashedPassword(); ok {
-		if err := user.HashedPasswordValidator(v); err != nil {
-			return &ValidationError{Name: "HashedPassword", err: fmt.Errorf(`ent: validator failed for field "User.HashedPassword": %w`, err)}
-		}
-	}
-	if v, ok := uu.mutation.Department(); ok {
-		if err := user.DepartmentValidator(v); err != nil {
-			return &ValidationError{Name: "Department", err: fmt.Errorf(`ent: validator failed for field "User.Department": %w`, err)}
 		}
 	}
 	return nil
@@ -225,20 +168,11 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := uu.mutation.MailAdress(); ok {
-		_spec.SetField(user.FieldMailAdress, field.TypeString, value)
+	if value, ok := uu.mutation.StudentNumber(); ok {
+		_spec.SetField(user.FieldStudentNumber, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.HandleName(); ok {
 		_spec.SetField(user.FieldHandleName, field.TypeString, value)
-	}
-	if value, ok := uu.mutation.Name(); ok {
-		_spec.SetField(user.FieldName, field.TypeString, value)
-	}
-	if value, ok := uu.mutation.HashedPassword(); ok {
-		_spec.SetField(user.FieldHashedPassword, field.TypeString, value)
-	}
-	if value, ok := uu.mutation.Department(); ok {
-		_spec.SetField(user.FieldDepartment, field.TypeEnum, value)
 	}
 	if value, ok := uu.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
@@ -308,16 +242,16 @@ type UserUpdateOne struct {
 	mutation *UserMutation
 }
 
-// SetMailAdress sets the "MailAdress" field.
-func (uuo *UserUpdateOne) SetMailAdress(s string) *UserUpdateOne {
-	uuo.mutation.SetMailAdress(s)
+// SetStudentNumber sets the "StudentNumber" field.
+func (uuo *UserUpdateOne) SetStudentNumber(s string) *UserUpdateOne {
+	uuo.mutation.SetStudentNumber(s)
 	return uuo
 }
 
-// SetNillableMailAdress sets the "MailAdress" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableMailAdress(s *string) *UserUpdateOne {
+// SetNillableStudentNumber sets the "StudentNumber" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableStudentNumber(s *string) *UserUpdateOne {
 	if s != nil {
-		uuo.SetMailAdress(*s)
+		uuo.SetStudentNumber(*s)
 	}
 	return uuo
 }
@@ -332,48 +266,6 @@ func (uuo *UserUpdateOne) SetHandleName(s string) *UserUpdateOne {
 func (uuo *UserUpdateOne) SetNillableHandleName(s *string) *UserUpdateOne {
 	if s != nil {
 		uuo.SetHandleName(*s)
-	}
-	return uuo
-}
-
-// SetName sets the "Name" field.
-func (uuo *UserUpdateOne) SetName(s string) *UserUpdateOne {
-	uuo.mutation.SetName(s)
-	return uuo
-}
-
-// SetNillableName sets the "Name" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableName(s *string) *UserUpdateOne {
-	if s != nil {
-		uuo.SetName(*s)
-	}
-	return uuo
-}
-
-// SetHashedPassword sets the "HashedPassword" field.
-func (uuo *UserUpdateOne) SetHashedPassword(s string) *UserUpdateOne {
-	uuo.mutation.SetHashedPassword(s)
-	return uuo
-}
-
-// SetNillableHashedPassword sets the "HashedPassword" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableHashedPassword(s *string) *UserUpdateOne {
-	if s != nil {
-		uuo.SetHashedPassword(*s)
-	}
-	return uuo
-}
-
-// SetDepartment sets the "Department" field.
-func (uuo *UserUpdateOne) SetDepartment(u user.Department) *UserUpdateOne {
-	uuo.mutation.SetDepartment(u)
-	return uuo
-}
-
-// SetNillableDepartment sets the "Department" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableDepartment(u *user.Department) *UserUpdateOne {
-	if u != nil {
-		uuo.SetDepartment(*u)
 	}
 	return uuo
 }
@@ -476,29 +368,14 @@ func (uuo *UserUpdateOne) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (uuo *UserUpdateOne) check() error {
-	if v, ok := uuo.mutation.MailAdress(); ok {
-		if err := user.MailAdressValidator(v); err != nil {
-			return &ValidationError{Name: "MailAdress", err: fmt.Errorf(`ent: validator failed for field "User.MailAdress": %w`, err)}
+	if v, ok := uuo.mutation.StudentNumber(); ok {
+		if err := user.StudentNumberValidator(v); err != nil {
+			return &ValidationError{Name: "StudentNumber", err: fmt.Errorf(`ent: validator failed for field "User.StudentNumber": %w`, err)}
 		}
 	}
 	if v, ok := uuo.mutation.HandleName(); ok {
 		if err := user.HandleNameValidator(v); err != nil {
 			return &ValidationError{Name: "HandleName", err: fmt.Errorf(`ent: validator failed for field "User.HandleName": %w`, err)}
-		}
-	}
-	if v, ok := uuo.mutation.Name(); ok {
-		if err := user.NameValidator(v); err != nil {
-			return &ValidationError{Name: "Name", err: fmt.Errorf(`ent: validator failed for field "User.Name": %w`, err)}
-		}
-	}
-	if v, ok := uuo.mutation.HashedPassword(); ok {
-		if err := user.HashedPasswordValidator(v); err != nil {
-			return &ValidationError{Name: "HashedPassword", err: fmt.Errorf(`ent: validator failed for field "User.HashedPassword": %w`, err)}
-		}
-	}
-	if v, ok := uuo.mutation.Department(); ok {
-		if err := user.DepartmentValidator(v); err != nil {
-			return &ValidationError{Name: "Department", err: fmt.Errorf(`ent: validator failed for field "User.Department": %w`, err)}
 		}
 	}
 	return nil
@@ -533,20 +410,11 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			}
 		}
 	}
-	if value, ok := uuo.mutation.MailAdress(); ok {
-		_spec.SetField(user.FieldMailAdress, field.TypeString, value)
+	if value, ok := uuo.mutation.StudentNumber(); ok {
+		_spec.SetField(user.FieldStudentNumber, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.HandleName(); ok {
 		_spec.SetField(user.FieldHandleName, field.TypeString, value)
-	}
-	if value, ok := uuo.mutation.Name(); ok {
-		_spec.SetField(user.FieldName, field.TypeString, value)
-	}
-	if value, ok := uuo.mutation.HashedPassword(); ok {
-		_spec.SetField(user.FieldHashedPassword, field.TypeString, value)
-	}
-	if value, ok := uuo.mutation.Department(); ok {
-		_spec.SetField(user.FieldDepartment, field.TypeEnum, value)
 	}
 	if value, ok := uuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)

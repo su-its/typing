@@ -16,8 +16,6 @@ func (Score) Fields() []ent.Field {
 		field.UUID("id", uuid.UUID{}).Default(uuid.New).StorageKey("id").Unique(),
 		field.Int("keystrokes"),
 		field.Float("accuracy"),
-		field.Float("score").Comment("スコアはaccuracyとkeystrokesの積で計算される"),
-		field.Time("startedAt"),
-		field.Time("endedAt"),
+		field.Time("createdAt"),
 	}
 }

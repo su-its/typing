@@ -33,21 +33,9 @@ func (sc *ScoreCreate) SetAccuracy(f float64) *ScoreCreate {
 	return sc
 }
 
-// SetScore sets the "score" field.
-func (sc *ScoreCreate) SetScore(f float64) *ScoreCreate {
-	sc.mutation.SetScore(f)
-	return sc
-}
-
-// SetStartedAt sets the "startedAt" field.
-func (sc *ScoreCreate) SetStartedAt(t time.Time) *ScoreCreate {
-	sc.mutation.SetStartedAt(t)
-	return sc
-}
-
-// SetEndedAt sets the "endedAt" field.
-func (sc *ScoreCreate) SetEndedAt(t time.Time) *ScoreCreate {
-	sc.mutation.SetEndedAt(t)
+// SetCreatedAt sets the "createdAt" field.
+func (sc *ScoreCreate) SetCreatedAt(t time.Time) *ScoreCreate {
+	sc.mutation.SetCreatedAt(t)
 	return sc
 }
 
@@ -114,14 +102,8 @@ func (sc *ScoreCreate) check() error {
 	if _, ok := sc.mutation.Accuracy(); !ok {
 		return &ValidationError{Name: "accuracy", err: errors.New(`ent: missing required field "Score.accuracy"`)}
 	}
-	if _, ok := sc.mutation.Score(); !ok {
-		return &ValidationError{Name: "score", err: errors.New(`ent: missing required field "Score.score"`)}
-	}
-	if _, ok := sc.mutation.StartedAt(); !ok {
-		return &ValidationError{Name: "startedAt", err: errors.New(`ent: missing required field "Score.startedAt"`)}
-	}
-	if _, ok := sc.mutation.EndedAt(); !ok {
-		return &ValidationError{Name: "endedAt", err: errors.New(`ent: missing required field "Score.endedAt"`)}
+	if _, ok := sc.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "createdAt", err: errors.New(`ent: missing required field "Score.createdAt"`)}
 	}
 	return nil
 }
@@ -166,17 +148,9 @@ func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 		_spec.SetField(score.FieldAccuracy, field.TypeFloat64, value)
 		_node.Accuracy = value
 	}
-	if value, ok := sc.mutation.Score(); ok {
-		_spec.SetField(score.FieldScore, field.TypeFloat64, value)
-		_node.Score = value
-	}
-	if value, ok := sc.mutation.StartedAt(); ok {
-		_spec.SetField(score.FieldStartedAt, field.TypeTime, value)
-		_node.StartedAt = value
-	}
-	if value, ok := sc.mutation.EndedAt(); ok {
-		_spec.SetField(score.FieldEndedAt, field.TypeTime, value)
-		_node.EndedAt = value
+	if value, ok := sc.mutation.CreatedAt(); ok {
+		_spec.SetField(score.FieldCreatedAt, field.TypeTime, value)
+		_node.CreatedAt = value
 	}
 	return _node, _spec
 }

@@ -23,24 +23,10 @@ func init() {
 	score.DefaultID = scoreDescID.Default.(func() uuid.UUID)
 	userFields := schema.User{}.Fields()
 	_ = userFields
-	// userDescMailAdress is the schema descriptor for MailAdress field.
-	userDescMailAdress := userFields[1].Descriptor()
-	// user.MailAdressValidator is a validator for the "MailAdress" field. It is called by the builders before save.
-	user.MailAdressValidator = func() func(string) error {
-		validators := userDescMailAdress.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(_MailAdress string) error {
-			for _, fn := range fns {
-				if err := fn(_MailAdress); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
+	// userDescStudentNumber is the schema descriptor for StudentNumber field.
+	userDescStudentNumber := userFields[1].Descriptor()
+	// user.StudentNumberValidator is a validator for the "StudentNumber" field. It is called by the builders before save.
+	user.StudentNumberValidator = userDescStudentNumber.Validators[0].(func(string) error)
 	// userDescHandleName is the schema descriptor for HandleName field.
 	userDescHandleName := userFields[2].Descriptor()
 	// user.HandleNameValidator is a validator for the "HandleName" field. It is called by the builders before save.
@@ -59,48 +45,12 @@ func init() {
 			return nil
 		}
 	}()
-	// userDescName is the schema descriptor for Name field.
-	userDescName := userFields[3].Descriptor()
-	// user.NameValidator is a validator for the "Name" field. It is called by the builders before save.
-	user.NameValidator = func() func(string) error {
-		validators := userDescName.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(_Name string) error {
-			for _, fn := range fns {
-				if err := fn(_Name); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
-	// userDescHashedPassword is the schema descriptor for HashedPassword field.
-	userDescHashedPassword := userFields[4].Descriptor()
-	// user.HashedPasswordValidator is a validator for the "HashedPassword" field. It is called by the builders before save.
-	user.HashedPasswordValidator = func() func(string) error {
-		validators := userDescHashedPassword.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(_HashedPassword string) error {
-			for _, fn := range fns {
-				if err := fn(_HashedPassword); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
 	// userDescCreatedAt is the schema descriptor for created_at field.
-	userDescCreatedAt := userFields[6].Descriptor()
+	userDescCreatedAt := userFields[3].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
 	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
 	// userDescUpdatedAt is the schema descriptor for updated_at field.
-	userDescUpdatedAt := userFields[7].Descriptor()
+	userDescUpdatedAt := userFields[4].Descriptor()
 	// user.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	user.DefaultUpdatedAt = userDescUpdatedAt.Default.(func() time.Time)
 	// user.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.

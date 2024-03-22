@@ -70,51 +70,16 @@ func (su *ScoreUpdate) AddAccuracy(f float64) *ScoreUpdate {
 	return su
 }
 
-// SetScore sets the "score" field.
-func (su *ScoreUpdate) SetScore(f float64) *ScoreUpdate {
-	su.mutation.ResetScore()
-	su.mutation.SetScore(f)
+// SetCreatedAt sets the "createdAt" field.
+func (su *ScoreUpdate) SetCreatedAt(t time.Time) *ScoreUpdate {
+	su.mutation.SetCreatedAt(t)
 	return su
 }
 
-// SetNillableScore sets the "score" field if the given value is not nil.
-func (su *ScoreUpdate) SetNillableScore(f *float64) *ScoreUpdate {
-	if f != nil {
-		su.SetScore(*f)
-	}
-	return su
-}
-
-// AddScore adds f to the "score" field.
-func (su *ScoreUpdate) AddScore(f float64) *ScoreUpdate {
-	su.mutation.AddScore(f)
-	return su
-}
-
-// SetStartedAt sets the "startedAt" field.
-func (su *ScoreUpdate) SetStartedAt(t time.Time) *ScoreUpdate {
-	su.mutation.SetStartedAt(t)
-	return su
-}
-
-// SetNillableStartedAt sets the "startedAt" field if the given value is not nil.
-func (su *ScoreUpdate) SetNillableStartedAt(t *time.Time) *ScoreUpdate {
+// SetNillableCreatedAt sets the "createdAt" field if the given value is not nil.
+func (su *ScoreUpdate) SetNillableCreatedAt(t *time.Time) *ScoreUpdate {
 	if t != nil {
-		su.SetStartedAt(*t)
-	}
-	return su
-}
-
-// SetEndedAt sets the "endedAt" field.
-func (su *ScoreUpdate) SetEndedAt(t time.Time) *ScoreUpdate {
-	su.mutation.SetEndedAt(t)
-	return su
-}
-
-// SetNillableEndedAt sets the "endedAt" field if the given value is not nil.
-func (su *ScoreUpdate) SetNillableEndedAt(t *time.Time) *ScoreUpdate {
-	if t != nil {
-		su.SetEndedAt(*t)
+		su.SetCreatedAt(*t)
 	}
 	return su
 }
@@ -172,17 +137,8 @@ func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := su.mutation.AddedAccuracy(); ok {
 		_spec.AddField(score.FieldAccuracy, field.TypeFloat64, value)
 	}
-	if value, ok := su.mutation.Score(); ok {
-		_spec.SetField(score.FieldScore, field.TypeFloat64, value)
-	}
-	if value, ok := su.mutation.AddedScore(); ok {
-		_spec.AddField(score.FieldScore, field.TypeFloat64, value)
-	}
-	if value, ok := su.mutation.StartedAt(); ok {
-		_spec.SetField(score.FieldStartedAt, field.TypeTime, value)
-	}
-	if value, ok := su.mutation.EndedAt(); ok {
-		_spec.SetField(score.FieldEndedAt, field.TypeTime, value)
+	if value, ok := su.mutation.CreatedAt(); ok {
+		_spec.SetField(score.FieldCreatedAt, field.TypeTime, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, su.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -246,51 +202,16 @@ func (suo *ScoreUpdateOne) AddAccuracy(f float64) *ScoreUpdateOne {
 	return suo
 }
 
-// SetScore sets the "score" field.
-func (suo *ScoreUpdateOne) SetScore(f float64) *ScoreUpdateOne {
-	suo.mutation.ResetScore()
-	suo.mutation.SetScore(f)
+// SetCreatedAt sets the "createdAt" field.
+func (suo *ScoreUpdateOne) SetCreatedAt(t time.Time) *ScoreUpdateOne {
+	suo.mutation.SetCreatedAt(t)
 	return suo
 }
 
-// SetNillableScore sets the "score" field if the given value is not nil.
-func (suo *ScoreUpdateOne) SetNillableScore(f *float64) *ScoreUpdateOne {
-	if f != nil {
-		suo.SetScore(*f)
-	}
-	return suo
-}
-
-// AddScore adds f to the "score" field.
-func (suo *ScoreUpdateOne) AddScore(f float64) *ScoreUpdateOne {
-	suo.mutation.AddScore(f)
-	return suo
-}
-
-// SetStartedAt sets the "startedAt" field.
-func (suo *ScoreUpdateOne) SetStartedAt(t time.Time) *ScoreUpdateOne {
-	suo.mutation.SetStartedAt(t)
-	return suo
-}
-
-// SetNillableStartedAt sets the "startedAt" field if the given value is not nil.
-func (suo *ScoreUpdateOne) SetNillableStartedAt(t *time.Time) *ScoreUpdateOne {
+// SetNillableCreatedAt sets the "createdAt" field if the given value is not nil.
+func (suo *ScoreUpdateOne) SetNillableCreatedAt(t *time.Time) *ScoreUpdateOne {
 	if t != nil {
-		suo.SetStartedAt(*t)
-	}
-	return suo
-}
-
-// SetEndedAt sets the "endedAt" field.
-func (suo *ScoreUpdateOne) SetEndedAt(t time.Time) *ScoreUpdateOne {
-	suo.mutation.SetEndedAt(t)
-	return suo
-}
-
-// SetNillableEndedAt sets the "endedAt" field if the given value is not nil.
-func (suo *ScoreUpdateOne) SetNillableEndedAt(t *time.Time) *ScoreUpdateOne {
-	if t != nil {
-		suo.SetEndedAt(*t)
+		suo.SetCreatedAt(*t)
 	}
 	return suo
 }
@@ -378,17 +299,8 @@ func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error
 	if value, ok := suo.mutation.AddedAccuracy(); ok {
 		_spec.AddField(score.FieldAccuracy, field.TypeFloat64, value)
 	}
-	if value, ok := suo.mutation.Score(); ok {
-		_spec.SetField(score.FieldScore, field.TypeFloat64, value)
-	}
-	if value, ok := suo.mutation.AddedScore(); ok {
-		_spec.AddField(score.FieldScore, field.TypeFloat64, value)
-	}
-	if value, ok := suo.mutation.StartedAt(); ok {
-		_spec.SetField(score.FieldStartedAt, field.TypeTime, value)
-	}
-	if value, ok := suo.mutation.EndedAt(); ok {
-		_spec.SetField(score.FieldEndedAt, field.TypeTime, value)
+	if value, ok := suo.mutation.CreatedAt(); ok {
+		_spec.SetField(score.FieldCreatedAt, field.TypeTime, value)
 	}
 	_node = &Score{config: suo.config}
 	_spec.Assign = _node.assignValues

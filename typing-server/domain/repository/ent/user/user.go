@@ -3,7 +3,6 @@
 package user
 
 import (
-	"fmt"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -16,16 +15,10 @@ const (
 	Label = "user"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldMailAdress holds the string denoting the mailadress field in the database.
-	FieldMailAdress = "mail_adress"
+	// FieldStudentNumber holds the string denoting the studentnumber field in the database.
+	FieldStudentNumber = "student_number"
 	// FieldHandleName holds the string denoting the handlename field in the database.
 	FieldHandleName = "handle_name"
-	// FieldName holds the string denoting the name field in the database.
-	FieldName = "name"
-	// FieldHashedPassword holds the string denoting the hashedpassword field in the database.
-	FieldHashedPassword = "hashed_password"
-	// FieldDepartment holds the string denoting the department field in the database.
-	FieldDepartment = "department"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -46,11 +39,8 @@ const (
 // Columns holds all SQL columns for user fields.
 var Columns = []string{
 	FieldID,
-	FieldMailAdress,
+	FieldStudentNumber,
 	FieldHandleName,
-	FieldName,
-	FieldHashedPassword,
-	FieldDepartment,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 }
@@ -66,14 +56,10 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// MailAdressValidator is a validator for the "MailAdress" field. It is called by the builders before save.
-	MailAdressValidator func(string) error
+	// StudentNumberValidator is a validator for the "StudentNumber" field. It is called by the builders before save.
+	StudentNumberValidator func(string) error
 	// HandleNameValidator is a validator for the "HandleName" field. It is called by the builders before save.
 	HandleNameValidator func(string) error
-	// NameValidator is a validator for the "Name" field. It is called by the builders before save.
-	NameValidator func(string) error
-	// HashedPasswordValidator is a validator for the "HashedPassword" field. It is called by the builders before save.
-	HashedPasswordValidator func(string) error
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
@@ -84,30 +70,6 @@ var (
 	DefaultID func() uuid.UUID
 )
 
-// Department defines the type for the "Department" enum field.
-type Department string
-
-// Department values.
-const (
-	DepartmentCS Department = "CS"
-	DepartmentBI Department = "BI"
-	DepartmentIA Department = "IA"
-)
-
-func (_department Department) String() string {
-	return string(_department)
-}
-
-// DepartmentValidator is a validator for the "Department" field enum values. It is called by the builders before save.
-func DepartmentValidator(_department Department) error {
-	switch _department {
-	case DepartmentCS, DepartmentBI, DepartmentIA:
-		return nil
-	default:
-		return fmt.Errorf("user: invalid enum value for Department field: %q", _department)
-	}
-}
-
 // OrderOption defines the ordering options for the User queries.
 type OrderOption func(*sql.Selector)
 
@@ -116,29 +78,14 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
-// ByMailAdress orders the results by the MailAdress field.
-func ByMailAdress(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldMailAdress, opts...).ToFunc()
+// ByStudentNumber orders the results by the StudentNumber field.
+func ByStudentNumber(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStudentNumber, opts...).ToFunc()
 }
 
 // ByHandleName orders the results by the HandleName field.
 func ByHandleName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldHandleName, opts...).ToFunc()
-}
-
-// ByName orders the results by the Name field.
-func ByName(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldName, opts...).ToFunc()
-}
-
-// ByHashedPassword orders the results by the HashedPassword field.
-func ByHashedPassword(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldHashedPassword, opts...).ToFunc()
-}
-
-// ByDepartment orders the results by the Department field.
-func ByDepartment(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldDepartment, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.
