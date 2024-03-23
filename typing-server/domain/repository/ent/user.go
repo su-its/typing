@@ -18,10 +18,10 @@ type User struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
-	// StudentNumber holds the value of the "StudentNumber" field.
-	StudentNumber string `json:"StudentNumber,omitempty"`
-	// HandleName holds the value of the "HandleName" field.
-	HandleName string `json:"HandleName,omitempty"`
+	// StudentNumber holds the value of the "student_number" field.
+	StudentNumber string `json:"student_number,omitempty"`
+	// HandleName holds the value of the "handle_name" field.
+	HandleName string `json:"handle_name,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -84,13 +84,13 @@ func (u *User) assignValues(columns []string, values []any) error {
 			}
 		case user.FieldStudentNumber:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field StudentNumber", values[i])
+				return fmt.Errorf("unexpected type %T for field student_number", values[i])
 			} else if value.Valid {
 				u.StudentNumber = value.String
 			}
 		case user.FieldHandleName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field HandleName", values[i])
+				return fmt.Errorf("unexpected type %T for field handle_name", values[i])
 			} else if value.Valid {
 				u.HandleName = value.String
 			}
@@ -147,10 +147,10 @@ func (u *User) String() string {
 	var builder strings.Builder
 	builder.WriteString("User(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", u.ID))
-	builder.WriteString("StudentNumber=")
+	builder.WriteString("student_number=")
 	builder.WriteString(u.StudentNumber)
 	builder.WriteString(", ")
-	builder.WriteString("HandleName=")
+	builder.WriteString("handle_name=")
 	builder.WriteString(u.HandleName)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")

@@ -23,22 +23,22 @@ func init() {
 	score.DefaultID = scoreDescID.Default.(func() uuid.UUID)
 	userFields := schema.User{}.Fields()
 	_ = userFields
-	// userDescStudentNumber is the schema descriptor for StudentNumber field.
+	// userDescStudentNumber is the schema descriptor for student_number field.
 	userDescStudentNumber := userFields[1].Descriptor()
-	// user.StudentNumberValidator is a validator for the "StudentNumber" field. It is called by the builders before save.
+	// user.StudentNumberValidator is a validator for the "student_number" field. It is called by the builders before save.
 	user.StudentNumberValidator = userDescStudentNumber.Validators[0].(func(string) error)
-	// userDescHandleName is the schema descriptor for HandleName field.
+	// userDescHandleName is the schema descriptor for handle_name field.
 	userDescHandleName := userFields[2].Descriptor()
-	// user.HandleNameValidator is a validator for the "HandleName" field. It is called by the builders before save.
+	// user.HandleNameValidator is a validator for the "handle_name" field. It is called by the builders before save.
 	user.HandleNameValidator = func() func(string) error {
 		validators := userDescHandleName.Validators
 		fns := [...]func(string) error{
 			validators[0].(func(string) error),
 			validators[1].(func(string) error),
 		}
-		return func(_HandleName string) error {
+		return func(handle_name string) error {
 			for _, fn := range fns {
-				if err := fn(_HandleName); err != nil {
+				if err := fn(handle_name); err != nil {
 					return err
 				}
 			}

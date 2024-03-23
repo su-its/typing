@@ -15,9 +15,9 @@ const (
 	Label = "user"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldStudentNumber holds the string denoting the studentnumber field in the database.
+	// FieldStudentNumber holds the string denoting the student_number field in the database.
 	FieldStudentNumber = "student_number"
-	// FieldHandleName holds the string denoting the handlename field in the database.
+	// FieldHandleName holds the string denoting the handle_name field in the database.
 	FieldHandleName = "handle_name"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
@@ -56,9 +56,9 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// StudentNumberValidator is a validator for the "StudentNumber" field. It is called by the builders before save.
+	// StudentNumberValidator is a validator for the "student_number" field. It is called by the builders before save.
 	StudentNumberValidator func(string) error
-	// HandleNameValidator is a validator for the "HandleName" field. It is called by the builders before save.
+	// HandleNameValidator is a validator for the "handle_name" field. It is called by the builders before save.
 	HandleNameValidator func(string) error
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
@@ -78,12 +78,12 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
-// ByStudentNumber orders the results by the StudentNumber field.
+// ByStudentNumber orders the results by the student_number field.
 func ByStudentNumber(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStudentNumber, opts...).ToFunc()
 }
 
-// ByHandleName orders the results by the HandleName field.
+// ByHandleName orders the results by the handle_name field.
 func ByHandleName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldHandleName, opts...).ToFunc()
 }

@@ -22,13 +22,13 @@ type UserCreate struct {
 	hooks    []Hook
 }
 
-// SetStudentNumber sets the "StudentNumber" field.
+// SetStudentNumber sets the "student_number" field.
 func (uc *UserCreate) SetStudentNumber(s string) *UserCreate {
 	uc.mutation.SetStudentNumber(s)
 	return uc
 }
 
-// SetHandleName sets the "HandleName" field.
+// SetHandleName sets the "handle_name" field.
 func (uc *UserCreate) SetHandleName(s string) *UserCreate {
 	uc.mutation.SetHandleName(s)
 	return uc
@@ -143,19 +143,19 @@ func (uc *UserCreate) defaults() {
 // check runs all checks and user-defined validators on the builder.
 func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.StudentNumber(); !ok {
-		return &ValidationError{Name: "StudentNumber", err: errors.New(`ent: missing required field "User.StudentNumber"`)}
+		return &ValidationError{Name: "student_number", err: errors.New(`ent: missing required field "User.student_number"`)}
 	}
 	if v, ok := uc.mutation.StudentNumber(); ok {
 		if err := user.StudentNumberValidator(v); err != nil {
-			return &ValidationError{Name: "StudentNumber", err: fmt.Errorf(`ent: validator failed for field "User.StudentNumber": %w`, err)}
+			return &ValidationError{Name: "student_number", err: fmt.Errorf(`ent: validator failed for field "User.student_number": %w`, err)}
 		}
 	}
 	if _, ok := uc.mutation.HandleName(); !ok {
-		return &ValidationError{Name: "HandleName", err: errors.New(`ent: missing required field "User.HandleName"`)}
+		return &ValidationError{Name: "handle_name", err: errors.New(`ent: missing required field "User.handle_name"`)}
 	}
 	if v, ok := uc.mutation.HandleName(); ok {
 		if err := user.HandleNameValidator(v); err != nil {
-			return &ValidationError{Name: "HandleName", err: fmt.Errorf(`ent: validator failed for field "User.HandleName": %w`, err)}
+			return &ValidationError{Name: "handle_name", err: fmt.Errorf(`ent: validator failed for field "User.handle_name": %w`, err)}
 		}
 	}
 	if _, ok := uc.mutation.CreatedAt(); !ok {

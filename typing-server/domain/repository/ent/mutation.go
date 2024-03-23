@@ -545,8 +545,8 @@ type UserMutation struct {
 	op             Op
 	typ            string
 	id             *uuid.UUID
-	_StudentNumber *string
-	_HandleName    *string
+	student_number *string
+	handle_name    *string
 	created_at     *time.Time
 	updated_at     *time.Time
 	clearedFields  map[string]struct{}
@@ -662,21 +662,21 @@ func (m *UserMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
 	}
 }
 
-// SetStudentNumber sets the "StudentNumber" field.
+// SetStudentNumber sets the "student_number" field.
 func (m *UserMutation) SetStudentNumber(s string) {
-	m._StudentNumber = &s
+	m.student_number = &s
 }
 
-// StudentNumber returns the value of the "StudentNumber" field in the mutation.
+// StudentNumber returns the value of the "student_number" field in the mutation.
 func (m *UserMutation) StudentNumber() (r string, exists bool) {
-	v := m._StudentNumber
+	v := m.student_number
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldStudentNumber returns the old "StudentNumber" field's value of the User entity.
+// OldStudentNumber returns the old "student_number" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *UserMutation) OldStudentNumber(ctx context.Context) (v string, err error) {
@@ -693,26 +693,26 @@ func (m *UserMutation) OldStudentNumber(ctx context.Context) (v string, err erro
 	return oldValue.StudentNumber, nil
 }
 
-// ResetStudentNumber resets all changes to the "StudentNumber" field.
+// ResetStudentNumber resets all changes to the "student_number" field.
 func (m *UserMutation) ResetStudentNumber() {
-	m._StudentNumber = nil
+	m.student_number = nil
 }
 
-// SetHandleName sets the "HandleName" field.
+// SetHandleName sets the "handle_name" field.
 func (m *UserMutation) SetHandleName(s string) {
-	m._HandleName = &s
+	m.handle_name = &s
 }
 
-// HandleName returns the value of the "HandleName" field in the mutation.
+// HandleName returns the value of the "handle_name" field in the mutation.
 func (m *UserMutation) HandleName() (r string, exists bool) {
-	v := m._HandleName
+	v := m.handle_name
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldHandleName returns the old "HandleName" field's value of the User entity.
+// OldHandleName returns the old "handle_name" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *UserMutation) OldHandleName(ctx context.Context) (v string, err error) {
@@ -729,9 +729,9 @@ func (m *UserMutation) OldHandleName(ctx context.Context) (v string, err error) 
 	return oldValue.HandleName, nil
 }
 
-// ResetHandleName resets all changes to the "HandleName" field.
+// ResetHandleName resets all changes to the "handle_name" field.
 func (m *UserMutation) ResetHandleName() {
-	m._HandleName = nil
+	m.handle_name = nil
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -895,10 +895,10 @@ func (m *UserMutation) Type() string {
 // AddedFields().
 func (m *UserMutation) Fields() []string {
 	fields := make([]string, 0, 4)
-	if m._StudentNumber != nil {
+	if m.student_number != nil {
 		fields = append(fields, user.FieldStudentNumber)
 	}
-	if m._HandleName != nil {
+	if m.handle_name != nil {
 		fields = append(fields, user.FieldHandleName)
 	}
 	if m.created_at != nil {
