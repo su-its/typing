@@ -1,0 +1,55 @@
+@import "color";
+
+.title {
+  height: 100%;
+}
+
+.header {
+  height: calc(100% - 450px);
+  background-image: url("/img/background_title.png");
+  position: relative;
+
+  .sukashi {
+    width: 80%;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+
+  .logo {
+    width: 750px;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+  }
+}
+
+.footer {
+  height: 450px;
+  background: linear-gradient(90deg, $blue-900, #000);
+  position: relative;
+
+  .button {
+    width: 740px;
+    padding: 10px 0;
+    position: absolute;
+    right: 24px;
+    top: 50px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    background-color: $bluegray-800;
+    border: solid 4px $bluegray-500;
+
+    &:hover {
+      background-color: $bluegray-700;
+      cursor: pointer;
+    }
+  }
+
+  .information {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+  }
+}
