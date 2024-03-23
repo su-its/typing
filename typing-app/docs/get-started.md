@@ -15,7 +15,7 @@ $ cd typing/typing-app
 $ curl -fsSL https://bun.sh/install | bash
 ```
 
-### プロジェクトの依存パッケージをインストール
+### プロジェクトの依存パッケージをインストール(typing-app ディレクトリで実行)
 
 ```bash
 $ bun install
@@ -24,7 +24,7 @@ $ bun install
 ## 3. API & DB の起動(typing-server ディレクトリで実行)
 
 ```bash
-$ docker-compose --file docker-compose.dev.yml up
+$ docker-compose --file docker-compose.dev.yml up --build
 ```
 
 ## 4. フロントエンドの起動(typing-app ディレクトリで実行)
