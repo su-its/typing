@@ -22,33 +22,15 @@ type UserCreate struct {
 	hooks    []Hook
 }
 
-// SetMailAdress sets the "MailAdress" field.
-func (uc *UserCreate) SetMailAdress(s string) *UserCreate {
-	uc.mutation.SetMailAdress(s)
+// SetStudentNumber sets the "StudentNumber" field.
+func (uc *UserCreate) SetStudentNumber(s string) *UserCreate {
+	uc.mutation.SetStudentNumber(s)
 	return uc
 }
 
 // SetHandleName sets the "HandleName" field.
 func (uc *UserCreate) SetHandleName(s string) *UserCreate {
 	uc.mutation.SetHandleName(s)
-	return uc
-}
-
-// SetName sets the "Name" field.
-func (uc *UserCreate) SetName(s string) *UserCreate {
-	uc.mutation.SetName(s)
-	return uc
-}
-
-// SetHashedPassword sets the "HashedPassword" field.
-func (uc *UserCreate) SetHashedPassword(s string) *UserCreate {
-	uc.mutation.SetHashedPassword(s)
-	return uc
-}
-
-// SetDepartment sets the "Department" field.
-func (uc *UserCreate) SetDepartment(u user.Department) *UserCreate {
-	uc.mutation.SetDepartment(u)
 	return uc
 }
 
@@ -160,12 +142,12 @@ func (uc *UserCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (uc *UserCreate) check() error {
-	if _, ok := uc.mutation.MailAdress(); !ok {
-		return &ValidationError{Name: "MailAdress", err: errors.New(`ent: missing required field "User.MailAdress"`)}
+	if _, ok := uc.mutation.StudentNumber(); !ok {
+		return &ValidationError{Name: "StudentNumber", err: errors.New(`ent: missing required field "User.StudentNumber"`)}
 	}
-	if v, ok := uc.mutation.MailAdress(); ok {
-		if err := user.MailAdressValidator(v); err != nil {
-			return &ValidationError{Name: "MailAdress", err: fmt.Errorf(`ent: validator failed for field "User.MailAdress": %w`, err)}
+	if v, ok := uc.mutation.StudentNumber(); ok {
+		if err := user.StudentNumberValidator(v); err != nil {
+			return &ValidationError{Name: "StudentNumber", err: fmt.Errorf(`ent: validator failed for field "User.StudentNumber": %w`, err)}
 		}
 	}
 	if _, ok := uc.mutation.HandleName(); !ok {
@@ -174,30 +156,6 @@ func (uc *UserCreate) check() error {
 	if v, ok := uc.mutation.HandleName(); ok {
 		if err := user.HandleNameValidator(v); err != nil {
 			return &ValidationError{Name: "HandleName", err: fmt.Errorf(`ent: validator failed for field "User.HandleName": %w`, err)}
-		}
-	}
-	if _, ok := uc.mutation.Name(); !ok {
-		return &ValidationError{Name: "Name", err: errors.New(`ent: missing required field "User.Name"`)}
-	}
-	if v, ok := uc.mutation.Name(); ok {
-		if err := user.NameValidator(v); err != nil {
-			return &ValidationError{Name: "Name", err: fmt.Errorf(`ent: validator failed for field "User.Name": %w`, err)}
-		}
-	}
-	if _, ok := uc.mutation.HashedPassword(); !ok {
-		return &ValidationError{Name: "HashedPassword", err: errors.New(`ent: missing required field "User.HashedPassword"`)}
-	}
-	if v, ok := uc.mutation.HashedPassword(); ok {
-		if err := user.HashedPasswordValidator(v); err != nil {
-			return &ValidationError{Name: "HashedPassword", err: fmt.Errorf(`ent: validator failed for field "User.HashedPassword": %w`, err)}
-		}
-	}
-	if _, ok := uc.mutation.Department(); !ok {
-		return &ValidationError{Name: "Department", err: errors.New(`ent: missing required field "User.Department"`)}
-	}
-	if v, ok := uc.mutation.Department(); ok {
-		if err := user.DepartmentValidator(v); err != nil {
-			return &ValidationError{Name: "Department", err: fmt.Errorf(`ent: validator failed for field "User.Department": %w`, err)}
 		}
 	}
 	if _, ok := uc.mutation.CreatedAt(); !ok {
@@ -241,25 +199,13 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
-	if value, ok := uc.mutation.MailAdress(); ok {
-		_spec.SetField(user.FieldMailAdress, field.TypeString, value)
-		_node.MailAdress = value
+	if value, ok := uc.mutation.StudentNumber(); ok {
+		_spec.SetField(user.FieldStudentNumber, field.TypeString, value)
+		_node.StudentNumber = value
 	}
 	if value, ok := uc.mutation.HandleName(); ok {
 		_spec.SetField(user.FieldHandleName, field.TypeString, value)
 		_node.HandleName = value
-	}
-	if value, ok := uc.mutation.Name(); ok {
-		_spec.SetField(user.FieldName, field.TypeString, value)
-		_node.Name = value
-	}
-	if value, ok := uc.mutation.HashedPassword(); ok {
-		_spec.SetField(user.FieldHashedPassword, field.TypeString, value)
-		_node.HashedPassword = value
-	}
-	if value, ok := uc.mutation.Department(); ok {
-		_spec.SetField(user.FieldDepartment, field.TypeEnum, value)
-		_node.Department = value
 	}
 	if value, ok := uc.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)

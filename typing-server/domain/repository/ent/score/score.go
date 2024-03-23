@@ -16,12 +16,8 @@ const (
 	FieldKeystrokes = "keystrokes"
 	// FieldAccuracy holds the string denoting the accuracy field in the database.
 	FieldAccuracy = "accuracy"
-	// FieldScore holds the string denoting the score field in the database.
-	FieldScore = "score"
-	// FieldStartedAt holds the string denoting the startedat field in the database.
-	FieldStartedAt = "started_at"
-	// FieldEndedAt holds the string denoting the endedat field in the database.
-	FieldEndedAt = "ended_at"
+	// FieldCreatedAt holds the string denoting the createdat field in the database.
+	FieldCreatedAt = "created_at"
 	// Table holds the table name of the score in the database.
 	Table = "scores"
 )
@@ -31,9 +27,7 @@ var Columns = []string{
 	FieldID,
 	FieldKeystrokes,
 	FieldAccuracy,
-	FieldScore,
-	FieldStartedAt,
-	FieldEndedAt,
+	FieldCreatedAt,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "scores"
@@ -80,17 +74,7 @@ func ByAccuracy(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAccuracy, opts...).ToFunc()
 }
 
-// ByScore orders the results by the score field.
-func ByScore(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldScore, opts...).ToFunc()
-}
-
-// ByStartedAt orders the results by the startedAt field.
-func ByStartedAt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldStartedAt, opts...).ToFunc()
-}
-
-// ByEndedAt orders the results by the endedAt field.
-func ByEndedAt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldEndedAt, opts...).ToFunc()
+// ByCreatedAt orders the results by the createdAt field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
 }
