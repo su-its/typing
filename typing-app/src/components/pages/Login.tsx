@@ -6,7 +6,7 @@ const LoginPage: React.FC = () => {
     <>
       <VStack>
         <Text fontSize="2xl">Hello, World!</Text>
-        <Text fontSize="xl">Welcome to the Ranking Page</Text>
+        <Text fontSize="xl">Welcome to the Login Page</Text>
       </VStack>
     </>
   );
