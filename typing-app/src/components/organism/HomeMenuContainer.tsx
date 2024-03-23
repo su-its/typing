@@ -7,7 +7,7 @@ import LogoutButton from "../atoms/LogoutButton";
 const HomeMenuContainer = () => {
     return (
         <Flex justify="center" align="center" h="65vh">
-            <VStack spacing = {8} align="stretch" maxWidth="md" mx="auto">
+            <VStack spacing = {8} align="stretch" width="50%" maxWidth="md" mx="auto">
                 <GameStartButton />
                 <RankingButton />
                 <LogoutButton />
