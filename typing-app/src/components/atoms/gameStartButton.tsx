@@ -2,9 +2,11 @@
 import { Button } from "@chakra-ui/react";
 
 const GameStartButton = () => {
-    return <Button colorScheme="green">
-        Game Start
-    </Button>;
+    return (
+        <Button colorScheme="green" size="lg">
+            Game Start
+        </Button>
+    );
 };
 
 export default GameStartButton;
