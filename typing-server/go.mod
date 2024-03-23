@@ -4,6 +4,7 @@ go 1.22.0
 
 require (
 	entgo.io/ent v0.13.1
+	github.com/go-chi/chi/v5 v5.0.12
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/google/uuid v1.6.0
 )
