@@ -20,7 +20,7 @@ func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New).StorageKey("id").Unique(),
 		field.String("student_number").NotEmpty().Unique(),
-		// field.String("MailAdress").NotEmpty().MaxLen(255),
+		// field.String("mail_address").NotEmpty().MaxLen(255),
 		field.String("handle_name").NotEmpty().MaxLen(36),
 		// field.String("Name").NotEmpty().MaxLen(36),
 		// field.String("HashedPassword").NotEmpty().MaxLen(255),
