@@ -6,13 +6,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/domain/repository/ent/predicate"
 	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
 // ScoreUpdate is the builder for updating Score entities.
@@ -70,23 +71,26 @@ func (su *ScoreUpdate) AddAccuracy(f float64) *ScoreUpdate {
 	return su
 }
 
-// SetCreatedAt sets the "createdAt" field.
-func (su *ScoreUpdate) SetCreatedAt(t time.Time) *ScoreUpdate {
-	su.mutation.SetCreatedAt(t)
+// SetUserID sets the "user" edge to the User entity by ID.
+func (su *ScoreUpdate) SetUserID(id uuid.UUID) *ScoreUpdate {
+	su.mutation.SetUserID(id)
 	return su
 }
 
-// SetNillableCreatedAt sets the "createdAt" field if the given value is not nil.
-func (su *ScoreUpdate) SetNillableCreatedAt(t *time.Time) *ScoreUpdate {
-	if t != nil {
-		su.SetCreatedAt(*t)
-	}
-	return su
+// SetUser sets the "user" edge to the User entity.
+func (su *ScoreUpdate) SetUser(u *User) *ScoreUpdate {
+	return su.SetUserID(u.ID)
 }
 
 // Mutation returns the ScoreMutation object of the builder.
 func (su *ScoreUpdate) Mutation() *ScoreMutation {
 	return su.mutation
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (su *ScoreUpdate) ClearUser() *ScoreUpdate {
+	su.mutation.ClearUser()
+	return su
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -116,7 +120,18 @@ func (su *ScoreUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (su *ScoreUpdate) check() error {
+	if _, ok := su.mutation.UserID(); su.mutation.UserCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "Score.user"`)
+	}
+	return nil
+}
+
 func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
+	if err := su.check(); err != nil {
+		return n, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(score.Table, score.Columns, sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID))
 	if ps := su.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -137,8 +152,34 @@ func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := su.mutation.AddedAccuracy(); ok {
 		_spec.AddField(score.FieldAccuracy, field.TypeFloat64, value)
 	}
-	if value, ok := su.mutation.CreatedAt(); ok {
-		_spec.SetField(score.FieldCreatedAt, field.TypeTime, value)
+	if su.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   score.UserTable,
+			Columns: []string{score.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := su.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   score.UserTable,
+			Columns: []string{score.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, su.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -202,23 +243,26 @@ func (suo *ScoreUpdateOne) AddAccuracy(f float64) *ScoreUpdateOne {
 	return suo
 }
 
-// SetCreatedAt sets the "createdAt" field.
-func (suo *ScoreUpdateOne) SetCreatedAt(t time.Time) *ScoreUpdateOne {
-	suo.mutation.SetCreatedAt(t)
+// SetUserID sets the "user" edge to the User entity by ID.
+func (suo *ScoreUpdateOne) SetUserID(id uuid.UUID) *ScoreUpdateOne {
+	suo.mutation.SetUserID(id)
 	return suo
 }
 
-// SetNillableCreatedAt sets the "createdAt" field if the given value is not nil.
-func (suo *ScoreUpdateOne) SetNillableCreatedAt(t *time.Time) *ScoreUpdateOne {
-	if t != nil {
-		suo.SetCreatedAt(*t)
-	}
-	return suo
+// SetUser sets the "user" edge to the User entity.
+func (suo *ScoreUpdateOne) SetUser(u *User) *ScoreUpdateOne {
+	return suo.SetUserID(u.ID)
 }
 
 // Mutation returns the ScoreMutation object of the builder.
 func (suo *ScoreUpdateOne) Mutation() *ScoreMutation {
 	return suo.mutation
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (suo *ScoreUpdateOne) ClearUser() *ScoreUpdateOne {
+	suo.mutation.ClearUser()
+	return suo
 }
 
 // Where appends a list predicates to the ScoreUpdate builder.
@@ -261,7 +305,18 @@ func (suo *ScoreUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (suo *ScoreUpdateOne) check() error {
+	if _, ok := suo.mutation.UserID(); suo.mutation.UserCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "Score.user"`)
+	}
+	return nil
+}
+
 func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error) {
+	if err := suo.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(score.Table, score.Columns, sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID))
 	id, ok := suo.mutation.ID()
 	if !ok {
@@ -299,8 +354,34 @@ func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error
 	if value, ok := suo.mutation.AddedAccuracy(); ok {
 		_spec.AddField(score.FieldAccuracy, field.TypeFloat64, value)
 	}
-	if value, ok := suo.mutation.CreatedAt(); ok {
-		_spec.SetField(score.FieldCreatedAt, field.TypeTime, value)
+	if suo.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   score.UserTable,
+			Columns: []string{score.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := suo.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   score.UserTable,
+			Columns: []string{score.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Score{config: suo.config}
 	_spec.Assign = _node.assignValues

@@ -40,8 +40,10 @@ type ScoreMutation struct {
 	addkeystrokes *int
 	accuracy      *float64
 	addaccuracy   *float64
-	createdAt     *time.Time
+	created_at    *time.Time
 	clearedFields map[string]struct{}
+	user          *uuid.UUID
+	cleareduser   bool
 	done          bool
 	oldValue      func(context.Context) (*Score, error)
 	predicates    []predicate.Score
@@ -263,21 +265,21 @@ func (m *ScoreMutation) ResetAccuracy() {
 	m.addaccuracy = nil
 }
 
-// SetCreatedAt sets the "createdAt" field.
+// SetCreatedAt sets the "created_at" field.
 func (m *ScoreMutation) SetCreatedAt(t time.Time) {
-	m.createdAt = &t
+	m.created_at = &t
 }
 
-// CreatedAt returns the value of the "createdAt" field in the mutation.
+// CreatedAt returns the value of the "created_at" field in the mutation.
 func (m *ScoreMutation) CreatedAt() (r time.Time, exists bool) {
-	v := m.createdAt
+	v := m.created_at
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldCreatedAt returns the old "createdAt" field's value of the Score entity.
+// OldCreatedAt returns the old "created_at" field's value of the Score entity.
 // If the Score object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *ScoreMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
@@ -294,9 +296,48 @@ func (m *ScoreMutation) OldCreatedAt(ctx context.Context) (v time.Time, err erro
 	return oldValue.CreatedAt, nil
 }
 
-// ResetCreatedAt resets all changes to the "createdAt" field.
+// ResetCreatedAt resets all changes to the "created_at" field.
 func (m *ScoreMutation) ResetCreatedAt() {
-	m.createdAt = nil
+	m.created_at = nil
+}
+
+// SetUserID sets the "user" edge to the User entity by id.
+func (m *ScoreMutation) SetUserID(id uuid.UUID) {
+	m.user = &id
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (m *ScoreMutation) ClearUser() {
+	m.cleareduser = true
+}
+
+// UserCleared reports if the "user" edge to the User entity was cleared.
+func (m *ScoreMutation) UserCleared() bool {
+	return m.cleareduser
+}
+
+// UserID returns the "user" edge ID in the mutation.
+func (m *ScoreMutation) UserID() (id uuid.UUID, exists bool) {
+	if m.user != nil {
+		return *m.user, true
+	}
+	return
+}
+
+// UserIDs returns the "user" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// UserID instead. It exists only for internal usage by the builders.
+func (m *ScoreMutation) UserIDs() (ids []uuid.UUID) {
+	if id := m.user; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetUser resets all changes to the "user" edge.
+func (m *ScoreMutation) ResetUser() {
+	m.user = nil
+	m.cleareduser = false
 }
 
 // Where appends a list predicates to the ScoreMutation builder.
@@ -340,7 +381,7 @@ func (m *ScoreMutation) Fields() []string {
 	if m.accuracy != nil {
 		fields = append(fields, score.FieldAccuracy)
 	}
-	if m.createdAt != nil {
+	if m.created_at != nil {
 		fields = append(fields, score.FieldCreatedAt)
 	}
 	return fields
@@ -493,19 +534,28 @@ func (m *ScoreMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *ScoreMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.user != nil {
+		edges = append(edges, score.EdgeUser)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *ScoreMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case score.EdgeUser:
+		if id := m.user; id != nil {
+			return []ent.Value{*id}
+		}
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *ScoreMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
 	return edges
 }
 
@@ -517,25 +567,42 @@ func (m *ScoreMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *ScoreMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.cleareduser {
+		edges = append(edges, score.EdgeUser)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *ScoreMutation) EdgeCleared(name string) bool {
+	switch name {
+	case score.EdgeUser:
+		return m.cleareduser
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *ScoreMutation) ClearEdge(name string) error {
+	switch name {
+	case score.EdgeUser:
+		m.ClearUser()
+		return nil
+	}
 	return fmt.Errorf("unknown Score unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *ScoreMutation) ResetEdge(name string) error {
+	switch name {
+	case score.EdgeUser:
+		m.ResetUser()
+		return nil
+	}
 	return fmt.Errorf("unknown Score edge %s", name)
 }
 
@@ -545,8 +612,8 @@ type UserMutation struct {
 	op             Op
 	typ            string
 	id             *uuid.UUID
-	_StudentNumber *string
-	_HandleName    *string
+	student_number *string
+	handle_name    *string
 	created_at     *time.Time
 	updated_at     *time.Time
 	clearedFields  map[string]struct{}
@@ -662,21 +729,21 @@ func (m *UserMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
 	}
 }
 
-// SetStudentNumber sets the "StudentNumber" field.
+// SetStudentNumber sets the "student_number" field.
 func (m *UserMutation) SetStudentNumber(s string) {
-	m._StudentNumber = &s
+	m.student_number = &s
 }
 
-// StudentNumber returns the value of the "StudentNumber" field in the mutation.
+// StudentNumber returns the value of the "student_number" field in the mutation.
 func (m *UserMutation) StudentNumber() (r string, exists bool) {
-	v := m._StudentNumber
+	v := m.student_number
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldStudentNumber returns the old "StudentNumber" field's value of the User entity.
+// OldStudentNumber returns the old "student_number" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *UserMutation) OldStudentNumber(ctx context.Context) (v string, err error) {
@@ -693,26 +760,26 @@ func (m *UserMutation) OldStudentNumber(ctx context.Context) (v string, err erro
 	return oldValue.StudentNumber, nil
 }
 
-// ResetStudentNumber resets all changes to the "StudentNumber" field.
+// ResetStudentNumber resets all changes to the "student_number" field.
 func (m *UserMutation) ResetStudentNumber() {
-	m._StudentNumber = nil
+	m.student_number = nil
 }
 
-// SetHandleName sets the "HandleName" field.
+// SetHandleName sets the "handle_name" field.
 func (m *UserMutation) SetHandleName(s string) {
-	m._HandleName = &s
+	m.handle_name = &s
 }
 
-// HandleName returns the value of the "HandleName" field in the mutation.
+// HandleName returns the value of the "handle_name" field in the mutation.
 func (m *UserMutation) HandleName() (r string, exists bool) {
-	v := m._HandleName
+	v := m.handle_name
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldHandleName returns the old "HandleName" field's value of the User entity.
+// OldHandleName returns the old "handle_name" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *UserMutation) OldHandleName(ctx context.Context) (v string, err error) {
@@ -729,9 +796,9 @@ func (m *UserMutation) OldHandleName(ctx context.Context) (v string, err error) 
 	return oldValue.HandleName, nil
 }
 
-// ResetHandleName resets all changes to the "HandleName" field.
+// ResetHandleName resets all changes to the "handle_name" field.
 func (m *UserMutation) ResetHandleName() {
-	m._HandleName = nil
+	m.handle_name = nil
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -895,10 +962,10 @@ func (m *UserMutation) Type() string {
 // AddedFields().
 func (m *UserMutation) Fields() []string {
 	fields := make([]string, 0, 4)
-	if m._StudentNumber != nil {
+	if m.student_number != nil {
 		fields = append(fields, user.FieldStudentNumber)
 	}
-	if m._HandleName != nil {
+	if m.handle_name != nil {
 		fields = append(fields, user.FieldHandleName)
 	}
 	if m.created_at != nil {

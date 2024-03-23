@@ -56,12 +56,12 @@ func IDLTE(id uuid.UUID) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldID, id))
 }
 
-// StudentNumber applies equality check predicate on the "StudentNumber" field. It's identical to StudentNumberEQ.
+// StudentNumber applies equality check predicate on the "student_number" field. It's identical to StudentNumberEQ.
 func StudentNumber(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldStudentNumber, v))
 }
 
-// HandleName applies equality check predicate on the "HandleName" field. It's identical to HandleNameEQ.
+// HandleName applies equality check predicate on the "handle_name" field. It's identical to HandleNameEQ.
 func HandleName(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldHandleName, v))
 }
@@ -76,132 +76,132 @@ func UpdatedAt(v time.Time) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldUpdatedAt, v))
 }
 
-// StudentNumberEQ applies the EQ predicate on the "StudentNumber" field.
+// StudentNumberEQ applies the EQ predicate on the "student_number" field.
 func StudentNumberEQ(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldStudentNumber, v))
 }
 
-// StudentNumberNEQ applies the NEQ predicate on the "StudentNumber" field.
+// StudentNumberNEQ applies the NEQ predicate on the "student_number" field.
 func StudentNumberNEQ(v string) predicate.User {
 	return predicate.User(sql.FieldNEQ(FieldStudentNumber, v))
 }
 
-// StudentNumberIn applies the In predicate on the "StudentNumber" field.
+// StudentNumberIn applies the In predicate on the "student_number" field.
 func StudentNumberIn(vs ...string) predicate.User {
 	return predicate.User(sql.FieldIn(FieldStudentNumber, vs...))
 }
 
-// StudentNumberNotIn applies the NotIn predicate on the "StudentNumber" field.
+// StudentNumberNotIn applies the NotIn predicate on the "student_number" field.
 func StudentNumberNotIn(vs ...string) predicate.User {
 	return predicate.User(sql.FieldNotIn(FieldStudentNumber, vs...))
 }
 
-// StudentNumberGT applies the GT predicate on the "StudentNumber" field.
+// StudentNumberGT applies the GT predicate on the "student_number" field.
 func StudentNumberGT(v string) predicate.User {
 	return predicate.User(sql.FieldGT(FieldStudentNumber, v))
 }
 
-// StudentNumberGTE applies the GTE predicate on the "StudentNumber" field.
+// StudentNumberGTE applies the GTE predicate on the "student_number" field.
 func StudentNumberGTE(v string) predicate.User {
 	return predicate.User(sql.FieldGTE(FieldStudentNumber, v))
 }
 
-// StudentNumberLT applies the LT predicate on the "StudentNumber" field.
+// StudentNumberLT applies the LT predicate on the "student_number" field.
 func StudentNumberLT(v string) predicate.User {
 	return predicate.User(sql.FieldLT(FieldStudentNumber, v))
 }
 
-// StudentNumberLTE applies the LTE predicate on the "StudentNumber" field.
+// StudentNumberLTE applies the LTE predicate on the "student_number" field.
 func StudentNumberLTE(v string) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldStudentNumber, v))
 }
 
-// StudentNumberContains applies the Contains predicate on the "StudentNumber" field.
+// StudentNumberContains applies the Contains predicate on the "student_number" field.
 func StudentNumberContains(v string) predicate.User {
 	return predicate.User(sql.FieldContains(FieldStudentNumber, v))
 }
 
-// StudentNumberHasPrefix applies the HasPrefix predicate on the "StudentNumber" field.
+// StudentNumberHasPrefix applies the HasPrefix predicate on the "student_number" field.
 func StudentNumberHasPrefix(v string) predicate.User {
 	return predicate.User(sql.FieldHasPrefix(FieldStudentNumber, v))
 }
 
-// StudentNumberHasSuffix applies the HasSuffix predicate on the "StudentNumber" field.
+// StudentNumberHasSuffix applies the HasSuffix predicate on the "student_number" field.
 func StudentNumberHasSuffix(v string) predicate.User {
 	return predicate.User(sql.FieldHasSuffix(FieldStudentNumber, v))
 }
 
-// StudentNumberEqualFold applies the EqualFold predicate on the "StudentNumber" field.
+// StudentNumberEqualFold applies the EqualFold predicate on the "student_number" field.
 func StudentNumberEqualFold(v string) predicate.User {
 	return predicate.User(sql.FieldEqualFold(FieldStudentNumber, v))
 }
 
-// StudentNumberContainsFold applies the ContainsFold predicate on the "StudentNumber" field.
+// StudentNumberContainsFold applies the ContainsFold predicate on the "student_number" field.
 func StudentNumberContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldStudentNumber, v))
 }
 
-// HandleNameEQ applies the EQ predicate on the "HandleName" field.
+// HandleNameEQ applies the EQ predicate on the "handle_name" field.
 func HandleNameEQ(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldHandleName, v))
 }
 
-// HandleNameNEQ applies the NEQ predicate on the "HandleName" field.
+// HandleNameNEQ applies the NEQ predicate on the "handle_name" field.
 func HandleNameNEQ(v string) predicate.User {
 	return predicate.User(sql.FieldNEQ(FieldHandleName, v))
 }
 
-// HandleNameIn applies the In predicate on the "HandleName" field.
+// HandleNameIn applies the In predicate on the "handle_name" field.
 func HandleNameIn(vs ...string) predicate.User {
 	return predicate.User(sql.FieldIn(FieldHandleName, vs...))
 }
 
-// HandleNameNotIn applies the NotIn predicate on the "HandleName" field.
+// HandleNameNotIn applies the NotIn predicate on the "handle_name" field.
 func HandleNameNotIn(vs ...string) predicate.User {
 	return predicate.User(sql.FieldNotIn(FieldHandleName, vs...))
 }
 
-// HandleNameGT applies the GT predicate on the "HandleName" field.
+// HandleNameGT applies the GT predicate on the "handle_name" field.
 func HandleNameGT(v string) predicate.User {
 	return predicate.User(sql.FieldGT(FieldHandleName, v))
 }
 
-// HandleNameGTE applies the GTE predicate on the "HandleName" field.
+// HandleNameGTE applies the GTE predicate on the "handle_name" field.
 func HandleNameGTE(v string) predicate.User {
 	return predicate.User(sql.FieldGTE(FieldHandleName, v))
 }
 
-// HandleNameLT applies the LT predicate on the "HandleName" field.
+// HandleNameLT applies the LT predicate on the "handle_name" field.
 func HandleNameLT(v string) predicate.User {
 	return predicate.User(sql.FieldLT(FieldHandleName, v))
 }
 
-// HandleNameLTE applies the LTE predicate on the "HandleName" field.
+// HandleNameLTE applies the LTE predicate on the "handle_name" field.
 func HandleNameLTE(v string) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldHandleName, v))
 }
 
-// HandleNameContains applies the Contains predicate on the "HandleName" field.
+// HandleNameContains applies the Contains predicate on the "handle_name" field.
 func HandleNameContains(v string) predicate.User {
 	return predicate.User(sql.FieldContains(FieldHandleName, v))
 }
 
-// HandleNameHasPrefix applies the HasPrefix predicate on the "HandleName" field.
+// HandleNameHasPrefix applies the HasPrefix predicate on the "handle_name" field.
 func HandleNameHasPrefix(v string) predicate.User {
 	return predicate.User(sql.FieldHasPrefix(FieldHandleName, v))
 }
 
-// HandleNameHasSuffix applies the HasSuffix predicate on the "HandleName" field.
+// HandleNameHasSuffix applies the HasSuffix predicate on the "handle_name" field.
 func HandleNameHasSuffix(v string) predicate.User {
 	return predicate.User(sql.FieldHasSuffix(FieldHandleName, v))
 }
 
-// HandleNameEqualFold applies the EqualFold predicate on the "HandleName" field.
+// HandleNameEqualFold applies the EqualFold predicate on the "handle_name" field.
 func HandleNameEqualFold(v string) predicate.User {
 	return predicate.User(sql.FieldEqualFold(FieldHandleName, v))
 }
 
-// HandleNameContainsFold applies the ContainsFold predicate on the "HandleName" field.
+// HandleNameContainsFold applies the ContainsFold predicate on the "handle_name" field.
 func HandleNameContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldHandleName, v))
 }

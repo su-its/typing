@@ -30,13 +30,13 @@ func (uu *UserUpdate) Where(ps ...predicate.User) *UserUpdate {
 	return uu
 }
 
-// SetStudentNumber sets the "StudentNumber" field.
+// SetStudentNumber sets the "student_number" field.
 func (uu *UserUpdate) SetStudentNumber(s string) *UserUpdate {
 	uu.mutation.SetStudentNumber(s)
 	return uu
 }
 
-// SetNillableStudentNumber sets the "StudentNumber" field if the given value is not nil.
+// SetNillableStudentNumber sets the "student_number" field if the given value is not nil.
 func (uu *UserUpdate) SetNillableStudentNumber(s *string) *UserUpdate {
 	if s != nil {
 		uu.SetStudentNumber(*s)
@@ -44,13 +44,13 @@ func (uu *UserUpdate) SetNillableStudentNumber(s *string) *UserUpdate {
 	return uu
 }
 
-// SetHandleName sets the "HandleName" field.
+// SetHandleName sets the "handle_name" field.
 func (uu *UserUpdate) SetHandleName(s string) *UserUpdate {
 	uu.mutation.SetHandleName(s)
 	return uu
 }
 
-// SetNillableHandleName sets the "HandleName" field if the given value is not nil.
+// SetNillableHandleName sets the "handle_name" field if the given value is not nil.
 func (uu *UserUpdate) SetNillableHandleName(s *string) *UserUpdate {
 	if s != nil {
 		uu.SetHandleName(*s)
@@ -145,12 +145,12 @@ func (uu *UserUpdate) defaults() {
 func (uu *UserUpdate) check() error {
 	if v, ok := uu.mutation.StudentNumber(); ok {
 		if err := user.StudentNumberValidator(v); err != nil {
-			return &ValidationError{Name: "StudentNumber", err: fmt.Errorf(`ent: validator failed for field "User.StudentNumber": %w`, err)}
+			return &ValidationError{Name: "student_number", err: fmt.Errorf(`ent: validator failed for field "User.student_number": %w`, err)}
 		}
 	}
 	if v, ok := uu.mutation.HandleName(); ok {
 		if err := user.HandleNameValidator(v); err != nil {
-			return &ValidationError{Name: "HandleName", err: fmt.Errorf(`ent: validator failed for field "User.HandleName": %w`, err)}
+			return &ValidationError{Name: "handle_name", err: fmt.Errorf(`ent: validator failed for field "User.handle_name": %w`, err)}
 		}
 	}
 	return nil
@@ -242,13 +242,13 @@ type UserUpdateOne struct {
 	mutation *UserMutation
 }
 
-// SetStudentNumber sets the "StudentNumber" field.
+// SetStudentNumber sets the "student_number" field.
 func (uuo *UserUpdateOne) SetStudentNumber(s string) *UserUpdateOne {
 	uuo.mutation.SetStudentNumber(s)
 	return uuo
 }
 
-// SetNillableStudentNumber sets the "StudentNumber" field if the given value is not nil.
+// SetNillableStudentNumber sets the "student_number" field if the given value is not nil.
 func (uuo *UserUpdateOne) SetNillableStudentNumber(s *string) *UserUpdateOne {
 	if s != nil {
 		uuo.SetStudentNumber(*s)
@@ -256,13 +256,13 @@ func (uuo *UserUpdateOne) SetNillableStudentNumber(s *string) *UserUpdateOne {
 	return uuo
 }
 
-// SetHandleName sets the "HandleName" field.
+// SetHandleName sets the "handle_name" field.
 func (uuo *UserUpdateOne) SetHandleName(s string) *UserUpdateOne {
 	uuo.mutation.SetHandleName(s)
 	return uuo
 }
 
-// SetNillableHandleName sets the "HandleName" field if the given value is not nil.
+// SetNillableHandleName sets the "handle_name" field if the given value is not nil.
 func (uuo *UserUpdateOne) SetNillableHandleName(s *string) *UserUpdateOne {
 	if s != nil {
 		uuo.SetHandleName(*s)
@@ -370,12 +370,12 @@ func (uuo *UserUpdateOne) defaults() {
 func (uuo *UserUpdateOne) check() error {
 	if v, ok := uuo.mutation.StudentNumber(); ok {
 		if err := user.StudentNumberValidator(v); err != nil {
-			return &ValidationError{Name: "StudentNumber", err: fmt.Errorf(`ent: validator failed for field "User.StudentNumber": %w`, err)}
+			return &ValidationError{Name: "student_number", err: fmt.Errorf(`ent: validator failed for field "User.student_number": %w`, err)}
 		}
 	}
 	if v, ok := uuo.mutation.HandleName(); ok {
 		if err := user.HandleNameValidator(v); err != nil {
-			return &ValidationError{Name: "HandleName", err: fmt.Errorf(`ent: validator failed for field "User.HandleName": %w`, err)}
+			return &ValidationError{Name: "handle_name", err: fmt.Errorf(`ent: validator failed for field "User.handle_name": %w`, err)}
 		}
 	}
 	return nil

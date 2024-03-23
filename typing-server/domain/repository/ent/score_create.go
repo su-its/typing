@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
 // ScoreCreate is the builder for creating a Score entity.
@@ -33,9 +34,17 @@ func (sc *ScoreCreate) SetAccuracy(f float64) *ScoreCreate {
 	return sc
 }
 
-// SetCreatedAt sets the "createdAt" field.
+// SetCreatedAt sets the "created_at" field.
 func (sc *ScoreCreate) SetCreatedAt(t time.Time) *ScoreCreate {
 	sc.mutation.SetCreatedAt(t)
+	return sc
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (sc *ScoreCreate) SetNillableCreatedAt(t *time.Time) *ScoreCreate {
+	if t != nil {
+		sc.SetCreatedAt(*t)
+	}
 	return sc
 }
 
@@ -51,6 +60,17 @@ func (sc *ScoreCreate) SetNillableID(u *uuid.UUID) *ScoreCreate {
 		sc.SetID(*u)
 	}
 	return sc
+}
+
+// SetUserID sets the "user" edge to the User entity by ID.
+func (sc *ScoreCreate) SetUserID(id uuid.UUID) *ScoreCreate {
+	sc.mutation.SetUserID(id)
+	return sc
+}
+
+// SetUser sets the "user" edge to the User entity.
+func (sc *ScoreCreate) SetUser(u *User) *ScoreCreate {
+	return sc.SetUserID(u.ID)
 }
 
 // Mutation returns the ScoreMutation object of the builder.
@@ -88,6 +108,10 @@ func (sc *ScoreCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (sc *ScoreCreate) defaults() {
+	if _, ok := sc.mutation.CreatedAt(); !ok {
+		v := score.DefaultCreatedAt()
+		sc.mutation.SetCreatedAt(v)
+	}
 	if _, ok := sc.mutation.ID(); !ok {
 		v := score.DefaultID()
 		sc.mutation.SetID(v)
@@ -103,7 +127,10 @@ func (sc *ScoreCreate) check() error {
 		return &ValidationError{Name: "accuracy", err: errors.New(`ent: missing required field "Score.accuracy"`)}
 	}
 	if _, ok := sc.mutation.CreatedAt(); !ok {
-		return &ValidationError{Name: "createdAt", err: errors.New(`ent: missing required field "Score.createdAt"`)}
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Score.created_at"`)}
+	}
+	if _, ok := sc.mutation.UserID(); !ok {
+		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "Score.user"`)}
 	}
 	return nil
 }
@@ -151,6 +178,23 @@ func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 	if value, ok := sc.mutation.CreatedAt(); ok {
 		_spec.SetField(score.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
+	}
+	if nodes := sc.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   score.UserTable,
+			Columns: []string{score.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.user_scores = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

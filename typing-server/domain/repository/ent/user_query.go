@@ -299,7 +299,7 @@ func (uq *UserQuery) WithScores(opts ...func(*ScoreQuery)) *UserQuery {
 // Example:
 //
 //	var v []struct {
-//		StudentNumber string `json:"StudentNumber,omitempty"`
+//		StudentNumber string `json:"student_number,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -322,7 +322,7 @@ func (uq *UserQuery) GroupBy(field string, fields ...string) *UserGroupBy {
 // Example:
 //
 //	var v []struct {
-//		StudentNumber string `json:"StudentNumber,omitempty"`
+//		StudentNumber string `json:"student_number,omitempty"`
 //	}
 //
 //	client.User.Query().
