@@ -65,19 +65,9 @@ func Accuracy(v float64) predicate.Score {
 	return predicate.Score(sql.FieldEQ(FieldAccuracy, v))
 }
 
-// Score applies equality check predicate on the "score" field. It's identical to ScoreEQ.
-func Score(v float64) predicate.Score {
-	return predicate.Score(sql.FieldEQ(FieldScore, v))
-}
-
-// StartedAt applies equality check predicate on the "startedAt" field. It's identical to StartedAtEQ.
-func StartedAt(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldEQ(FieldStartedAt, v))
-}
-
-// EndedAt applies equality check predicate on the "endedAt" field. It's identical to EndedAtEQ.
-func EndedAt(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldEQ(FieldEndedAt, v))
+// CreatedAt applies equality check predicate on the "createdAt" field. It's identical to CreatedAtEQ.
+func CreatedAt(v time.Time) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldCreatedAt, v))
 }
 
 // KeystrokesEQ applies the EQ predicate on the "keystrokes" field.
@@ -160,124 +150,44 @@ func AccuracyLTE(v float64) predicate.Score {
 	return predicate.Score(sql.FieldLTE(FieldAccuracy, v))
 }
 
-// ScoreEQ applies the EQ predicate on the "score" field.
-func ScoreEQ(v float64) predicate.Score {
-	return predicate.Score(sql.FieldEQ(FieldScore, v))
+// CreatedAtEQ applies the EQ predicate on the "createdAt" field.
+func CreatedAtEQ(v time.Time) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldCreatedAt, v))
 }
 
-// ScoreNEQ applies the NEQ predicate on the "score" field.
-func ScoreNEQ(v float64) predicate.Score {
-	return predicate.Score(sql.FieldNEQ(FieldScore, v))
+// CreatedAtNEQ applies the NEQ predicate on the "createdAt" field.
+func CreatedAtNEQ(v time.Time) predicate.Score {
+	return predicate.Score(sql.FieldNEQ(FieldCreatedAt, v))
 }
 
-// ScoreIn applies the In predicate on the "score" field.
-func ScoreIn(vs ...float64) predicate.Score {
-	return predicate.Score(sql.FieldIn(FieldScore, vs...))
+// CreatedAtIn applies the In predicate on the "createdAt" field.
+func CreatedAtIn(vs ...time.Time) predicate.Score {
+	return predicate.Score(sql.FieldIn(FieldCreatedAt, vs...))
 }
 
-// ScoreNotIn applies the NotIn predicate on the "score" field.
-func ScoreNotIn(vs ...float64) predicate.Score {
-	return predicate.Score(sql.FieldNotIn(FieldScore, vs...))
+// CreatedAtNotIn applies the NotIn predicate on the "createdAt" field.
+func CreatedAtNotIn(vs ...time.Time) predicate.Score {
+	return predicate.Score(sql.FieldNotIn(FieldCreatedAt, vs...))
 }
 
-// ScoreGT applies the GT predicate on the "score" field.
-func ScoreGT(v float64) predicate.Score {
-	return predicate.Score(sql.FieldGT(FieldScore, v))
+// CreatedAtGT applies the GT predicate on the "createdAt" field.
+func CreatedAtGT(v time.Time) predicate.Score {
+	return predicate.Score(sql.FieldGT(FieldCreatedAt, v))
 }
 
-// ScoreGTE applies the GTE predicate on the "score" field.
-func ScoreGTE(v float64) predicate.Score {
-	return predicate.Score(sql.FieldGTE(FieldScore, v))
+// CreatedAtGTE applies the GTE predicate on the "createdAt" field.
+func CreatedAtGTE(v time.Time) predicate.Score {
+	return predicate.Score(sql.FieldGTE(FieldCreatedAt, v))
 }
 
-// ScoreLT applies the LT predicate on the "score" field.
-func ScoreLT(v float64) predicate.Score {
-	return predicate.Score(sql.FieldLT(FieldScore, v))
+// CreatedAtLT applies the LT predicate on the "createdAt" field.
+func CreatedAtLT(v time.Time) predicate.Score {
+	return predicate.Score(sql.FieldLT(FieldCreatedAt, v))
 }
 
-// ScoreLTE applies the LTE predicate on the "score" field.
-func ScoreLTE(v float64) predicate.Score {
-	return predicate.Score(sql.FieldLTE(FieldScore, v))
-}
-
-// StartedAtEQ applies the EQ predicate on the "startedAt" field.
-func StartedAtEQ(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldEQ(FieldStartedAt, v))
-}
-
-// StartedAtNEQ applies the NEQ predicate on the "startedAt" field.
-func StartedAtNEQ(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldNEQ(FieldStartedAt, v))
-}
-
-// StartedAtIn applies the In predicate on the "startedAt" field.
-func StartedAtIn(vs ...time.Time) predicate.Score {
-	return predicate.Score(sql.FieldIn(FieldStartedAt, vs...))
-}
-
-// StartedAtNotIn applies the NotIn predicate on the "startedAt" field.
-func StartedAtNotIn(vs ...time.Time) predicate.Score {
-	return predicate.Score(sql.FieldNotIn(FieldStartedAt, vs...))
-}
-
-// StartedAtGT applies the GT predicate on the "startedAt" field.
-func StartedAtGT(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldGT(FieldStartedAt, v))
-}
-
-// StartedAtGTE applies the GTE predicate on the "startedAt" field.
-func StartedAtGTE(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldGTE(FieldStartedAt, v))
-}
-
-// StartedAtLT applies the LT predicate on the "startedAt" field.
-func StartedAtLT(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldLT(FieldStartedAt, v))
-}
-
-// StartedAtLTE applies the LTE predicate on the "startedAt" field.
-func StartedAtLTE(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldLTE(FieldStartedAt, v))
-}
-
-// EndedAtEQ applies the EQ predicate on the "endedAt" field.
-func EndedAtEQ(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldEQ(FieldEndedAt, v))
-}
-
-// EndedAtNEQ applies the NEQ predicate on the "endedAt" field.
-func EndedAtNEQ(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldNEQ(FieldEndedAt, v))
-}
-
-// EndedAtIn applies the In predicate on the "endedAt" field.
-func EndedAtIn(vs ...time.Time) predicate.Score {
-	return predicate.Score(sql.FieldIn(FieldEndedAt, vs...))
-}
-
-// EndedAtNotIn applies the NotIn predicate on the "endedAt" field.
-func EndedAtNotIn(vs ...time.Time) predicate.Score {
-	return predicate.Score(sql.FieldNotIn(FieldEndedAt, vs...))
-}
-
-// EndedAtGT applies the GT predicate on the "endedAt" field.
-func EndedAtGT(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldGT(FieldEndedAt, v))
-}
-
-// EndedAtGTE applies the GTE predicate on the "endedAt" field.
-func EndedAtGTE(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldGTE(FieldEndedAt, v))
-}
-
-// EndedAtLT applies the LT predicate on the "endedAt" field.
-func EndedAtLT(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldLT(FieldEndedAt, v))
-}
-
-// EndedAtLTE applies the LTE predicate on the "endedAt" field.
-func EndedAtLTE(v time.Time) predicate.Score {
-	return predicate.Score(sql.FieldLTE(FieldEndedAt, v))
+// CreatedAtLTE applies the LTE predicate on the "createdAt" field.
+func CreatedAtLTE(v time.Time) predicate.Score {
+	return predicate.Score(sql.FieldLTE(FieldCreatedAt, v))
 }
 
 // And groups predicates with the AND operator between them.
