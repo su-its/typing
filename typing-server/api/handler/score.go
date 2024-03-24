@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/api/service"
-	"github.com/su-its/typing/typing-server/domain/repository/ent"
 )
 
 func GetScoresRanking(w http.ResponseWriter, r *http.Request) {
@@ -23,13 +23,7 @@ func GetScoresRanking(w http.ResponseWriter, r *http.Request) {
 		start = 1
 	}
 
-	limitStr := r.URL.Query().Get("limit")
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil {
-		limit = 50
-	}
-
-	rankings, err := service.GetScoresRanking(ctx, sortBy, start, limit)
+	rankings, err := service.GetScoresRanking(ctx, sortBy, start)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -42,13 +36,28 @@ func GetScoresRanking(w http.ResponseWriter, r *http.Request) {
 func PostScore(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	var score ent.Score
-	if err := json.NewDecoder(r.Body).Decode(&score); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	userIDStr := r.URL.Query().Get("user_id")
+	userID, err := uuid.Parse(userIDStr)
+	if err != nil {
+		http.Error(w, "Invalid user_id", http.StatusBadRequest)
 		return
 	}
 
-	if err := service.CreateScore(ctx, &score); err != nil {
+	keystrokesStr := r.URL.Query().Get("keystrokes")
+	keystrokes, err := strconv.Atoi(keystrokesStr)
+	if err != nil {
+		http.Error(w, "Invalid keystrokes", http.StatusBadRequest)
+		return
+	}
+
+	accuracyStr := r.URL.Query().Get("accuracy")
+	accuracy, err := strconv.ParseFloat(accuracyStr, 64)
+	if err != nil {
+		http.Error(w, "Invalid accuracy", http.StatusBadRequest)
+		return
+	}
+
+	if err := service.CreateScore(ctx, userID, keystrokes, accuracy); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
