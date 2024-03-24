@@ -43,8 +43,19 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
   //<Text>Typing screen</Text>
   //<Button onClick={nextPage}>finish</Button>
   //<Progress value={progress} colorScheme="blue" />
+  const [typeIndex, setTypeIndex] = useState(0);
+  // ToDo: 要変更
+  const sentence = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel massa pulvinar, semper arcu porttitor, sodales dui. Nam vitae blandit quam. Sed condimentum euismod placerat. Fusce id ipsum ante. Praesent pulvinar, urna at tempor pellentesque, erat ligula lobortis metus, ut ultrices ipsum nunc non turpis. Nunc egestas urna ipsum, dignissim porta orci rutrum sed. Etiam in tristique urna. Fusce eu eros laoreet, varius ipsum in, eleifend dui. Proin dapibus tortor nec ultricies porta. Suspendisse potenti. Suspendisse potenti.  Donec vel volutpat arcu. Morbi ullamcorper a velit finibus placerat. Ut ac metus vitae lectus ornare fermentum vitae vitae sem. Morbi laoreet finibus purus nec faucibus.`;
+  const handleOnKeyDown = (e: React.KeyboardEvent) => {
+    const key = e.key;
+    console.log(key, typeIndex, sentence[typeIndex]);
+    const currentType = sentence[typeIndex];
+    if (key === currentType) {
+      setTypeIndex(typeIndex + 1);
+    }
+  };
   return (
-    <Box>
+    <Box onKeyDown={handleOnKeyDown} tabIndex={0}>
       <div className={styles.box}>
         <div className={`${styles.heading} ${styles.heading_name}`}>Article Name</div>
         <div className={`${styles.heading} ${styles.heading_time}`}>Time Remain</div>
@@ -80,13 +91,8 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
         <div className={styles.title}>Lorem Ipsum</div>
         <div className={styles.text}>
           <div>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel massa pulvinar, semper arcu porttitor,
-            sodales dui. Nam vitae blandit quam. Sed condimentum euismod placerat. Fusce id ipsum ante. Praesent
-            pulvinar, urna at tempor pellentesque, erat ligula lobortis metus, ut ultrices ipsum nunc non turpis. Nunc
-            egestas urna ipsum, dignissim porta orci rutrum sed. Etiam in tristique urna. Fusce eu eros laoreet, varius
-            ipsum in, eleifend dui. Proin dapibus tortor nec ultricies porta. Suspendisse potenti. Suspendisse potenti.
-            Donec vel volutpat arcu. Morbi ullamcorper a velit finibus placerat. Ut ac metus vitae lectus ornare
-            fermentum vitae vitae sem. Morbi laoreet finibus purus nec faucibus.
+            <span className={styles.span_typed}>{sentence.slice(0, typeIndex)}</span>
+            <span>{sentence.slice(typeIndex, sentence.length)}</span>
           </div>
         </div>
         <div className={styles.info_time}>
