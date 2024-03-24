@@ -9,153 +9,80 @@ servers:
     description: 本番環境
 paths:
   /users:
-    post:
-      summary: 新しいユーザーを作成
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                MailAdress:
-                  type: string
-                  maxLength: 255
-                HandleName:
-                  type: string
-                  maxLength: 36
-                Name:
-                  type: string
-                  maxLength: 36
-                HashedPassword:
-                  type: string
-                  maxLength: 255
-                Department:
-                  type: string
-                  enum: [CS, BI, IA]
-      responses:
-        '201':
-          description: ユーザー作成成功
-        '400':
-          description: 不正なリクエスト
-  /users/{userId}:
     get:
       summary: ユーザー情報を取得
       parameters:
-        - in: path
-          name: userId
-          required: true
+        - in: query
+          name: student_number
           schema:
             type: string
+          description: 学生番号
+          required: true
       responses:
-        '200':
+        "200":
           description: ユーザー情報取得成功
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '404':
+                $ref: "#/components/schemas/User"
+        "404":
           description: ユーザーが見つからない
-  /users/{userId}/scores:
-    post:
-      summary: ユーザーのスコアを登録
-      parameters:
-        - in: path
-          name: userId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                keystrokes:
-                  type: integer
-                accuracy:
-                  type: number
-                  format: float
-                score:
-                  type: number
-                  format: float
-                startedAt:
-                  type: string
-                  format: date-time
-                endedAt:
-                  type: string
-                  format: date-time
-      responses:
-        '201':
-          description: スコア登録成功
-        '400':
-          description: 不正なリクエスト
-  /users/{userId}/scores/{scoreId}:
+
+  /scores/ranking:
     get:
-      summary: 特定のスコア情報の取得
+      summary: スコアランキングを取得
       parameters:
-        - in: path
-          name: userId
-          required: true
+        - in: query
+          name: sort_by
           schema:
             type: string
-        - in: path
-          name: scoreId
-          required: true
+            enum: [keystrokes, accuracy]
+          description: ソート対象のカラム
+        - in: query
+          name: start
           schema:
-            type: string
+            type: integer
+          description: ランキングの開始位置
       responses:
-        '200':
-          description: スコア情報の取得成功
+        "200":
+          description: スコアランキング取得成功
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Score'
-        '404':
-          description: スコアが見つからない
+                type: array
+                items:
+                  $ref: "#/components/schemas/ScoreRanking"
 
-    put:
-      summary: ユーザーのスコアを更新
+  /scores:
+    post:
+      summary: スコアを登録
       parameters:
-        - in: path
-          name: userId
-          required: true
+        - in: query
+          name: user_id
           schema:
             type: string
-        - in: path
-          name: scoreId
+            format: uuid
           required: true
+          description: ユーザーID
+        - in: query
+          name: keystrokes
           schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                keystrokes:
-                  type: integer
-                accuracy:
-                  type: number
-                  format: float
-                score:
-                  type: number
-                  format: float
-                startedAt:
-                  type: string
-                  format: date-time
-                endedAt:
-                  type: string
-                  format: date-time
+            type: integer
+          required: true
+          description: キーストローク数
+        - in: query
+          name: accuracy
+          schema:
+            type: number
+            format: float
+          required: true
+          description: 正確性
       responses:
-        '200':
-          description: スコアの更新成功
-        '400':
+        "201":
+          description: スコア登録成功
+        "400":
           description: 不正なリクエスト
-        '404':
-          description: スコアが見つからない
+
 components:
   schemas:
     User:
@@ -164,40 +91,29 @@ components:
         id:
           type: string
           format: uuid
-        MailAdress:
+        student_number:
           type: string
-        HandleName:
+        handle_name:
           type: string
-        Name:
-          type: string
-        HashedPassword:
-          type: string
-        Department:
-          type: string
-          enum: [CS, BI, IA]
         created_at:
           type: string
           format: date-time
         updated_at:
           type: string
           format: date-time
-    Score:
+
+    ScoreRanking:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
-        keystrokes:
+        rank:
+          type: integer
+        user:
+          $ref: "#/components/schemas/User"
+        score:
           type: integer
         accuracy:
           type: number
           format: float
-        score:
-          type: number
-          format: float
-        startedAt:
-          type: string
-          format: date-time
-        endedAt:
+        created_at:
           type: string
           format: date-time
