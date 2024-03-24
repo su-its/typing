@@ -30,7 +30,11 @@ func GetScoresRanking(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(rankings)
+	err = json.NewEncoder(w).Encode(rankings)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func PostScore(w http.ResponseWriter, r *http.Request) {
