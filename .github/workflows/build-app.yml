@@ -30,4 +30,4 @@ jobs:
         with:
           root: ${{ github.workspace }}/typing-app
       - name: Build Next.js Project
-        run: npm run build
+        run: bun run build
