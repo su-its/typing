@@ -5,11 +5,15 @@ import GamePre from "../templates/GamePre";
 import GameResult from "../templates/GameResult";
 import GameTyping from "../templates/GameTyping";
 
+interface GamePageProps {
+  filenames: string[];
+}
+
 export interface SubGamePageProps {
   nextPage: () => void;
 }
 
-const GamePage: React.FC = () => {
+const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
   enum ScreenIndex {
     IDX_PRE,
     IDX_TYPING,
@@ -22,6 +26,7 @@ const GamePage: React.FC = () => {
   const subPageList = [
     <GamePre
       key={ScreenIndex.IDX_PRE}
+      filenames={filenames}
       nextPage={() => setScreenIndex(ScreenIndex.IDX_TYPING)}
       setSubjectTextData={setSubjectTextData} // propsとして課題となるテキストデータを渡す
     />,
