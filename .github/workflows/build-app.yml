@@ -43,4 +43,4 @@ jobs:
         with:
           root: ${{ github.workspace }}/typing-app
       - name: Format Code
-        run: bun run format:ci
+        run: npm run format:ci
