@@ -3,6 +3,7 @@ import { Box } from "@chakra-ui/react";
 import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import ProgressBar from "../atoms/ProgressBar";
 import { SubGamePageProps } from "../pages/Game";
 import styles from "./GameTyping.module.css";
 
@@ -38,21 +39,30 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
     }
   }, [count, nextPage]);
 
-  const progress = ((totalSeconds - count) / totalSeconds) * 100;
+  const timeProgress = ((totalSeconds - count) / totalSeconds) * 100;
 
   //<Text>Typing screen</Text>
   //<Button onClick={nextPage}>finish</Button>
-  //<Progress value={progress} colorScheme="blue" />
+  //<Progress value={timeProgress} colorScheme="blue" />
   const [typeIndex, setTypeIndex] = useState(0);
+  const [correctType, setCorrectType] = useState(0);
+  const [incorrectType, setIncorrectType] = useState(0); // 使わないかもしれない
+  const [typeProgress, setTypeProgress] = useState(0); // 0-100 [%]
   // ToDo: 要変更
   const sentence = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel massa pulvinar, semper arcu porttitor, sodales dui. Nam vitae blandit quam. Sed condimentum euismod placerat. Fusce id ipsum ante. Praesent pulvinar, urna at tempor pellentesque, erat ligula lobortis metus, ut ultrices ipsum nunc non turpis. Nunc egestas urna ipsum, dignissim porta orci rutrum sed. Etiam in tristique urna. Fusce eu eros laoreet, varius ipsum in, eleifend dui. Proin dapibus tortor nec ultricies porta. Suspendisse potenti. Suspendisse potenti.  Donec vel volutpat arcu. Morbi ullamcorper a velit finibus placerat. Ut ac metus vitae lectus ornare fermentum vitae vitae sem. Morbi laoreet finibus purus nec faucibus.`;
   const handleOnKeyDown = (e: React.KeyboardEvent) => {
     const key = e.key;
-    console.log(key, typeIndex, sentence[typeIndex]);
+    if (key.length !== 1) {
+      return; // アルファベット等以外のキーは無視 shiftなどがここに入る
+    }
     const currentType = sentence[typeIndex];
     if (key === currentType) {
       setTypeIndex(typeIndex + 1);
+      setCorrectType(correctType + 1);
+    } else {
+      setIncorrectType(incorrectType + 1);
     }
+    setTypeProgress((typeIndex / sentence.length) * 100);
   };
   return (
     <Box onKeyDown={handleOnKeyDown} tabIndex={0}>
@@ -61,9 +71,21 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
         <div className={`${styles.heading} ${styles.heading_time}`}>Time Remain</div>
         <div className={`${styles.heading} ${styles.heading_position}`}>Progress</div>
         <div className={`${styles.heading} ${styles.heading_speed}`}>Speed</div>
-        <div className={`${styles.progress} ${styles.progress_time}`}></div>
-        <div className={`${styles.progress} ${styles.progress_position}`}></div>
-        <div className={`${styles.progress} ${styles.progress_speed}`}></div>
+        <div className={`${styles.progress} ${styles.progress_time}`}>
+          {
+            // ToDo 時間の計算
+          }
+          <ProgressBar maxWidth={250} value={timeProgress} />
+        </div>
+        <div className={`${styles.progress} ${styles.progress_position}`}>
+          <ProgressBar maxWidth={250} value={typeProgress} />
+        </div>
+        <div className={`${styles.progress} ${styles.progress_speed}`}>
+          {
+            // ToDo 速度の計算
+          }
+          <ProgressBar maxWidth={250} value={0} />
+        </div>
         <Image
           className={styles.gauge_time}
           id="gauge_time"
@@ -98,7 +120,9 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
         <div className={styles.info_time}>
           残り <span className={styles.info_time_span}>250</span> 秒
         </div>
-        <div className={styles.info_text}>123 語 / 4567 字</div>
+        <div className={styles.info_text}>
+          {correctType} 語 / {sentence.length} 字
+        </div>
       </div>
     </Box>
   );
