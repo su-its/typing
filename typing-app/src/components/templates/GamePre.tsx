@@ -1,12 +1,20 @@
-import { Box, Button, Text } from "@chakra-ui/react";
-import React from "react";
+import { Box, Text } from "@chakra-ui/react";
+import React, { useEffect } from "react";
 import { SubGamePageProps } from "../pages/Game";
 
 const GamePre: React.FC<SubGamePageProps> = ({ nextPage }) => {
+  // Spaceキーを押したときに実行する関数
+  const handleSpaceButtonDown: React.KeyboardEventHandler = async (e) => {
+    if (e.code === 'Space') {
+      e.preventDefault();  // ページのスクロールなどのデフォルト動作を防止
+      // 次のページへ
+      nextPage();
+    }
+  };
+
   return (
-    <Box>
+    <Box onKeyDown={handleSpaceButtonDown}>
       <Text>GamePre screen</Text>
-      <Button onClick={nextPage}>start</Button>
     </Box>
   );
 };
