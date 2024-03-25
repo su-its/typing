@@ -9,6 +9,11 @@ export interface SubGamePageProps {
   nextPage: () => void;
 }
 
+export interface GameTypingProps {
+  nextPage: () => void;
+  filenames: string[];
+}
+
 interface GamePageProps {
   filenames: string[];
 }
@@ -23,7 +28,11 @@ const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
   const [screenIndex, setScreenIndex] = useState<ScreenIndex>(ScreenIndex.IDX_PRE);
   const subPageList = [
     <GamePre key={ScreenIndex.IDX_PRE} nextPage={() => setScreenIndex(ScreenIndex.IDX_TYPING)} />,
-    <GameTyping key={ScreenIndex.IDX_TYPING} nextPage={() => setScreenIndex(ScreenIndex.IDX_RESULT)} />,
+    <GameTyping
+      key={ScreenIndex.IDX_TYPING}
+      nextPage={() => setScreenIndex(ScreenIndex.IDX_RESULT)}
+      filenames={filenames}
+    />,
     <GameResult key={ScreenIndex.IDX_RESULT} nextPage={() => setScreenIndex(ScreenIndex.IDX_PRE)} />,
   ];
   return (
@@ -31,7 +40,6 @@ const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
       <VStack>
         <Text fontSize="2xl">Hello, World!</Text>
         <Text fontSize="xl">Welcome to the Game Page</Text>
-        <Text fontSize="xl">{ filenames }</Text>
         {subPageList[screenIndex]}
       </VStack>
     </>

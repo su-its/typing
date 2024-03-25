@@ -6,18 +6,18 @@ const GamePre: React.FC<SubGamePageProps> = ({ nextPage }) => {
   useEffect(() => {
     // Spaceキーを押したときに実行する関数
     const handleSpaceButtonDown = (e: KeyboardEvent) => {
-      if (e.code === 'Space') {
-        e.preventDefault();  // ページのスクロールなどのデフォルト動作を防止
+      if (e.code === "Space") {
+        e.preventDefault(); // ページのスクロールなどのデフォルト動作を防止
         // 次のページへ
         nextPage();
       }
     };
 
-    window.addEventListener("keydown", handleSpaceButtonDown)
+    window.addEventListener("keydown", handleSpaceButtonDown);
 
     return () => {
-      window.removeEventListener("keydown", handleSpaceButtonDown)
-    }
+      window.removeEventListener("keydown", handleSpaceButtonDown);
+    };
   }, [nextPage]);
 
   return (
