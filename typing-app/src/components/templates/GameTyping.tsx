@@ -75,16 +75,16 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
           {
             // ToDo 時間の計算
           }
-          <ProgressBar maxWidth={250} value={timeProgress} />
+          <ProgressBar maxWidth={250} height={20} value={timeProgress} />
         </div>
         <div className={`${styles.progress} ${styles.progress_position}`}>
-          <ProgressBar maxWidth={250} value={typeProgress} />
+          <ProgressBar maxWidth={250} height={20} value={typeProgress} />
         </div>
         <div className={`${styles.progress} ${styles.progress_speed}`}>
           {
             // ToDo 速度の計算
           }
-          <ProgressBar maxWidth={250} value={0} />
+          <ProgressBar maxWidth={250} height={20} value={0} />
         </div>
         <Image
           className={styles.gauge_time}
