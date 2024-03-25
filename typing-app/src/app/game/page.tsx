@@ -1,5 +1,9 @@
 import GamePage from "@/components/pages/Game";
+import fs from 'fs';
+import path from 'path';
 
 export default function Typing() {
-  return <GamePage />;
+  const textsDirectory = path.join(process.cwd(), 'public/texts');
+  const filenames = fs.readdirSync(textsDirectory).filter((filename) => filename.endsWith('.txt'));
+  return <GamePage filenames={filenames} />;
 }

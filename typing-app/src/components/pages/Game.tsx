@@ -9,7 +9,11 @@ export interface SubGamePageProps {
   nextPage: () => void;
 }
 
-const GamePage: React.FC = () => {
+interface GamePageProps {
+  filenames: string[];
+}
+
+const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
   enum ScreenIndex {
     IDX_PRE,
     IDX_TYPING,
@@ -27,6 +31,7 @@ const GamePage: React.FC = () => {
       <VStack>
         <Text fontSize="2xl">Hello, World!</Text>
         <Text fontSize="xl">Welcome to the Game Page</Text>
+        <Text fontSize="xl">{ filenames }</Text>
         {subPageList[screenIndex]}
       </VStack>
     </>
