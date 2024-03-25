@@ -43,6 +43,11 @@ paths:
           schema:
             type: integer
           description: ランキングの開始位置
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: ランキングの取得件数
       responses:
         "200":
           description: スコアランキングを返します。
