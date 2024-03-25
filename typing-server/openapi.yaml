@@ -20,13 +20,13 @@ paths:
           required: true
       responses:
         "200":
-          description: ユーザー情報取得成功
+          description: ユーザー情報を返します。
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
         "404":
-          description: ユーザーが見つからない
+          description: ユーザーが見つかりません。
 
   /scores/ranking:
     get:
@@ -45,43 +45,43 @@ paths:
           description: ランキングの開始位置
       responses:
         "200":
-          description: スコアランキング取得成功
+          description: スコアランキングを返します。
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/ScoreRanking"
+        "400":
+          description: 不正なリクエストです。
 
   /scores:
     post:
       summary: スコアを登録
-      parameters:
-        - in: query
-          name: user_id
-          schema:
-            type: string
-            format: uuid
-          required: true
-          description: ユーザーID
-        - in: query
-          name: keystrokes
-          schema:
-            type: integer
-          required: true
-          description: キーストローク数
-        - in: query
-          name: accuracy
-          schema:
-            type: number
-            format: float
-          required: true
-          description: 正確性
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  format: uuid
+                keystrokes:
+                  type: integer
+                accuracy:
+                  type: number
+                  format: float
+              required:
+                - user_id
+                - keystrokes
+                - accuracy
       responses:
         "201":
-          description: スコア登録成功
+          description: スコアが正常に登録されました。
         "400":
-          description: 不正なリクエスト
+          description: 不正なリクエストです。
 
 components:
   schemas:
