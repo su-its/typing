@@ -141,7 +141,6 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
           <div>
             <span className={styles.span_typed}>{sentence.slice(0, typeIndex)}</span>
             <span>{sentence.slice(typeIndex, sentence.length)}</span>
-            {currentTypeSpeed}
           </div>
         </div>
         <div className={styles.info_time}>
