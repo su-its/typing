@@ -14,8 +14,9 @@ typing/typing-app/src/components/atoms/ProgressBar.tsx
 
 ### props
 
-- maxWidth: number: 100%時の横幅[px]．
-- value: number: 進捗．0 から 100 の値を取る．
+- maxWidth: number：100%時の横幅[px]．
+- value: number：進捗．0 から 100 の値を取る．
+- height: number：高さ[px]
 
 ### 例
 
@@ -23,8 +24,11 @@ progress を変更することで ProgressBar が伸び縮みする．
 
 ```[jsx]
 const [progress, setProgress] = useState(0);
+const handleProgressChange = () => setProgress(progress+1);
 
-<ProgressBar maxWidth={250}9value={progress} />
+return (
+  <ProgressBar maxWidth={250} height={20} value={progress} />
+);
 ```
 
 ### Style
