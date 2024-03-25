@@ -127,6 +127,12 @@
   color: #fff;
 }
 
-.span_typed {
+.span_typed_text {
   color: #888;
+}
+
+.span_current_text {
+  color: #000;
+  background-color: #ffff00;
+  white-space: pre-wrap;
 }

@@ -139,8 +139,9 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
         <div className={styles.title}>Lorem Ipsum</div>
         <div className={styles.text}>
           <div>
-            <span className={styles.span_typed}>{sentence.slice(0, typeIndex)}</span>
-            <span>{sentence.slice(typeIndex, sentence.length)}</span>
+            <span className={styles.span_typed_text}>{sentence.slice(0, typeIndex)}</span>
+            <span className={styles.span_current_text}>{sentence.slice(typeIndex, typeIndex + 1)}</span>
+            <span>{sentence.slice(typeIndex + 1, sentence.length)}</span>
           </div>
         </div>
         <div className={styles.info_time}>
