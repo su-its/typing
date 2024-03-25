@@ -3,17 +3,25 @@ import React, { useEffect } from "react";
 import { SubGamePageProps } from "../pages/Game";
 
 const GamePre: React.FC<SubGamePageProps> = ({ nextPage }) => {
-  // Spaceキーを押したときに実行する関数
-  const handleSpaceButtonDown: React.KeyboardEventHandler = async (e) => {
-    if (e.code === 'Space') {
-      e.preventDefault();  // ページのスクロールなどのデフォルト動作を防止
-      // 次のページへ
-      nextPage();
+  useEffect(() => {
+    // Spaceキーを押したときに実行する関数
+    const handleSpaceButtonDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        e.preventDefault();  // ページのスクロールなどのデフォルト動作を防止
+        // 次のページへ
+        nextPage();
+      }
+    };
+
+    window.addEventListener("keydown", handleSpaceButtonDown)
+
+    return () => {
+      window.removeEventListener("keydown", handleSpaceButtonDown)
     }
-  };
+  }, [nextPage]);
 
   return (
-    <Box onKeyDown={handleSpaceButtonDown}>
+    <Box>
       <Text>GamePre screen</Text>
     </Box>
   );
