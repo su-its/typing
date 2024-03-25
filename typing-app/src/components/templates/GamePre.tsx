@@ -15,7 +15,7 @@ const GamePre: React.FC<GamePreProps> = ({ filenames, nextPage, setSubjectTextDa
   };
 
   // Spaceキーを押したときに実行する関数
-  const handleSpaceButtonDown = async (e: KeyboardEvent) => {
+  const handleSpaceButtonDown: React.KeyboardEventHandler = async (e) => {
     if (e.code === 'Space') {
       e.preventDefault();  // ページのスクロールなどのデフォルト動作を防止
       
@@ -38,17 +38,17 @@ const GamePre: React.FC<GamePreProps> = ({ filenames, nextPage, setSubjectTextDa
     }
   };
 
-  useEffect(() => {
-    window.addEventListener('keydown', handleSpaceButtonDown);
+  // useEffect(() => {
+  //   window.addEventListener('keydown', handleSpaceButtonDown);
 
-    // コンポーネントのクリーンアップ時にイベントリスナーを削除
-    return () => {
-      window.removeEventListener('keydown', handleSpaceButtonDown);
-    };
-  }, []); // 空の依存配列を指定して、コンポーネントのマウント時にのみイベントリスナーを追加
+  //   // コンポーネントのクリーンアップ時にイベントリスナーを削除
+  //   return () => {
+  //     window.removeEventListener('keydown', handleSpaceButtonDown);
+  //   };
+  // }, [handleSpaceButtonDown]);
 
   return (
-    <Box>
+    <Box onKeyDown={handleSpaceButtonDown}>
       <Text>GamePre screen</Text>
       {/* <Button onKeyDown={handleSpaceButtonDown}>start</Button> */}
       <Text>{ filenames }</Text>
