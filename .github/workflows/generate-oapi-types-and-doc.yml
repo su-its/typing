@@ -1,4 +1,4 @@
-name: Generate OpenAPI TypeScript Client and Document
+name: Generate TypeScript Type Definitions and Document from OpenAPI
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   generate-client:
-    name: Generate TS Client
+    name: Generate TypeScript Type Definitions
     runs-on: ubuntu-latest
     permissions:
       contents: write
