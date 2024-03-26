@@ -1,6 +1,7 @@
 "use client";
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Button, Flex } from "@chakra-ui/react";
 import RankingTable from "../organism/RankingTable";
+import { Pagination } from "../molecules/Pagination";
 import { useEffect, useState } from "react";
 
 const RankingTabs = () => {
@@ -47,7 +48,7 @@ const RankingTabs = () => {
       </Flex>
       <TabList>
         <Tab>Accuracy</Tab>
-        <Tab>KeyStoroke</Tab>
+        <Tab>KeyStroke</Tab>
       </TabList>
 
       <TabPanels>
@@ -58,13 +59,12 @@ const RankingTabs = () => {
           <RankingTable scoreRankings={demoKeyStrokeRankings} /> {/* TODO: scoreRankingsに置き換え */}
         </TabPanel>
       </TabPanels>
-      <Button onClick={() => handlePaginationClick("prev")} isDisabled={rankingStartFrom <= 0}>
-        Prev
-      </Button>
-      <Button onClick={() => handlePaginationClick("next")} isDisabled={rankingStartFrom + LIMIT >= MAXIMUM}>
-        {/* テストのときにMAXIMUM人が表示されているか確認する */}
-        Next
-      </Button>
+      <Pagination
+        onPrev={() => handlePaginationClick("prev")}
+        onNext={() => handlePaginationClick("next")}
+        isPrevDisabled={rankingStartFrom <= 0}
+        isNextDisabled={rankingStartFrom + LIMIT >= MAXIMUM}
+      />
     </Tabs>
   );
 };
