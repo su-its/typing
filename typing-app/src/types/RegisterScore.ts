@@ -6,4 +6,12 @@ interface RegisterScore {
   EndedAt: Date;
 }
 
+export interface ResultScore {
+  Keystrokes: number;
+  Miss: number;
+  Time: Date;
+  WPM: number;
+  Accuracy: number;
+}
+
 export default RegisterScore;
