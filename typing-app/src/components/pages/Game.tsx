@@ -13,6 +13,7 @@ export interface SubGamePageProps {
 export interface GameTypingProps {
   nextPage: () => void;
   filenames: string[];
+  setResultScore: (data: ResultScore) => void;
 }
 
 interface GamePageProps {
@@ -37,7 +38,12 @@ const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
   const [screenIndex, setScreenIndex] = useState<ScreenIndex>(ScreenIndex.IDX_PRE);
   const subPageList = [
     <GamePre key={ScreenIndex.IDX_PRE} nextPage={() => setScreenIndex(ScreenIndex.IDX_TYPING)} />,
-    <GameTyping key={ScreenIndex.IDX_TYPING} nextPage={() => setScreenIndex(ScreenIndex.IDX_RESULT)} />,
+    <GameTyping
+      key={ScreenIndex.IDX_TYPING}
+      nextPage={() => setScreenIndex(ScreenIndex.IDX_RESULT)}
+      filenames={filenames}
+      setResultScore={setResultScore}
+    />,
     <GameResult
       key={ScreenIndex.IDX_RESULT}
       nextPage={() => setScreenIndex(ScreenIndex.IDX_PRE)}

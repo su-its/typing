@@ -1,4 +1,4 @@
-import RegisterScore from "@/types/RegisterScore";
+import RegisterScore, { ResultScore } from "@/types/RegisterScore";
 import { Box } from "@chakra-ui/react";
 import axios from "axios";
 import Image from "next/image";
@@ -7,7 +7,7 @@ import ProgressBar from "../atoms/ProgressBar";
 import { GameTypingProps } from "../pages/Game";
 import styles from "./GameTyping.module.css";
 
-const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
+const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultScore }) => {
   // subjectTextの状態を管理するuseStateフック
   const [subjectText, setSubjectText] = useState("");
 
@@ -43,25 +43,47 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
 
   const userId = damyUserId; // ToDo: 要変更
   const scoreData = damyScoreData; // ToDo: 要変更
+  const [correctType, setCorrectType] = useState(0); // 正打数
+  const [incorrectType, setIncorrectType] = useState(0); // 誤打数
+  const [typeProgress, setTypeProgress] = useState(0); // 進捗
 
+  const [typeIndex, setTypeIndex] = useState(0);
   useEffect(() => {
     if (count <= 0) {
-      axios
-        .post(`http://localhost:8080/users/${userId}/scores`, scoreData)
-        .then((res) => {
-          console.log(res.data);
-          nextPage();
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      sendResultDat();
     } else {
-      const timer = setInterval(() => setCount(count - 1), 1000);
+      const timer = setInterval(() => setCount(count - 0.1), 100);
       return () => clearInterval(timer);
     }
   }, [count, nextPage, userId, scoreData]); // ビルド時の警告防止のためにuserId, scoreDataも依存リストに追加
 
-  const [startTime, setStartTime] = useState(new Date().valueOf()); // 平均速度計算用
+  useEffect(() => {
+    if (typeIndex === subjectText.length - 1) {
+      sendResultDat();
+    }
+  }, [nextPage, userId, scoreData, typeIndex]); // ビルド時の警告防止のためにuserId, scoreDataも依存リストに追加
+
+  // スコアデータを送信する
+  const sendResultDat = () => {
+    const typeTimeSeconds = totalSeconds - count;
+    setResultScore({
+      Keystrokes: correctType + incorrectType,
+      Miss: incorrectType,
+      Time: new Date(typeTimeSeconds * 1000),
+      WPM: (correctType / typeTimeSeconds) * 60,
+      Accuracy: (correctType / (correctType + incorrectType)) * 100,
+    });
+    axios
+      .post(`http://localhost:8080/users/${userId}/scores`, scoreData)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    nextPage();
+  };
+
   const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
 
   // 瞬間タイピング速度計算用
@@ -83,10 +105,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
     return (typingQueueList.length / typeTime) * 60000;
   };
 
-  const [typeIndex, setTypeIndex] = useState(0);
-  const [correctType, setCorrectType] = useState(0);
-  const [incorrectType, setIncorrectType] = useState(0); // 使わないかもしれない
-  const [typeProgress, setTypeProgress] = useState(0);
   const handleOnKeyDown = (e: React.KeyboardEvent) => {
     const key = e.key;
     if (key.length !== 1) {
@@ -160,7 +178,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
           </div>
         </div>
         <div className={styles.info_time}>
-          残り <span className={styles.info_time_span}>{count}</span> 秒
+          残り <span className={styles.info_time_span}>{count.toFixed(1)}</span> 秒
         </div>
         <div className={styles.info_text}>
           {correctType} 語 / {subjectText.length} 字
