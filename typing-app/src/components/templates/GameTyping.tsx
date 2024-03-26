@@ -4,10 +4,32 @@ import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import ProgressBar from "../atoms/ProgressBar";
-import { SubGamePageProps } from "../pages/Game";
+import { GameTypingProps } from "../pages/Game";
 import styles from "./GameTyping.module.css";
 
-const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
+const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
+  // subjectTextの状態を管理するuseStateフック
+  const [subjectText, setSubjectText] = useState("");
+
+  useEffect(() => {
+    const loadTextFile = async () => {
+      // ランダムにファイル名を選択
+      const randomFile = filenames[Math.floor(Math.random() * filenames.length)];
+      // `public` ディレクトリからの相対パスを指定
+      const filePath = `/texts/${randomFile}`;
+      // fetch APIを使用してファイルの内容を読み込む
+      try {
+        const response = await fetch(filePath);
+        const fetchedText = await response.text();
+        setSubjectText(fetchedText); // レスポンスをsubjectTextステートに設定
+      } catch (error) {
+        console.error("Error loading the text file:", error);
+      }
+    };
+
+    loadTextFile();
+  }, []);
+
   const totalSeconds = 20;
   const [count, setCount] = useState(totalSeconds);
   const damyScoreData = {
@@ -63,9 +85,6 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
 
   const timeProgress = ((totalSeconds - count) / totalSeconds) * 100;
 
-  //<Text>Typing screen</Text>
-  //<Button onClick={nextPage}>finish</Button>
-  //<Progress value={timeProgress} colorScheme="blue" />
   const [typeIndex, setTypeIndex] = useState(0);
   const [correctType, setCorrectType] = useState(0);
   const [incorrectType, setIncorrectType] = useState(0); // 使わないかもしれない
