@@ -28,7 +28,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
     };
 
     loadTextFile();
-  }, []);
+  }, [filenames]); // ビルド時の警告防止のためにfilenamesを依存リストに追加
 
   const totalSeconds = 250;
   const [count, setCount] = useState(totalSeconds);
@@ -59,7 +59,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
       const timer = setInterval(() => setCount(count - 1), 1000);
       return () => clearInterval(timer);
     }
-  }, [count, nextPage]);
+  }, [count, nextPage, userId, scoreData]); // ビルド時の警告防止のためにuserId, scoreDataも依存リストに追加
 
   const [startTime, setStartTime] = useState(new Date().valueOf()); // 平均速度計算用
   const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
