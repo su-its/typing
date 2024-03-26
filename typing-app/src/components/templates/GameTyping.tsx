@@ -30,7 +30,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
     loadTextFile();
   }, []);
 
-  const totalSeconds = 20;
+  const totalSeconds = 250;
   const [count, setCount] = useState(totalSeconds);
   const damyScoreData = {
     Keystrokes: 123,
@@ -83,8 +83,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
     return (typingQueueList.length / typeTime) * 60000;
   };
 
-  const timeProgress = ((totalSeconds - count) / totalSeconds) * 100;
-
   const [typeIndex, setTypeIndex] = useState(0);
   const [correctType, setCorrectType] = useState(0);
   const [incorrectType, setIncorrectType] = useState(0); // 使わないかもしれない
@@ -117,7 +115,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
           {
             // ToDo 時間の計算
           }
-          <ProgressBar maxWidth={330} height={20} maxValue={300} value={timeProgress} />
+          <ProgressBar maxWidth={330} height={20} maxValue={250} value={count} />
         </div>
         <div className={`${styles.progress} ${styles.progress_position}`}>
           <ProgressBar maxWidth={330} height={20} maxValue={subjectText.length - 1} value={typeProgress} />
@@ -162,7 +160,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
           </div>
         </div>
         <div className={styles.info_time}>
-          残り <span className={styles.info_time_span}>250</span> 秒
+          残り <span className={styles.info_time_span}>{count}</span> 秒
         </div>
         <div className={styles.info_text}>
           {correctType} 語 / {subjectText.length} 字
