@@ -1,8 +1,8 @@
 // components/MenuContainer.js
 import { Flex, VStack } from "@chakra-ui/react";
-import GameStartButton from "../atoms/GameStartButton";
-import RankingButton from "../atoms/RankingButton";
-import LogoutButton from "../atoms/LogoutButton";
+import GameStartButton from "../molecules/GameStartButton";
+import RankingButton from "../molecules/RankingButton";
+import LogoutButton from "../molecules/LogoutButton";
 
 const HomeMenuContainer = () => {
   return (
