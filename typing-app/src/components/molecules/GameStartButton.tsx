@@ -10,9 +10,10 @@ const GameStartButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleLogin = async (studentId: string) => {
-    // 学籍番号を使用したログイン処理
-    console.log(studentId); // 例: ログイン処理
-    router.push("/game"); // ログイン成功後の遷移
+    // TODO:ログイン済みかどうかを判別
+    // TODO:学籍番号を使用したログイン処理
+    console.log(studentId);
+    router.push("/game");
   };
 
   return (

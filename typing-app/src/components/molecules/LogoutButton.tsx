@@ -1,20 +1,32 @@
 "use client";
 
+import React from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@chakra-ui/react";
+import { Button, useDisclosure } from "@chakra-ui/react";
+import LogoutModal from "./LogoutModal"; // 正しいパスに変更してください
 
-const LogoutButton = () => {
+const LogoutButton: React.FC = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
 
   const handleLogout = async () => {
-    //TODO:ログアウト処理を実装
-    router.push("/login");
+    // TODO:ログアウト処理を実装
+    onOpen();
+  };
+
+  const handleModalClose = () => {
+    onClose();
+    router.push("/"); //リダイレクト
   };
 
   return (
-    <Button colorScheme="blue" size="lg" onClick={handleLogout}>
-      Logout
-    </Button>
+    <>
+      <Button colorScheme="blue" size="lg" onClick={handleLogout}>
+        Logout
+      </Button>
+
+      <LogoutModal isOpen={isOpen} onClose={onClose} onConfirm={handleModalClose} />
+    </>
   );
 };
 
