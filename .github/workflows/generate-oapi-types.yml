@@ -28,7 +28,7 @@ jobs:
         run: |
           SCHEMA_VERSION=${{ steps.get_schema_version.outputs.result }}
           SCHEMA_MAJOR_VERSION=${SCHEMA_VERSION%%.*}
-          npx openapi-typescript ../typing-server/openapi.yaml --output ./src/libs/api/v${SCHEMA_MAJOR_VERSION}.ts
+          npx openapi-typescript ../typing-server/openapi.yaml --output ./src/libs/api/v${SCHEMA_MAJOR_VERSION}.d.ts
       - name: Validate
         working-directory: typing-app
         run: npx tsc --noEmit
