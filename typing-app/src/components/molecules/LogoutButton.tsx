@@ -1,7 +1,5 @@
-// components/buttons/LogoutButton.js
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@chakra-ui/react";
 
