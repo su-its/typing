@@ -73,11 +73,14 @@ paths:
                 user_id:
                   type: string
                   format: uuid
+                  description: ユーザーID
                 keystrokes:
                   type: integer
+                  description: キーストローク数
                 accuracy:
                   type: number
                   format: float
+                  description: 正確性(ミスタイプ数/ストローク数)
               required:
                 - user_id
                 - keystrokes
