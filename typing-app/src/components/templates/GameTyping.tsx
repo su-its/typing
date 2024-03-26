@@ -89,14 +89,12 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
   const [correctType, setCorrectType] = useState(0);
   const [incorrectType, setIncorrectType] = useState(0); // 使わないかもしれない
   const [typeProgress, setTypeProgress] = useState(0);
-  // ToDo: 要変更
-  const sentence = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel massa pulvinar, semper arcu porttitor, sodales dui. Nam vitae blandit quam. Sed condimentum euismod placerat. Fusce id ipsum ante. Praesent pulvinar, urna at tempor pellentesque, erat ligula lobortis metus, ut ultrices ipsum nunc non turpis. Nunc egestas urna ipsum, dignissim porta orci rutrum sed. Etiam in tristique urna. Fusce eu eros laoreet, varius ipsum in, eleifend dui. Proin dapibus tortor nec ultricies porta. Suspendisse potenti. Suspendisse potenti.  Donec vel volutpat arcu. Morbi ullamcorper a velit finibus placerat. Ut ac metus vitae lectus ornare fermentum vitae vitae sem. Morbi laoreet finibus purus nec faucibus.`;
   const handleOnKeyDown = (e: React.KeyboardEvent) => {
     const key = e.key;
     if (key.length !== 1) {
       return; // アルファベット等以外のキーは無視 shiftなどがここに入る
     }
-    const currentType = sentence[typeIndex];
+    const currentType = subjectText[typeIndex];
     if (key === currentType) {
       setTypeIndex(typeIndex + 1);
       setCorrectType(correctType + 1);
@@ -122,7 +120,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
           <ProgressBar maxWidth={330} height={20} maxValue={300} value={timeProgress} />
         </div>
         <div className={`${styles.progress} ${styles.progress_position}`}>
-          <ProgressBar maxWidth={330} height={20} maxValue={sentence.length - 1} value={typeProgress} />
+          <ProgressBar maxWidth={330} height={20} maxValue={subjectText.length - 1} value={typeProgress} />
         </div>
         <div className={`${styles.progress} ${styles.progress_speed}`}>
           {
@@ -158,16 +156,16 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
         <div className={styles.title}>Lorem Ipsum</div>
         <div className={styles.text}>
           <div>
-            <span className={styles.span_typed_text}>{sentence.slice(0, typeIndex)}</span>
-            <span className={styles.span_current_text}>{sentence.slice(typeIndex, typeIndex + 1)}</span>
-            <span>{sentence.slice(typeIndex + 1, sentence.length)}</span>
+            <span className={styles.span_typed_text}>{subjectText.slice(0, typeIndex)}</span>
+            <span className={styles.span_current_text}>{subjectText.slice(typeIndex, typeIndex + 1)}</span>
+            <span>{subjectText.slice(typeIndex + 1, subjectText.length)}</span>
           </div>
         </div>
         <div className={styles.info_time}>
           残り <span className={styles.info_time_span}>250</span> 秒
         </div>
         <div className={styles.info_text}>
-          {correctType} 語 / {sentence.length} 字
+          {correctType} 語 / {subjectText.length} 字
         </div>
       </div>
     </Box>
