@@ -23,7 +23,13 @@ func GetScoresRanking(w http.ResponseWriter, r *http.Request) {
 		start = 1
 	}
 
-	rankings, err := service.GetScoresRanking(ctx, sortBy, start)
+	limitStr := r.URL.Query().Get("limit")
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		limit = 10
+	}
+
+	rankings, err := service.GetScoresRanking(ctx, sortBy, start, limit)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

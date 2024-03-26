@@ -8,8 +8,8 @@ import (
 	"github.com/su-its/typing/typing-server/domain/model"
 )
 
-func GetScoresRanking(ctx context.Context, sortBy string, start int) ([]*model.ScoreRanking, error) {
-	rankings, err := repository.GetScoresRanking(ctx, sortBy, start)
+func GetScoresRanking(ctx context.Context, sortBy string, start, limit int) ([]*model.ScoreRanking, error) {
+	rankings, err := repository.GetScoresRanking(ctx, sortBy, start, limit)
 	if err != nil {
 		return nil, err
 	}
