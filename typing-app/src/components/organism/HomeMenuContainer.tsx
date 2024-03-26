@@ -1,4 +1,3 @@
-// components/MenuContainer.js
 import { Flex, VStack } from "@chakra-ui/react";
 import GameStartButton from "../molecules/GameStartButton";
 import RankingButton from "../molecules/RankingButton";
