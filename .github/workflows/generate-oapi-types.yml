@@ -1,7 +1,7 @@
 name: Generate TypeScript Type Definitions from OpenAPI
 
 on:
-  push:
+  pull_request:
     paths:
       - typing-server/openapi.yaml
 
