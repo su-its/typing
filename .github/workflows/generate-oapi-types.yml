@@ -1,4 +1,4 @@
-name: Generate TypeScript Type Definitions and Document from OpenAPI
+name: Generate TypeScript Type Definitions from OpenAPI
 
 on:
   push:
@@ -38,5 +38,3 @@ jobs:
           commit_message: generate TS code from api schema
         # Do not run on local (see. https://nektosact.com/usage/index.html)
         if: ${{ !env.ACT }}
-# TODO
-# generate-doc:
