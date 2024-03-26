@@ -10,7 +10,16 @@ export interface SubGamePageProps {
   nextPage: () => void;
 }
 
-const GamePage: React.FC = () => {
+export interface GameTypingProps {
+  nextPage: () => void;
+  filenames: string[];
+}
+
+interface GamePageProps {
+  filenames: string[];
+}
+
+const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
   enum ScreenIndex {
     IDX_PRE,
     IDX_TYPING,

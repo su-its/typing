@@ -4,11 +4,33 @@ import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import ProgressBar from "../atoms/ProgressBar";
-import { SubGamePageProps } from "../pages/Game";
+import { GameTypingProps } from "../pages/Game";
 import styles from "./GameTyping.module.css";
 
-const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
-  const totalSeconds = 20;
+const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames }) => {
+  // subjectTextの状態を管理するuseStateフック
+  const [subjectText, setSubjectText] = useState("");
+
+  useEffect(() => {
+    const loadTextFile = async () => {
+      // ランダムにファイル名を選択
+      const randomFile = filenames[Math.floor(Math.random() * filenames.length)];
+      // `public` ディレクトリからの相対パスを指定
+      const filePath = `/texts/${randomFile}`;
+      // fetch APIを使用してファイルの内容を読み込む
+      try {
+        const response = await fetch(filePath);
+        const fetchedText = await response.text();
+        setSubjectText(fetchedText); // レスポンスをsubjectTextステートに設定
+      } catch (error) {
+        console.error("Error loading the text file:", error);
+      }
+    };
+
+    loadTextFile();
+  }, [filenames]); // ビルド時の警告防止のためにfilenamesを依存リストに追加
+
+  const totalSeconds = 250;
   const [count, setCount] = useState(totalSeconds);
   const damyScoreData = {
     Keystrokes: 123,
@@ -37,7 +59,7 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
       const timer = setInterval(() => setCount(count - 1), 1000);
       return () => clearInterval(timer);
     }
-  }, [count, nextPage]);
+  }, [count, nextPage, userId, scoreData]); // ビルド時の警告防止のためにuserId, scoreDataも依存リストに追加
 
   const [startTime, setStartTime] = useState(new Date().valueOf()); // 平均速度計算用
   const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
@@ -61,23 +83,16 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
     return (typingQueueList.length / typeTime) * 60000;
   };
 
-  const timeProgress = ((totalSeconds - count) / totalSeconds) * 100;
-
-  //<Text>Typing screen</Text>
-  //<Button onClick={nextPage}>finish</Button>
-  //<Progress value={timeProgress} colorScheme="blue" />
   const [typeIndex, setTypeIndex] = useState(0);
   const [correctType, setCorrectType] = useState(0);
   const [incorrectType, setIncorrectType] = useState(0); // 使わないかもしれない
   const [typeProgress, setTypeProgress] = useState(0);
-  // ToDo: 要変更
-  const sentence = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel massa pulvinar, semper arcu porttitor, sodales dui. Nam vitae blandit quam. Sed condimentum euismod placerat. Fusce id ipsum ante. Praesent pulvinar, urna at tempor pellentesque, erat ligula lobortis metus, ut ultrices ipsum nunc non turpis. Nunc egestas urna ipsum, dignissim porta orci rutrum sed. Etiam in tristique urna. Fusce eu eros laoreet, varius ipsum in, eleifend dui. Proin dapibus tortor nec ultricies porta. Suspendisse potenti. Suspendisse potenti.  Donec vel volutpat arcu. Morbi ullamcorper a velit finibus placerat. Ut ac metus vitae lectus ornare fermentum vitae vitae sem. Morbi laoreet finibus purus nec faucibus.`;
   const handleOnKeyDown = (e: React.KeyboardEvent) => {
     const key = e.key;
     if (key.length !== 1) {
       return; // アルファベット等以外のキーは無視 shiftなどがここに入る
     }
-    const currentType = sentence[typeIndex];
+    const currentType = subjectText[typeIndex];
     if (key === currentType) {
       setTypeIndex(typeIndex + 1);
       setCorrectType(correctType + 1);
@@ -100,10 +115,10 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
           {
             // ToDo 時間の計算
           }
-          <ProgressBar maxWidth={330} height={20} maxValue={300} value={timeProgress} />
+          <ProgressBar maxWidth={330} height={20} maxValue={250} value={count} />
         </div>
         <div className={`${styles.progress} ${styles.progress_position}`}>
-          <ProgressBar maxWidth={330} height={20} maxValue={sentence.length - 1} value={typeProgress} />
+          <ProgressBar maxWidth={330} height={20} maxValue={subjectText.length - 1} value={typeProgress} />
         </div>
         <div className={`${styles.progress} ${styles.progress_speed}`}>
           {
@@ -139,16 +154,16 @@ const GameTyping: React.FC<SubGamePageProps> = ({ nextPage }) => {
         <div className={styles.title}>Lorem Ipsum</div>
         <div className={styles.text}>
           <div>
-            <span className={styles.span_typed_text}>{sentence.slice(0, typeIndex)}</span>
-            <span className={styles.span_current_text}>{sentence.slice(typeIndex, typeIndex + 1)}</span>
-            <span>{sentence.slice(typeIndex + 1, sentence.length)}</span>
+            <span className={styles.span_typed_text}>{subjectText.slice(0, typeIndex)}</span>
+            <span className={styles.span_current_text}>{subjectText.slice(typeIndex, typeIndex + 1)}</span>
+            <span>{subjectText.slice(typeIndex + 1, subjectText.length)}</span>
           </div>
         </div>
         <div className={styles.info_time}>
-          残り <span className={styles.info_time_span}>250</span> 秒
+          残り <span className={styles.info_time_span}>{count}</span> 秒
         </div>
         <div className={styles.info_text}>
-          {correctType} 語 / {sentence.length} 字
+          {correctType} 語 / {subjectText.length} 字
         </div>
       </div>
     </Box>
