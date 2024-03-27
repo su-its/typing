@@ -9,9 +9,6 @@ import styles from "./GameTyping.module.css";
 const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultScore }) => {
   // subjectTextの状態を管理するuseStateフック
   const [subjectText, setSubjectText] = useState("");
-  // はじまりと終わりの時間を管理するuseStateフック
-  const [gameStartedAt, setGameStartedAt] = useState<Date | null>(null);
-  const [gameEndedAt, setGameEndedAt] = useState<Date | null>(null);
 
   useEffect(() => {
     const loadTextFile = async () => {
@@ -32,35 +29,27 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
     loadTextFile();
   }, [filenames]); // ビルド時の警告防止のためにfilenamesを依存リストに追加
 
-  const totalSeconds = 250; // Todo: 要変更
+  const totalSeconds = 250;
   const [count, setCount] = useState(totalSeconds);
-  const damyUserId = "damyId";
-  const userId = damyUserId; // ToDo: 要変更
-  const [correctType, setCorrectType] = useState(0); // 正打数
-  const [incorrectType, setIncorrectType] = useState(0); // 誤打数
-  const [typeProgress, setTypeProgress] = useState(0); // 進捗
-  const accuracy = (correctType / (correctType + incorrectType)) * 100;
-
-  const scoreData = {
-    keystrokes: correctType + incorrectType,
-    accuracy:(correctType / (correctType + incorrectType)) * 100,
-    score: accuracy * correctType,
+  const damyScoreData = {
+    keystrokes: 123,
+    accuracy: 456.7,
+    score: 890.1,
     startedAt: new Date(),
     endedAt: new Date(),
   } as RegisterScore;
+  const damyUserId = "damyId";
+
+  const userId = damyUserId; // ToDo: 要変更
+  const scoreData = damyScoreData; // ToDo: 要変更
+  const [correctType, setCorrectType] = useState(0); // 正打数
+  const [incorrectType, setIncorrectType] = useState(0); // 誤打数
+  const [typeProgress, setTypeProgress] = useState(0); // 進捗
 
   const [typeIndex, setTypeIndex] = useState(0);
   useEffect(() => {
-    if(!gameStartedAt && subjectText.length > 0) { //テキストが読み込まれたらゲーム開始
-      setGameStartedAt(new Date());
-    }
-
     if (count <= 0) {
       sendResultDat();
-      if (!gameEndedAt) {
-        const endTime = new Date();
-        setGameEndedAt(endTime);
-      }
     } else {
       const timer = setInterval(() => setCount(count - 0.1), 100);
       return () => clearInterval(timer);
@@ -76,14 +65,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
   // スコアデータを送信する
   const sendResultDat = () => {
     const typeTimeSeconds = totalSeconds - count;
-    const finalScoreData = {
-      keystrokes: correctType + incorrectType,
-      accuracy: accuracy,
-      score: accuracy * correctType, 
-      startedAt: gameStartedAt,
-      endedAt: gameEndedAt,  
-    };
-
     setResultScore({
       keystrokes: correctType + incorrectType,
       miss: incorrectType,
@@ -91,13 +72,12 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       wpm: (correctType / typeTimeSeconds) * 60,
       accuracy: (correctType / (correctType + incorrectType)) * 100,
     });
-
     fetch(`http://localhost:8080/users/${userId}/scores`,{
       method: `POST`,
       headers: {
         'Content-Type': 'application/json',
       },
-     body: JSON.stringify(finalScoreData),
+      body: JSON.stringify(scoreData),
     })
       .then((res) => res.json())
       .then((data) => {
