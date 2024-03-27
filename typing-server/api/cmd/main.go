@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/su-its/typing/typing-server/api/handler"
 	"github.com/su-its/typing/typing-server/api/router"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
 	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
@@ -55,6 +56,7 @@ func main() {
 		return
 	}
 	defer entClient.Close()
+	handler.SetEntClient(entClient)
 	logger.Info("ent client is opened")
 
 	// スキーマの作成

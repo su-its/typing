@@ -7,11 +7,9 @@ import (
 	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
-func GetUserByStudentNumber(ctx context.Context, studentNumber string) (*ent.User, error) {
-	client := ent.FromContext(ctx)
-
+func GetUserByStudentNumber(ctx context.Context, client *ent.Client, studentNumber string) (*ent.User, error) {
 	entUser, err := client.User.Query().
-		Where(user.StudentNumber(studentNumber)).
+		Where(user.StudentNumberEQ(studentNumber)).
 		Only(ctx)
 	if err != nil {
 		return nil, err

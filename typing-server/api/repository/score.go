@@ -10,9 +10,7 @@ import (
 	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
 )
 
-func GetScoresRanking(ctx context.Context, sortBy string, start, limit int) ([]*model.ScoreRanking, error) {
-	client := ent.FromContext(ctx)
-
+func GetScoresRanking(ctx context.Context, client *ent.Client, sortBy string, start, limit int) ([]*model.ScoreRanking, error) {
 	// ! このクエリは要チェック
 	scores, err := client.Score.Query().
 		WithUser().
@@ -24,7 +22,7 @@ func GetScoresRanking(ctx context.Context, sortBy string, start, limit int) ([]*
 		).
 		Order(ent.Desc(sortBy)).
 		Limit(limit).
-		Offset(start-1). 
+		Offset(start-1).
 		Select("user_id").
 		Unique(true).
 		Select("id", "keystrokes", "accuracy", "created_at", "user_id").
@@ -80,9 +78,7 @@ func GetScoresRanking(ctx context.Context, sortBy string, start, limit int) ([]*
 	return rankings, nil
 }
 
-func CreateScore(ctx context.Context, userID uuid.UUID, keystrokes int, accuracy float64) error {
-	client := ent.FromContext(ctx)
-
+func CreateScore(ctx context.Context, client *ent.Client, userID uuid.UUID, keystrokes int, accuracy float64) error {
 	_, err := client.Score.Create().
 		SetKeystrokes(keystrokes).
 		SetAccuracy(float64(keystrokes)).

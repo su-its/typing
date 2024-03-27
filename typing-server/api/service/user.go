@@ -7,8 +7,8 @@ import (
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
 )
 
-func GetUserByStudentNumber(ctx context.Context, studentNumber string) (*ent.User, error) {
-	user, err := repository.GetUserByStudentNumber(ctx, studentNumber)
+func GetUserByStudentNumber(ctx context.Context, client *ent.Client, studentNumber string) (*ent.User, error) {
+	user, err := repository.GetUserByStudentNumber(ctx, client, studentNumber)
 	if err != nil {
 		return nil, err
 	}

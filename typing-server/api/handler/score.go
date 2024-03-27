@@ -29,7 +29,7 @@ func GetScoresRanking(w http.ResponseWriter, r *http.Request) {
 		limit = 10
 	}
 
-	rankings, err := service.GetScoresRanking(ctx, sortBy, start, limit)
+	rankings, err := service.GetScoresRanking(ctx, entClient, sortBy, start, limit)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -67,7 +67,7 @@ func PostScore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := service.CreateScore(ctx, userID, keystrokes, accuracy); err != nil {
+	if err := service.CreateScore(ctx, entClient, userID, keystrokes, accuracy); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

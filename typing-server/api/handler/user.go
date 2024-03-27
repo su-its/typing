@@ -7,7 +7,7 @@ import (
 	"github.com/su-its/typing/typing-server/api/service"
 )
 
-func GetUsers(w http.ResponseWriter, r *http.Request) {
+func GetUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	studentNumber := r.URL.Query().Get("student_number")
@@ -16,7 +16,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := service.GetUserByStudentNumber(ctx, studentNumber)
+	user, err := service.GetUserByStudentNumber(ctx, entClient, studentNumber)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
