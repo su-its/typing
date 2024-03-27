@@ -30,4 +30,3 @@ services:
 
 volumes:
   db-data:
-

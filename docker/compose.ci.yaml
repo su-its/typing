@@ -13,4 +13,3 @@ services:
       cache_from:
         - golang:1.22.0
         - alpine:latest
-
