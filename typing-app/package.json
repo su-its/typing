@@ -40,5 +40,8 @@
   },
   "repository": "https://github.com/su-its/typing",
   "author": "su-its",
-  "packageManager": "yarn@4.1.1"
+  "packageManager": "yarn@4.1.1",
+  "engines": {
+    "npm": "use yarn instead"
+  }
 }
