@@ -7,9 +7,10 @@ services:
         - oven/bun:slim
         - node:20.11-slim
   api:
-    image: ghcr.io/su-its/typing-api:dev
+    image: ghcr.io/su-its/typing-server:dev
     build:
       context: ../typing-server
       cache_from:
         - golang:1.22.0
         - alpine:latest
+
