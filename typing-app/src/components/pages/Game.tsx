@@ -1,5 +1,5 @@
 "use client";
-import { Text, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import React, { useState } from "react";
 import GamePre from "../templates/GamePre";
 import GameResult from "../templates/GameResult";
@@ -21,11 +21,13 @@ interface GamePageProps {
 }
 
 const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
-  enum ScreenIndex {
-    IDX_PRE,
-    IDX_TYPING,
-    IDX_RESULT,
-  }
+  const ScreenIndex = {
+    IDX_PRE: 0,
+    IDX_TYPING: 1,
+    IDX_RESULT: 2,
+  } as const;
+
+  type ScreenIndex = (typeof ScreenIndex)[keyof typeof ScreenIndex];
 
   const [resultScore, setResultScore] = useState<ResultScore>({
     Keystrokes: 0,
