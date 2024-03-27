@@ -1,10 +1,10 @@
 "use client";
+import { ResultScore } from "@/types/RegisterScore";
 import { VStack } from "@chakra-ui/react";
 import React, { useState } from "react";
 import GamePre from "../templates/GamePre";
 import GameResult from "../templates/GameResult";
 import GameTyping from "../templates/GameTyping";
-import { ResultScore } from "@/types/RegisterScore";
 
 export interface SubGamePageProps {
   nextPage: () => void;
@@ -30,11 +30,11 @@ const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
   type ScreenIndex = (typeof ScreenIndex)[keyof typeof ScreenIndex];
 
   const [resultScore, setResultScore] = useState<ResultScore>({
-    Keystrokes: 0,
-    Miss: 0,
-    Time: new Date(),
-    WPM: 0,
-    Accuracy: 0,
+    keystrokes: 0,
+    miss: 0,
+    time: new Date(),
+    wpm: 0,
+    accuracy: 0,
   });
 
   const [screenIndex, setScreenIndex] = useState<ScreenIndex>(ScreenIndex.IDX_PRE);
