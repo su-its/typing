@@ -73,14 +73,20 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       WPM: (correctType / typeTimeSeconds) * 60,
       Accuracy: (correctType / (correctType + incorrectType)) * 100,
     });
-    axios
-      .post(`http://localhost:8080/users/${userId}/scores`, scoreData)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    fetch(`http://localhost:8080/users/${userId}/scores`,{
+      method: `POST`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(scoreData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
     nextPage();
   };
 
