@@ -8,6 +8,12 @@ servers:
   - url: https://typemaster.com
     description: 本番環境
 paths:
+  /health:
+    get:
+      summary: サーバーの状態を取得
+      responses:
+        "200":
+          description: サーバーが正常に稼働しています。
   /users:
     get:
       summary: ユーザー情報を取得
