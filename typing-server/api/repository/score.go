@@ -7,17 +7,27 @@ import (
 	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/domain/model"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
 )
 
 func GetScoresRanking(ctx context.Context, sortBy string, start, limit int) ([]*model.ScoreRanking, error) {
 	client := ent.FromContext(ctx)
 
+	// ! このクエリは要チェック
 	scores, err := client.Score.Query().
 		WithUser().
+		Where(
+			score.And(
+				score.KeystrokesGTE(120),
+				score.AccuracyGTE(95.0),
+			),
+		).
 		Order(ent.Desc(sortBy)).
 		Limit(limit).
-		Offset(start - 1).
-		Select("id, keystrokes, accuracy, created_at").
+		Offset(start-1). 
+		Select("user_id").
+		Unique(true).
+		Select("id", "keystrokes", "accuracy", "created_at", "user_id").
 		All(ctx)
 	if err != nil {
 		return nil, err
