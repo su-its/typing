@@ -39,5 +39,6 @@
     "typescript": "^5"
   },
   "repository": "https://github.com/su-its/typing",
-  "author": "su-its"
+  "author": "su-its",
+  "packageManager": "yarn@4.1.1"
 }
