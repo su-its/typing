@@ -1,0 +1,21 @@
+name: Deploy Containers
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy
+    needs: build-and-push
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: docker compose up
+        shell: bash
+        run: docker compose up -f compose.yml -d
+        env:
+          COMPOSE_PROJECT_NAME: typing
