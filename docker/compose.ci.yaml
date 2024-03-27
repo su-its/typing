@@ -1,0 +1,15 @@
+services:
+  app:
+    image: ghcr.io/su-its/typing-app:dev
+    build:
+      context: ../typing-app
+      cache_from:
+        - oven/bun:slim
+        - node:20.11-slim
+  api:
+    image: ghcr.io/su-its/typing-api:dev
+    build:
+      context: ../typing-server
+      cache_from:
+        - golang:1.22.0
+        - alpine:latest
