@@ -22,12 +22,8 @@ type Score struct {
 	Keystrokes int `json:"keystrokes,omitempty"`
 	// Accuracy holds the value of the "accuracy" field.
 	Accuracy float64 `json:"accuracy,omitempty"`
-	// スコアはaccuracyとkeystrokesの積で計算される
-	Score float64 `json:"score,omitempty"`
-	// StartedAt holds the value of the "startedAt" field.
-	StartedAt time.Time `json:"startedAt,omitempty"`
-	// EndedAt holds the value of the "endedAt" field.
-	EndedAt      time.Time `json:"endedAt,omitempty"`
+	// CreatedAt holds the value of the "createdAt" field.
+	CreatedAt    time.Time `json:"createdAt,omitempty"`
 	user_scores  *uuid.UUID
 	selectValues sql.SelectValues
 }
@@ -37,11 +33,11 @@ func (*Score) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case score.FieldAccuracy, score.FieldScore:
+		case score.FieldAccuracy:
 			values[i] = new(sql.NullFloat64)
 		case score.FieldKeystrokes:
 			values[i] = new(sql.NullInt64)
-		case score.FieldStartedAt, score.FieldEndedAt:
+		case score.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
 		case score.FieldID:
 			values[i] = new(uuid.UUID)
@@ -80,23 +76,11 @@ func (s *Score) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				s.Accuracy = value.Float64
 			}
-		case score.FieldScore:
-			if value, ok := values[i].(*sql.NullFloat64); !ok {
-				return fmt.Errorf("unexpected type %T for field score", values[i])
-			} else if value.Valid {
-				s.Score = value.Float64
-			}
-		case score.FieldStartedAt:
+		case score.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field startedAt", values[i])
+				return fmt.Errorf("unexpected type %T for field createdAt", values[i])
 			} else if value.Valid {
-				s.StartedAt = value.Time
-			}
-		case score.FieldEndedAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field endedAt", values[i])
-			} else if value.Valid {
-				s.EndedAt = value.Time
+				s.CreatedAt = value.Time
 			}
 		case score.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullScanner); !ok {
@@ -147,14 +131,8 @@ func (s *Score) String() string {
 	builder.WriteString("accuracy=")
 	builder.WriteString(fmt.Sprintf("%v", s.Accuracy))
 	builder.WriteString(", ")
-	builder.WriteString("score=")
-	builder.WriteString(fmt.Sprintf("%v", s.Score))
-	builder.WriteString(", ")
-	builder.WriteString("startedAt=")
-	builder.WriteString(s.StartedAt.Format(time.ANSIC))
-	builder.WriteString(", ")
-	builder.WriteString("endedAt=")
-	builder.WriteString(s.EndedAt.Format(time.ANSIC))
+	builder.WriteString("createdAt=")
+	builder.WriteString(s.CreatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

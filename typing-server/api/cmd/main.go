@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
+	"flag"
+	"fmt"
 	"log/slog"
+	"math/rand"
 	"net/http"
 	"os"
 	"os/signal"
@@ -11,11 +14,14 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/su-its/typing/typing-server/api/presenter"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
 func main() {
+	seedFlag := flag.Bool("seed", false, "シードデータを挿入する場合はtrueを指定")
+	flag.Parse()
+
 	logger := slog.Default()
 
 	// タイムゾーンの設定
@@ -57,8 +63,16 @@ func main() {
 	}
 	logger.Info("schema is created")
 
-	// ルートの登録
-	presenter.RegisterRoutes()
+	// シードデータの挿入
+	if *seedFlag {
+		if err := seedData(context.Background(), entClient); err != nil {
+			logger.Error("failed to seed data: %v", err)
+			return
+		}
+		logger.Info("シードデータが挿入されました")
+	} else {
+		logger.Info("シードデータは挿入されませんでした")
+	}
 
 	// WaitGroupの宣言
 	var wg sync.WaitGroup
@@ -99,4 +113,44 @@ func main() {
 	wg.Wait() // HTTPサーバーの終了を待機
 	close(errChan)
 	logger.Info("server exited")
+}
+
+// TODO: 本番環境では削除する
+func seedData(ctx context.Context, client *ent.Client) error {
+	// シードデータの作成
+	for i := 0; i < 10; i++ {
+		isAlreadySeeded, err := client.User.Query().Where(user.StudentNumber(fmt.Sprintf("user%d", i+1))).Exist(ctx)
+		if err != nil {
+			return err
+		}
+		if isAlreadySeeded {
+			continue
+		}
+
+		u, err := client.User.Create().
+			SetStudentNumber(fmt.Sprintf("user%d", i+1)).
+			SetHandleName(fmt.Sprintf("handle%d", i+1)).
+			Save(ctx)
+		if err != nil {
+			panic(err)
+		}
+
+		for j := 0; j < 5; j++ {
+			score, err := client.Score.Create().
+				SetKeystrokes(rand.Intn(200)).
+				SetAccuracy(rand.Float64()).
+				SetCreatedAt(time.Now()).
+				Save(ctx)
+			if err != nil {
+				panic(err)
+			}
+
+			_, err = client.User.UpdateOne(u).
+				AddScores(score).Save(ctx)
+			if err != nil {
+				panic(err)
+			}
+		}
+	}
+	return nil
 }
