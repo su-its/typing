@@ -19,16 +19,21 @@ type Score struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// UserID holds the value of the "user_id" field.
+	UserID uuid.UUID `json:"user_id,omitempty"`
 	// Keystrokes holds the value of the "keystrokes" field.
 	Keystrokes int `json:"keystrokes,omitempty"`
 	// Accuracy holds the value of the "accuracy" field.
 	Accuracy float64 `json:"accuracy,omitempty"`
+	// 条件を満たす結果のうち、Userのkeystrokesが最大のもの
+	IsMaxKeystrokes bool `json:"is_max_keystrokes,omitempty"`
+	// 条件を満たす結果のうち、Userのaccuracyが最大のもの
+	IsMaxAccuracy bool `json:"is_max_accuracy,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ScoreQuery when eager-loading is set.
 	Edges        ScoreEdges `json:"edges"`
-	user_scores  *uuid.UUID
 	selectValues sql.SelectValues
 }
 
@@ -57,16 +62,16 @@ func (*Score) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case score.FieldIsMaxKeystrokes, score.FieldIsMaxAccuracy:
+			values[i] = new(sql.NullBool)
 		case score.FieldAccuracy:
 			values[i] = new(sql.NullFloat64)
 		case score.FieldKeystrokes:
 			values[i] = new(sql.NullInt64)
 		case score.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
-		case score.FieldID:
+		case score.FieldID, score.FieldUserID:
 			values[i] = new(uuid.UUID)
-		case score.ForeignKeys[0]: // user_scores
-			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -88,6 +93,12 @@ func (s *Score) assignValues(columns []string, values []any) error {
 			} else if value != nil {
 				s.ID = *value
 			}
+		case score.FieldUserID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field user_id", values[i])
+			} else if value != nil {
+				s.UserID = *value
+			}
 		case score.FieldKeystrokes:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field keystrokes", values[i])
@@ -100,18 +111,23 @@ func (s *Score) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				s.Accuracy = value.Float64
 			}
+		case score.FieldIsMaxKeystrokes:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_max_keystrokes", values[i])
+			} else if value.Valid {
+				s.IsMaxKeystrokes = value.Bool
+			}
+		case score.FieldIsMaxAccuracy:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_max_accuracy", values[i])
+			} else if value.Valid {
+				s.IsMaxAccuracy = value.Bool
+			}
 		case score.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
 				s.CreatedAt = value.Time
-			}
-		case score.ForeignKeys[0]:
-			if value, ok := values[i].(*sql.NullScanner); !ok {
-				return fmt.Errorf("unexpected type %T for field user_scores", values[i])
-			} else if value.Valid {
-				s.user_scores = new(uuid.UUID)
-				*s.user_scores = *value.S.(*uuid.UUID)
 			}
 		default:
 			s.selectValues.Set(columns[i], values[i])
@@ -154,11 +170,20 @@ func (s *Score) String() string {
 	var builder strings.Builder
 	builder.WriteString("Score(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", s.ID))
+	builder.WriteString("user_id=")
+	builder.WriteString(fmt.Sprintf("%v", s.UserID))
+	builder.WriteString(", ")
 	builder.WriteString("keystrokes=")
 	builder.WriteString(fmt.Sprintf("%v", s.Keystrokes))
 	builder.WriteString(", ")
 	builder.WriteString("accuracy=")
 	builder.WriteString(fmt.Sprintf("%v", s.Accuracy))
+	builder.WriteString(", ")
+	builder.WriteString("is_max_keystrokes=")
+	builder.WriteString(fmt.Sprintf("%v", s.IsMaxKeystrokes))
+	builder.WriteString(", ")
+	builder.WriteString("is_max_accuracy=")
+	builder.WriteString(fmt.Sprintf("%v", s.IsMaxAccuracy))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(s.CreatedAt.Format(time.ANSIC))

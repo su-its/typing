@@ -56,6 +56,11 @@ func IDLTE(id uuid.UUID) predicate.Score {
 	return predicate.Score(sql.FieldLTE(FieldID, id))
 }
 
+// UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
+func UserID(v uuid.UUID) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldUserID, v))
+}
+
 // Keystrokes applies equality check predicate on the "keystrokes" field. It's identical to KeystrokesEQ.
 func Keystrokes(v int) predicate.Score {
 	return predicate.Score(sql.FieldEQ(FieldKeystrokes, v))
@@ -66,9 +71,39 @@ func Accuracy(v float64) predicate.Score {
 	return predicate.Score(sql.FieldEQ(FieldAccuracy, v))
 }
 
+// IsMaxKeystrokes applies equality check predicate on the "is_max_keystrokes" field. It's identical to IsMaxKeystrokesEQ.
+func IsMaxKeystrokes(v bool) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldIsMaxKeystrokes, v))
+}
+
+// IsMaxAccuracy applies equality check predicate on the "is_max_accuracy" field. It's identical to IsMaxAccuracyEQ.
+func IsMaxAccuracy(v bool) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldIsMaxAccuracy, v))
+}
+
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v time.Time) predicate.Score {
 	return predicate.Score(sql.FieldEQ(FieldCreatedAt, v))
+}
+
+// UserIDEQ applies the EQ predicate on the "user_id" field.
+func UserIDEQ(v uuid.UUID) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldUserID, v))
+}
+
+// UserIDNEQ applies the NEQ predicate on the "user_id" field.
+func UserIDNEQ(v uuid.UUID) predicate.Score {
+	return predicate.Score(sql.FieldNEQ(FieldUserID, v))
+}
+
+// UserIDIn applies the In predicate on the "user_id" field.
+func UserIDIn(vs ...uuid.UUID) predicate.Score {
+	return predicate.Score(sql.FieldIn(FieldUserID, vs...))
+}
+
+// UserIDNotIn applies the NotIn predicate on the "user_id" field.
+func UserIDNotIn(vs ...uuid.UUID) predicate.Score {
+	return predicate.Score(sql.FieldNotIn(FieldUserID, vs...))
 }
 
 // KeystrokesEQ applies the EQ predicate on the "keystrokes" field.
@@ -149,6 +184,46 @@ func AccuracyLT(v float64) predicate.Score {
 // AccuracyLTE applies the LTE predicate on the "accuracy" field.
 func AccuracyLTE(v float64) predicate.Score {
 	return predicate.Score(sql.FieldLTE(FieldAccuracy, v))
+}
+
+// IsMaxKeystrokesEQ applies the EQ predicate on the "is_max_keystrokes" field.
+func IsMaxKeystrokesEQ(v bool) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldIsMaxKeystrokes, v))
+}
+
+// IsMaxKeystrokesNEQ applies the NEQ predicate on the "is_max_keystrokes" field.
+func IsMaxKeystrokesNEQ(v bool) predicate.Score {
+	return predicate.Score(sql.FieldNEQ(FieldIsMaxKeystrokes, v))
+}
+
+// IsMaxKeystrokesIsNil applies the IsNil predicate on the "is_max_keystrokes" field.
+func IsMaxKeystrokesIsNil() predicate.Score {
+	return predicate.Score(sql.FieldIsNull(FieldIsMaxKeystrokes))
+}
+
+// IsMaxKeystrokesNotNil applies the NotNil predicate on the "is_max_keystrokes" field.
+func IsMaxKeystrokesNotNil() predicate.Score {
+	return predicate.Score(sql.FieldNotNull(FieldIsMaxKeystrokes))
+}
+
+// IsMaxAccuracyEQ applies the EQ predicate on the "is_max_accuracy" field.
+func IsMaxAccuracyEQ(v bool) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldIsMaxAccuracy, v))
+}
+
+// IsMaxAccuracyNEQ applies the NEQ predicate on the "is_max_accuracy" field.
+func IsMaxAccuracyNEQ(v bool) predicate.Score {
+	return predicate.Score(sql.FieldNEQ(FieldIsMaxAccuracy, v))
+}
+
+// IsMaxAccuracyIsNil applies the IsNil predicate on the "is_max_accuracy" field.
+func IsMaxAccuracyIsNil() predicate.Score {
+	return predicate.Score(sql.FieldIsNull(FieldIsMaxAccuracy))
+}
+
+// IsMaxAccuracyNotNil applies the NotNil predicate on the "is_max_accuracy" field.
+func IsMaxAccuracyNotNil() predicate.Score {
+	return predicate.Score(sql.FieldNotNull(FieldIsMaxAccuracy))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.

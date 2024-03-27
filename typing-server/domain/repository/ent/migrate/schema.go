@@ -13,8 +13,10 @@ var (
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "keystrokes", Type: field.TypeInt},
 		{Name: "accuracy", Type: field.TypeFloat64},
+		{Name: "is_max_keystrokes", Type: field.TypeBool, Nullable: true},
+		{Name: "is_max_accuracy", Type: field.TypeBool, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
-		{Name: "user_scores", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
 	}
 	// ScoresTable holds the schema information for the "scores" table.
 	ScoresTable = &schema.Table{
@@ -24,7 +26,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "scores_users_scores",
-				Columns:    []*schema.Column{ScoresColumns[4]},
+				Columns:    []*schema.Column{ScoresColumns[6]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},

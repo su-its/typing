@@ -17,8 +17,11 @@ func (Score) Fields() []ent.Field {
 	//カラムとしてint型のkeystrokes,float型のaccuracy，float型のscore,datetime型のstartedAt,datetime型のendedAtを持たせる
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New).StorageKey("id").Unique(),
+		field.UUID("user_id", uuid.UUID{}).StorageKey("user_id").Unique(),
 		field.Int("keystrokes"),
 		field.Float("accuracy"),
+		field.Bool("is_max_keystrokes").Optional().Comment("条件を満たす結果のうち、Userのkeystrokesが最大のもの"),
+		field.Bool("is_max_accuracy").Optional().Comment("条件を満たす結果のうち、Userのaccuracyが最大のもの"),
 		field.Time("created_at").Immutable().Default(time.Now)}
 }
 
@@ -29,6 +32,7 @@ func (Score) Edges() []ent.Edge {
 		edge.From("user", User.Type).
 			Ref("scores").
 			Unique().
+			Field("user_id"). // ここでリンクするカラムを指定
 			Required(),
 	}
 }

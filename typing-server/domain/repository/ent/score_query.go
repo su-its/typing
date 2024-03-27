@@ -24,7 +24,6 @@ type ScoreQuery struct {
 	inters     []Interceptor
 	predicates []predicate.Score
 	withUser   *UserQuery
-	withFKs    bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -299,12 +298,12 @@ func (sq *ScoreQuery) WithUser(opts ...func(*UserQuery)) *ScoreQuery {
 // Example:
 //
 //	var v []struct {
-//		Keystrokes int `json:"keystrokes,omitempty"`
+//		UserID uuid.UUID `json:"user_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Score.Query().
-//		GroupBy(score.FieldKeystrokes).
+//		GroupBy(score.FieldUserID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (sq *ScoreQuery) GroupBy(field string, fields ...string) *ScoreGroupBy {
@@ -322,11 +321,11 @@ func (sq *ScoreQuery) GroupBy(field string, fields ...string) *ScoreGroupBy {
 // Example:
 //
 //	var v []struct {
-//		Keystrokes int `json:"keystrokes,omitempty"`
+//		UserID uuid.UUID `json:"user_id,omitempty"`
 //	}
 //
 //	client.Score.Query().
-//		Select(score.FieldKeystrokes).
+//		Select(score.FieldUserID).
 //		Scan(ctx, &v)
 func (sq *ScoreQuery) Select(fields ...string) *ScoreSelect {
 	sq.ctx.Fields = append(sq.ctx.Fields, fields...)
@@ -370,18 +369,11 @@ func (sq *ScoreQuery) prepareQuery(ctx context.Context) error {
 func (sq *ScoreQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Score, error) {
 	var (
 		nodes       = []*Score{}
-		withFKs     = sq.withFKs
 		_spec       = sq.querySpec()
 		loadedTypes = [1]bool{
 			sq.withUser != nil,
 		}
 	)
-	if sq.withUser != nil {
-		withFKs = true
-	}
-	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, score.ForeignKeys...)
-	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Score).scanValues(nil, columns)
 	}
@@ -413,10 +405,7 @@ func (sq *ScoreQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*S
 	ids := make([]uuid.UUID, 0, len(nodes))
 	nodeids := make(map[uuid.UUID][]*Score)
 	for i := range nodes {
-		if nodes[i].user_scores == nil {
-			continue
-		}
-		fk := *nodes[i].user_scores
+		fk := nodes[i].UserID
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
@@ -433,7 +422,7 @@ func (sq *ScoreQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*S
 	for _, n := range neighbors {
 		nodes, ok := nodeids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "user_scores" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "user_id" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)
@@ -466,6 +455,9 @@ func (sq *ScoreQuery) querySpec() *sqlgraph.QuerySpec {
 			if fields[i] != score.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
+		}
+		if sq.withUser != nil {
+			_spec.Node.AddColumnOnce(score.FieldUserID)
 		}
 	}
 	if ps := sq.predicates; len(ps) > 0 {

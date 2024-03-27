@@ -22,6 +22,12 @@ type ScoreCreate struct {
 	hooks    []Hook
 }
 
+// SetUserID sets the "user_id" field.
+func (sc *ScoreCreate) SetUserID(u uuid.UUID) *ScoreCreate {
+	sc.mutation.SetUserID(u)
+	return sc
+}
+
 // SetKeystrokes sets the "keystrokes" field.
 func (sc *ScoreCreate) SetKeystrokes(i int) *ScoreCreate {
 	sc.mutation.SetKeystrokes(i)
@@ -31,6 +37,34 @@ func (sc *ScoreCreate) SetKeystrokes(i int) *ScoreCreate {
 // SetAccuracy sets the "accuracy" field.
 func (sc *ScoreCreate) SetAccuracy(f float64) *ScoreCreate {
 	sc.mutation.SetAccuracy(f)
+	return sc
+}
+
+// SetIsMaxKeystrokes sets the "is_max_keystrokes" field.
+func (sc *ScoreCreate) SetIsMaxKeystrokes(b bool) *ScoreCreate {
+	sc.mutation.SetIsMaxKeystrokes(b)
+	return sc
+}
+
+// SetNillableIsMaxKeystrokes sets the "is_max_keystrokes" field if the given value is not nil.
+func (sc *ScoreCreate) SetNillableIsMaxKeystrokes(b *bool) *ScoreCreate {
+	if b != nil {
+		sc.SetIsMaxKeystrokes(*b)
+	}
+	return sc
+}
+
+// SetIsMaxAccuracy sets the "is_max_accuracy" field.
+func (sc *ScoreCreate) SetIsMaxAccuracy(b bool) *ScoreCreate {
+	sc.mutation.SetIsMaxAccuracy(b)
+	return sc
+}
+
+// SetNillableIsMaxAccuracy sets the "is_max_accuracy" field if the given value is not nil.
+func (sc *ScoreCreate) SetNillableIsMaxAccuracy(b *bool) *ScoreCreate {
+	if b != nil {
+		sc.SetIsMaxAccuracy(*b)
+	}
 	return sc
 }
 
@@ -59,12 +93,6 @@ func (sc *ScoreCreate) SetNillableID(u *uuid.UUID) *ScoreCreate {
 	if u != nil {
 		sc.SetID(*u)
 	}
-	return sc
-}
-
-// SetUserID sets the "user" edge to the User entity by ID.
-func (sc *ScoreCreate) SetUserID(id uuid.UUID) *ScoreCreate {
-	sc.mutation.SetUserID(id)
 	return sc
 }
 
@@ -120,6 +148,9 @@ func (sc *ScoreCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (sc *ScoreCreate) check() error {
+	if _, ok := sc.mutation.UserID(); !ok {
+		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Score.user_id"`)}
+	}
 	if _, ok := sc.mutation.Keystrokes(); !ok {
 		return &ValidationError{Name: "keystrokes", err: errors.New(`ent: missing required field "Score.keystrokes"`)}
 	}
@@ -175,6 +206,14 @@ func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 		_spec.SetField(score.FieldAccuracy, field.TypeFloat64, value)
 		_node.Accuracy = value
 	}
+	if value, ok := sc.mutation.IsMaxKeystrokes(); ok {
+		_spec.SetField(score.FieldIsMaxKeystrokes, field.TypeBool, value)
+		_node.IsMaxKeystrokes = value
+	}
+	if value, ok := sc.mutation.IsMaxAccuracy(); ok {
+		_spec.SetField(score.FieldIsMaxAccuracy, field.TypeBool, value)
+		_node.IsMaxAccuracy = value
+	}
 	if value, ok := sc.mutation.CreatedAt(); ok {
 		_spec.SetField(score.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
@@ -193,7 +232,7 @@ func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.user_scores = &nodes[0]
+		_node.UserID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

@@ -15,10 +15,16 @@ const (
 	Label = "score"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldUserID holds the string denoting the user_id field in the database.
+	FieldUserID = "user_id"
 	// FieldKeystrokes holds the string denoting the keystrokes field in the database.
 	FieldKeystrokes = "keystrokes"
 	// FieldAccuracy holds the string denoting the accuracy field in the database.
 	FieldAccuracy = "accuracy"
+	// FieldIsMaxKeystrokes holds the string denoting the is_max_keystrokes field in the database.
+	FieldIsMaxKeystrokes = "is_max_keystrokes"
+	// FieldIsMaxAccuracy holds the string denoting the is_max_accuracy field in the database.
+	FieldIsMaxAccuracy = "is_max_accuracy"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// EdgeUser holds the string denoting the user edge name in mutations.
@@ -31,32 +37,24 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UserInverseTable = "users"
 	// UserColumn is the table column denoting the user relation/edge.
-	UserColumn = "user_scores"
+	UserColumn = "user_id"
 )
 
 // Columns holds all SQL columns for score fields.
 var Columns = []string{
 	FieldID,
+	FieldUserID,
 	FieldKeystrokes,
 	FieldAccuracy,
+	FieldIsMaxKeystrokes,
+	FieldIsMaxAccuracy,
 	FieldCreatedAt,
-}
-
-// ForeignKeys holds the SQL foreign-keys that are owned by the "scores"
-// table and are not defined as standalone fields in the schema.
-var ForeignKeys = []string{
-	"user_scores",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
-			return true
-		}
-	}
-	for i := range ForeignKeys {
-		if column == ForeignKeys[i] {
 			return true
 		}
 	}
@@ -78,6 +76,11 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
+// ByUserID orders the results by the user_id field.
+func ByUserID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUserID, opts...).ToFunc()
+}
+
 // ByKeystrokes orders the results by the keystrokes field.
 func ByKeystrokes(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldKeystrokes, opts...).ToFunc()
@@ -86,6 +89,16 @@ func ByKeystrokes(opts ...sql.OrderTermOption) OrderOption {
 // ByAccuracy orders the results by the accuracy field.
 func ByAccuracy(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAccuracy, opts...).ToFunc()
+}
+
+// ByIsMaxKeystrokes orders the results by the is_max_keystrokes field.
+func ByIsMaxKeystrokes(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsMaxKeystrokes, opts...).ToFunc()
+}
+
+// ByIsMaxAccuracy orders the results by the is_max_accuracy field.
+func ByIsMaxAccuracy(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsMaxAccuracy, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.

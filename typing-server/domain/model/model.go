@@ -17,6 +17,7 @@ type User struct {
 
 type Score struct {
 	ID         string    `json:"id"`
+	UserID     string    `json:"user_id"`
 	Keystrokes int       `json:"keystrokes"`
 	Accuracy   float64   `json:"accuracy"`
 	CreatedAt  time.Time `json:"created_at"`
