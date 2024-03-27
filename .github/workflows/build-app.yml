@@ -19,8 +19,21 @@ defaults:
     working-directory: typing-app
 
 jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/prepare-nodemodules
+        with:
+          root: ${{ github.workspace }}/typing-app
+      - name: Format Code
+        run: npm run format:ci
   build:
     name: Build
+    needs: format
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -31,16 +44,3 @@ jobs:
           root: ${{ github.workspace }}/typing-app
       - name: Build Next.js Project
         run: npm run build
-  format:
-    name: Format
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/prepare-nodemodules
-        with:
-          root: ${{ github.workspace }}/typing-app
-      - name: Format Code
-        run: npm run format:ci
