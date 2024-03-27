@@ -7,15 +7,28 @@ servers:
     description: ローカル開発環境
   - url: https://typemaster.com
     description: 本番環境
+tags:
+  - name: other
+    description: いい名前が思いつかない(仮)
+  - name: user
+    description: ユーザー関係(仮)
+  - name: score
+    description: スコア関係(仮)
 paths:
   /health:
-    get:
+    get:  
+      tags:
+        - other
+      operationId: healthcheck
       summary: サーバーの状態を取得
       responses:
         "200":
           description: サーバーが正常に稼働しています。
   /users:
     get:
+      tags:
+        - user
+      operationId: getUsers
       summary: ユーザー情報を取得
       parameters:
         - in: query
@@ -36,6 +49,9 @@ paths:
 
   /scores/ranking:
     get:
+      tags:
+        - score
+      operationId: getScoresRanking
       summary: スコアランキングを取得
       parameters:
         - in: query
@@ -68,6 +84,9 @@ paths:
 
   /scores:
     post:
+      tags:
+        - score
+      operationId: registerScore
       summary: スコアを登録
       requestBody:
         required: true
