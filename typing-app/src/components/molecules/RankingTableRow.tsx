@@ -1,5 +1,5 @@
 import { Td, Tr } from "@chakra-ui/react";
-import { ScoreRanking } from "./RankingTableBody";
+import { ScoreRanking } from "../organism/RankingTabs";
 
 const RankingTableRow: React.FC<ScoreRanking> = (scoreRanking) => {
   return (

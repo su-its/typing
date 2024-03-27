@@ -5,9 +5,10 @@ const RankingTableHead: React.FC = () => {
     <Thead>
       <Tr>
         <Th>Rank</Th>
-        <Th>Student Number</Th>
+        <Th isNumeric>Student Number</Th>
         <Th isNumeric>keyStorokes</Th>
         <Th isNumeric>Accuracy</Th>
+        <Th>Created at</Th>
       </Tr>
     </Thead>
   );

@@ -1,11 +1,12 @@
 "use client";
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Button, Flex } from "@chakra-ui/react";
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Button, Flex, Container, Center } from "@chakra-ui/react";
 import RankingTable from "../organism/RankingTable";
 import { Pagination } from "../molecules/Pagination";
+import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
 
 const RankingTabs = () => {
-  const [scoreRankings, setScoreRankings] = useState<ScoreRanking[]>([]);
+  const [scoreRankings, setScoreRankings] = useState<ScoreRanking[]>(demoAccuracyRankings);
   const [rankingStartFrom, setRankingStartFrom] = useState(0);
   const [sortBy, setSortBy] = useState<"accuracy" | "keystrokes">("accuracy");
   const LIMIT = 10;
@@ -37,14 +38,20 @@ const RankingTabs = () => {
   };
 
   const fetchData = async () => {
-    setScoreRankings(demoAccuracyRankings);
-    // TODO: データをフェッチ
+    // TODO: APIを使ってデータをフェッチ
+    if (sortBy == "accuracy") {
+      setScoreRankings(demoAccuracyRankings);
+    } else if(sortBy == "keystrokes") {
+      setScoreRankings(demoKeyStrokeRankings);
+    }
   };
 
   return (
     <Tabs onChange={handleTabChange}>
       <Flex justifyContent="right">
-        <Button onClick={fetchData}>Reload</Button>
+        <CustomButton onClick={() => fetchData()} isDisabled={false}>
+          Reload
+        </CustomButton>
       </Flex>
       <TabList>
         <Tab>Accuracy</Tab>
@@ -53,18 +60,20 @@ const RankingTabs = () => {
 
       <TabPanels>
         <TabPanel>
-          <RankingTable scoreRankings={demoAccuracyRankings} /> {/* TODO: scoreRankingsに置き換え */}
+          <RankingTable scoreRankings={scoreRankings} />
         </TabPanel>
         <TabPanel>
-          <RankingTable scoreRankings={demoKeyStrokeRankings} /> {/* TODO: scoreRankingsに置き換え */}
+          <RankingTable scoreRankings={scoreRankings} />
         </TabPanel>
       </TabPanels>
-      <Pagination
-        onPrev={() => handlePaginationClick("prev")}
-        onNext={() => handlePaginationClick("next")}
-        isPrevDisabled={rankingStartFrom <= 0}
-        isNextDisabled={rankingStartFrom + LIMIT >= MAXIMUM}
-      />
+      <Center>
+        <Pagination
+          onPrev={() => handlePaginationClick("prev")}
+          onNext={() => handlePaginationClick("next")}
+          isPrevDisabled={rankingStartFrom <= 0}
+          isNextDisabled={rankingStartFrom + LIMIT >= MAXIMUM}
+        />
+      </Center>
     </Tabs>
   );
 };
@@ -160,6 +169,13 @@ const demoAccuracyRankings: ScoreRanking[] = [
     user: demoUsers[2],
     keystrokes: 70,
     accuracy: 70,
+    createdAt: new Date(),
+  },
+  {
+    rank: 5,
+    user: demoUsers[2],
+    keystrokes: 60,
+    accuracy: 60,
     createdAt: new Date(),
   },
 ];
