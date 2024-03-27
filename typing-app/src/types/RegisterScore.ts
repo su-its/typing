@@ -1,17 +1,17 @@
 interface RegisterScore {
-  Keystrokes: number;
-  Accuracy: number;
-  Score: number;
-  StartedAt: Date;
-  EndedAt: Date;
+  keystrokes: number;
+  accuracy: number;
+  score: number;
+  startedAt: Date;
+  endedAt: Date;
 }
 
 export interface ResultScore {
-  Keystrokes: number;
-  Miss: number;
-  Time: Date;
-  WPM: number;
-  Accuracy: number;
+  keystrokes: number;
+  miss: number;
+  time: Date;
+  wpm: number;
+  accuracy: number;
 }
 
 export default RegisterScore;

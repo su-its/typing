@@ -1,6 +1,5 @@
 import RegisterScore, { ResultScore } from "@/types/RegisterScore";
 import { Box } from "@chakra-ui/react";
-import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import ProgressBar from "../atoms/ProgressBar";
@@ -33,11 +32,11 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
   const totalSeconds = 250;
   const [count, setCount] = useState(totalSeconds);
   const damyScoreData = {
-    Keystrokes: 123,
-    Accuracy: 456.7,
-    Score: 890.1,
-    StartedAt: new Date(),
-    EndedAt: new Date(),
+    keystrokes: 123,
+    accuracy: 456.7,
+    score: 890.1,
+    startedAt: new Date(),
+    endedAt: new Date(),
   } as RegisterScore;
   const damyUserId = "damyId";
 
@@ -67,11 +66,11 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
   const sendResultDat = () => {
     const typeTimeSeconds = totalSeconds - count;
     setResultScore({
-      Keystrokes: correctType + incorrectType,
-      Miss: incorrectType,
-      Time: new Date(typeTimeSeconds * 1000),
-      WPM: (correctType / typeTimeSeconds) * 60,
-      Accuracy: (correctType / (correctType + incorrectType)) * 100,
+      keystrokes: correctType + incorrectType,
+      miss: incorrectType,
+      time: new Date(typeTimeSeconds * 1000),
+      wpm: (correctType / typeTimeSeconds) * 60,
+      accuracy: (correctType / (correctType + incorrectType)) * 100,
     });
     fetch(`http://localhost:8080/users/${userId}/scores`,{
       method: `POST`,
@@ -83,11 +82,11 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+        nextPage();
     })
     .catch((error) => {
       console.error(error);
     });
-    nextPage();
   };
 
   const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
