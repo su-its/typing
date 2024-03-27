@@ -5,7 +5,7 @@ info:
 servers:
   - url: http://localhost:8080
     description: ローカル開発環境
-  - url: https://typemaster.com
+  - url: https://example.com
     description: 本番環境
 tags:
   - name: other
@@ -16,7 +16,7 @@ tags:
     description: スコア関係(仮)
 paths:
   /health:
-    get:  
+    get:
       tags:
         - other
       operationId: healthcheck
