@@ -48,7 +48,7 @@ paths:
           name: start
           schema:
             type: integer
-          description: ランキングの開始位置
+          description: ランキングの開始位置(x位 | x>0)
         - in: query
           name: limit
           schema:
