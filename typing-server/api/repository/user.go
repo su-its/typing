@@ -9,6 +9,7 @@ import (
 
 func GetUserByStudentNumber(ctx context.Context, client *ent.Client, studentNumber string) (*ent.User, error) {
 	entUser, err := client.User.Query().
+		WithScores().
 		Where(user.StudentNumberEQ(studentNumber)).
 		Only(ctx)
 	if err != nil {
@@ -19,5 +20,8 @@ func GetUserByStudentNumber(ctx context.Context, client *ent.Client, studentNumb
 		ID:            entUser.ID,
 		StudentNumber: entUser.StudentNumber,
 		HandleName:    entUser.HandleName,
+		CreatedAt:     entUser.CreatedAt,
+		UpdatedAt:     entUser.UpdatedAt,
+		Edges:         entUser.Edges,
 	}, nil
 }
