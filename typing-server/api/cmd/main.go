@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/su-its/typing/typing-server/api/router"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
 	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
@@ -86,7 +87,14 @@ func main() {
 	go func() {
 		defer wg.Done() // 関数終了時にWaitGroupをデクリメント
 		// サーバーの設定
-		server := &http.Server{Addr: ":8080"}
+		// ルーティングの設定
+		r := router.SetupRouter()
+
+		// サーバーの設定
+		server := &http.Server{
+			Addr:    ":8080",
+			Handler: r,
+		}
 		// 非同期でサーバーを開始
 		go func() {
 			logger.Info("server is running at Addr :8080")
