@@ -31,17 +31,9 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
 
   const totalSeconds = 250;
   const [count, setCount] = useState(totalSeconds);
-  const damyScoreData = {
-    keystrokes: 123,
-    accuracy: 456.7,
-    score: 890.1,
-    startedAt: new Date(),
-    endedAt: new Date(),
-  } as RegisterScore;
   const damyUserId = "damyId";
 
   const userId = damyUserId; // ToDo: 要変更
-  const scoreData = damyScoreData; // ToDo: 要変更
   const [correctType, setCorrectType] = useState(0); // 正打数
   const [incorrectType, setIncorrectType] = useState(0); // 誤打数
   const [typeProgress, setTypeProgress] = useState(0); // 進捗
@@ -49,44 +41,52 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
   const [typeIndex, setTypeIndex] = useState(0);
   useEffect(() => {
     if (count <= 0) {
-      sendResultDat();
+      sendResultData();
     } else {
       const timer = setInterval(() => setCount(count - 0.1), 100);
       return () => clearInterval(timer);
     }
-  }, [count, nextPage, userId, scoreData]); // ビルド時の警告防止のためにuserId, scoreDataも依存リストに追加
+  }, [count, nextPage, userId]); // ビルド時の警告防止のためにuserIdも依存リストに追加
 
   useEffect(() => {
     if (typeIndex === subjectText.length - 1) {
-      sendResultDat();
+      sendResultData();
     }
-  }, [nextPage, userId, scoreData, typeIndex]); // ビルド時の警告防止のためにuserId, scoreDataも依存リストに追加
+  }, [nextPage, userId, typeIndex]); // ビルド時の警告防止のためにuserIdも依存リストに追加
 
   // スコアデータを送信する
-  const sendResultDat = () => {
+  const sendResultData = () => {
     const typeTimeSeconds = totalSeconds - count;
+    // サーバに送信されるデータ
+    const registeredScore = {
+      keystrokes: correctType,
+      accuracy: (correctType / (correctType + incorrectType)) * 100,
+      score: (correctType / typeTimeSeconds) * 60,
+      startedAt: new Date(), // ToDo: 要変更
+      endedAt: new Date(), // ToDo: 要変更
+    } as RegisterScore; // ToDo: 要変更
+    // リザルト画面用のデータ
     setResultScore({
-      keystrokes: correctType + incorrectType,
+      keystrokes: registeredScore.keystrokes,
       miss: incorrectType,
       time: new Date(typeTimeSeconds * 1000),
       wpm: (correctType / typeTimeSeconds) * 60,
-      accuracy: (correctType / (correctType + incorrectType)) * 100,
-    });
-    fetch(`http://localhost:8080/users/${userId}/scores`,{
+      accuracy: registeredScore.accuracy,
+    } as ResultScore);
+    fetch(`http://localhost:8080/users/${userId}/scores`, {
       method: `POST`,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(scoreData),
+      body: JSON.stringify(registeredScore),
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         nextPage();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
