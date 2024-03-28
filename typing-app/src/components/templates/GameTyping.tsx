@@ -118,7 +118,12 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       return 0;
     }
     const typeTime = typingQueueList[typingQueueList.length - 1] - typingQueueList[0];
-    return (typingQueueList.length / typeTime) * 60000;
+    const currentWpm = (typingQueueList.length / typeTime) * 60000;
+    const currentWpmForProgressBar = (1000 / 3) * Math.log10((999 / 1000) * currentWpm + 1);
+    if (currentWpmForProgressBar > 1000) {
+      return 1000;
+    }
+    return currentWpmForProgressBar;
   };
 
   const handleOnKeyDown = (e: React.KeyboardEvent) => {
@@ -154,7 +159,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
           {
             // ToDo 速度の計算
           }
-          <ProgressBar maxWidth={330} height={10} maxValue={500} value={currentTypeSpeed} />
+          <ProgressBar maxWidth={330} height={10} maxValue={1000} value={currentTypeSpeed} />
           <ProgressBar maxWidth={330} height={10} maxValue={500} value={300} />
         </div>
         <Image
