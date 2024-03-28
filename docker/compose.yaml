@@ -1,0 +1,32 @@
+services:
+  app:
+    image: ghcr.io/su-its/typing-app:dev
+  api:
+    image: ghcr.io/su-its/typing-server:dev
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_ADDR: ${DB_ADDR:-db:3306}
+    healthcheck:
+      test: ["CMD", "curl", "localhost:8080"]
+      interval: 10s
+      retries: 10
+      start_period: 30s
+  db:
+    image: mysql:8.3.0
+    environment:
+      MYSQL_DATABASE: typing-db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  db-data:
