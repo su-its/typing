@@ -38,7 +38,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
   const userId = damyUserId; // ToDo: 要変更
   const [correctType, setCorrectType] = useState(0); // 正打数
   const [incorrectType, setIncorrectType] = useState(0); // 誤打数
-  const [typeProgress, setTypeProgress] = useState(0); // 進捗 typeIndexで代替可能
 
   const [typeIndex, setTypeIndex] = useState(0);
   // 残り時間のカウントダウン
@@ -54,9 +53,9 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       }, updateFrequency);
       return () => clearInterval(timer);
     }
-    nextPage();
   }, [count, nextPage, userId]); // ビルド時の警告防止のためにuserIdも依存リストに追加
 
+  // 打ち終わった時にスコアを送信する
   useEffect(() => {
     if (typeIndex === subjectText.length - 1) {
       sendResultData();
@@ -97,12 +96,11 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       body: JSON.stringify(registeredScore),
     })
       .then((res) => res.json())
-      .then((data) => {
-        nextPage();
-      })
+      .then(() => {})
       .catch((error) => {
         console.error(error);
       });
+    nextPage();
   };
 
   // 瞬間タイピング速度計算用
@@ -139,7 +137,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
     } else {
       setIncorrectType(incorrectType + 1);
     }
-    setTypeProgress(typeIndex);
   };
 
   return (
@@ -156,7 +153,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
           <ProgressBar maxWidth={280} height={20} maxValue={60} value={count} />
         </div>
         <div className={`${styles.progress} ${styles.progress_position}`}>
-          <ProgressBar maxWidth={330} height={20} maxValue={subjectText.length - 1} value={typeProgress} />
+          <ProgressBar maxWidth={330} height={20} maxValue={subjectText.length - 1} value={typeIndex} />
         </div>
         <div className={`${styles.progress} ${styles.progress_speed}`}>
           {
