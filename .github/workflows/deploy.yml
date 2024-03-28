@@ -9,13 +9,13 @@ on:
 jobs:
   deploy:
     name: Deploy
-    needs: build-and-push
     runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v4
-      - name: docker compose up
+      - name: podman-compose up
         shell: bash
-        run: docker compose up -f compose.yml -d
+        run: docker-compose up -f compose.yml -d
+        working-directory: docker
         env:
           COMPOSE_PROJECT_NAME: typing
