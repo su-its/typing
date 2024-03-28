@@ -33,18 +33,22 @@ const (
 // ScoreMutation represents an operation that mutates the Score nodes in the graph.
 type ScoreMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uuid.UUID
-	keystrokes    *int
-	addkeystrokes *int
-	accuracy      *float64
-	addaccuracy   *float64
-	createdAt     *time.Time
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Score, error)
-	predicates    []predicate.Score
+	op                Op
+	typ               string
+	id                *uuid.UUID
+	keystrokes        *int
+	addkeystrokes     *int
+	accuracy          *float64
+	addaccuracy       *float64
+	is_max_keystrokes *bool
+	is_max_accuracy   *bool
+	created_at        *time.Time
+	clearedFields     map[string]struct{}
+	user              *uuid.UUID
+	cleareduser       bool
+	done              bool
+	oldValue          func(context.Context) (*Score, error)
+	predicates        []predicate.Score
 }
 
 var _ ent.Mutation = (*ScoreMutation)(nil)
@@ -149,6 +153,42 @@ func (m *ScoreMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
+}
+
+// SetUserID sets the "user_id" field.
+func (m *ScoreMutation) SetUserID(u uuid.UUID) {
+	m.user = &u
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *ScoreMutation) UserID() (r uuid.UUID, exists bool) {
+	v := m.user
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the Score entity.
+// If the Score object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ScoreMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *ScoreMutation) ResetUserID() {
+	m.user = nil
 }
 
 // SetKeystrokes sets the "keystrokes" field.
@@ -263,21 +303,119 @@ func (m *ScoreMutation) ResetAccuracy() {
 	m.addaccuracy = nil
 }
 
-// SetCreatedAt sets the "createdAt" field.
-func (m *ScoreMutation) SetCreatedAt(t time.Time) {
-	m.createdAt = &t
+// SetIsMaxKeystrokes sets the "is_max_keystrokes" field.
+func (m *ScoreMutation) SetIsMaxKeystrokes(b bool) {
+	m.is_max_keystrokes = &b
 }
 
-// CreatedAt returns the value of the "createdAt" field in the mutation.
-func (m *ScoreMutation) CreatedAt() (r time.Time, exists bool) {
-	v := m.createdAt
+// IsMaxKeystrokes returns the value of the "is_max_keystrokes" field in the mutation.
+func (m *ScoreMutation) IsMaxKeystrokes() (r bool, exists bool) {
+	v := m.is_max_keystrokes
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldCreatedAt returns the old "createdAt" field's value of the Score entity.
+// OldIsMaxKeystrokes returns the old "is_max_keystrokes" field's value of the Score entity.
+// If the Score object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ScoreMutation) OldIsMaxKeystrokes(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsMaxKeystrokes is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsMaxKeystrokes requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsMaxKeystrokes: %w", err)
+	}
+	return oldValue.IsMaxKeystrokes, nil
+}
+
+// ClearIsMaxKeystrokes clears the value of the "is_max_keystrokes" field.
+func (m *ScoreMutation) ClearIsMaxKeystrokes() {
+	m.is_max_keystrokes = nil
+	m.clearedFields[score.FieldIsMaxKeystrokes] = struct{}{}
+}
+
+// IsMaxKeystrokesCleared returns if the "is_max_keystrokes" field was cleared in this mutation.
+func (m *ScoreMutation) IsMaxKeystrokesCleared() bool {
+	_, ok := m.clearedFields[score.FieldIsMaxKeystrokes]
+	return ok
+}
+
+// ResetIsMaxKeystrokes resets all changes to the "is_max_keystrokes" field.
+func (m *ScoreMutation) ResetIsMaxKeystrokes() {
+	m.is_max_keystrokes = nil
+	delete(m.clearedFields, score.FieldIsMaxKeystrokes)
+}
+
+// SetIsMaxAccuracy sets the "is_max_accuracy" field.
+func (m *ScoreMutation) SetIsMaxAccuracy(b bool) {
+	m.is_max_accuracy = &b
+}
+
+// IsMaxAccuracy returns the value of the "is_max_accuracy" field in the mutation.
+func (m *ScoreMutation) IsMaxAccuracy() (r bool, exists bool) {
+	v := m.is_max_accuracy
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsMaxAccuracy returns the old "is_max_accuracy" field's value of the Score entity.
+// If the Score object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ScoreMutation) OldIsMaxAccuracy(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsMaxAccuracy is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsMaxAccuracy requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsMaxAccuracy: %w", err)
+	}
+	return oldValue.IsMaxAccuracy, nil
+}
+
+// ClearIsMaxAccuracy clears the value of the "is_max_accuracy" field.
+func (m *ScoreMutation) ClearIsMaxAccuracy() {
+	m.is_max_accuracy = nil
+	m.clearedFields[score.FieldIsMaxAccuracy] = struct{}{}
+}
+
+// IsMaxAccuracyCleared returns if the "is_max_accuracy" field was cleared in this mutation.
+func (m *ScoreMutation) IsMaxAccuracyCleared() bool {
+	_, ok := m.clearedFields[score.FieldIsMaxAccuracy]
+	return ok
+}
+
+// ResetIsMaxAccuracy resets all changes to the "is_max_accuracy" field.
+func (m *ScoreMutation) ResetIsMaxAccuracy() {
+	m.is_max_accuracy = nil
+	delete(m.clearedFields, score.FieldIsMaxAccuracy)
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *ScoreMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *ScoreMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the Score entity.
 // If the Score object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *ScoreMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
@@ -294,9 +432,36 @@ func (m *ScoreMutation) OldCreatedAt(ctx context.Context) (v time.Time, err erro
 	return oldValue.CreatedAt, nil
 }
 
-// ResetCreatedAt resets all changes to the "createdAt" field.
+// ResetCreatedAt resets all changes to the "created_at" field.
 func (m *ScoreMutation) ResetCreatedAt() {
-	m.createdAt = nil
+	m.created_at = nil
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (m *ScoreMutation) ClearUser() {
+	m.cleareduser = true
+	m.clearedFields[score.FieldUserID] = struct{}{}
+}
+
+// UserCleared reports if the "user" edge to the User entity was cleared.
+func (m *ScoreMutation) UserCleared() bool {
+	return m.cleareduser
+}
+
+// UserIDs returns the "user" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// UserID instead. It exists only for internal usage by the builders.
+func (m *ScoreMutation) UserIDs() (ids []uuid.UUID) {
+	if id := m.user; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetUser resets all changes to the "user" edge.
+func (m *ScoreMutation) ResetUser() {
+	m.user = nil
+	m.cleareduser = false
 }
 
 // Where appends a list predicates to the ScoreMutation builder.
@@ -333,14 +498,23 @@ func (m *ScoreMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ScoreMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 6)
+	if m.user != nil {
+		fields = append(fields, score.FieldUserID)
+	}
 	if m.keystrokes != nil {
 		fields = append(fields, score.FieldKeystrokes)
 	}
 	if m.accuracy != nil {
 		fields = append(fields, score.FieldAccuracy)
 	}
-	if m.createdAt != nil {
+	if m.is_max_keystrokes != nil {
+		fields = append(fields, score.FieldIsMaxKeystrokes)
+	}
+	if m.is_max_accuracy != nil {
+		fields = append(fields, score.FieldIsMaxAccuracy)
+	}
+	if m.created_at != nil {
 		fields = append(fields, score.FieldCreatedAt)
 	}
 	return fields
@@ -351,10 +525,16 @@ func (m *ScoreMutation) Fields() []string {
 // schema.
 func (m *ScoreMutation) Field(name string) (ent.Value, bool) {
 	switch name {
+	case score.FieldUserID:
+		return m.UserID()
 	case score.FieldKeystrokes:
 		return m.Keystrokes()
 	case score.FieldAccuracy:
 		return m.Accuracy()
+	case score.FieldIsMaxKeystrokes:
+		return m.IsMaxKeystrokes()
+	case score.FieldIsMaxAccuracy:
+		return m.IsMaxAccuracy()
 	case score.FieldCreatedAt:
 		return m.CreatedAt()
 	}
@@ -366,10 +546,16 @@ func (m *ScoreMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *ScoreMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
+	case score.FieldUserID:
+		return m.OldUserID(ctx)
 	case score.FieldKeystrokes:
 		return m.OldKeystrokes(ctx)
 	case score.FieldAccuracy:
 		return m.OldAccuracy(ctx)
+	case score.FieldIsMaxKeystrokes:
+		return m.OldIsMaxKeystrokes(ctx)
+	case score.FieldIsMaxAccuracy:
+		return m.OldIsMaxAccuracy(ctx)
 	case score.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	}
@@ -381,6 +567,13 @@ func (m *ScoreMutation) OldField(ctx context.Context, name string) (ent.Value, e
 // type.
 func (m *ScoreMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case score.FieldUserID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
 	case score.FieldKeystrokes:
 		v, ok := value.(int)
 		if !ok {
@@ -394,6 +587,20 @@ func (m *ScoreMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAccuracy(v)
+		return nil
+	case score.FieldIsMaxKeystrokes:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsMaxKeystrokes(v)
+		return nil
+	case score.FieldIsMaxAccuracy:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsMaxAccuracy(v)
 		return nil
 	case score.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -458,7 +665,14 @@ func (m *ScoreMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *ScoreMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(score.FieldIsMaxKeystrokes) {
+		fields = append(fields, score.FieldIsMaxKeystrokes)
+	}
+	if m.FieldCleared(score.FieldIsMaxAccuracy) {
+		fields = append(fields, score.FieldIsMaxAccuracy)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -471,6 +685,14 @@ func (m *ScoreMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *ScoreMutation) ClearField(name string) error {
+	switch name {
+	case score.FieldIsMaxKeystrokes:
+		m.ClearIsMaxKeystrokes()
+		return nil
+	case score.FieldIsMaxAccuracy:
+		m.ClearIsMaxAccuracy()
+		return nil
+	}
 	return fmt.Errorf("unknown Score nullable field %s", name)
 }
 
@@ -478,11 +700,20 @@ func (m *ScoreMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *ScoreMutation) ResetField(name string) error {
 	switch name {
+	case score.FieldUserID:
+		m.ResetUserID()
+		return nil
 	case score.FieldKeystrokes:
 		m.ResetKeystrokes()
 		return nil
 	case score.FieldAccuracy:
 		m.ResetAccuracy()
+		return nil
+	case score.FieldIsMaxKeystrokes:
+		m.ResetIsMaxKeystrokes()
+		return nil
+	case score.FieldIsMaxAccuracy:
+		m.ResetIsMaxAccuracy()
 		return nil
 	case score.FieldCreatedAt:
 		m.ResetCreatedAt()
@@ -493,19 +724,28 @@ func (m *ScoreMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *ScoreMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.user != nil {
+		edges = append(edges, score.EdgeUser)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *ScoreMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case score.EdgeUser:
+		if id := m.user; id != nil {
+			return []ent.Value{*id}
+		}
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *ScoreMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
 	return edges
 }
 
@@ -517,25 +757,42 @@ func (m *ScoreMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *ScoreMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.cleareduser {
+		edges = append(edges, score.EdgeUser)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *ScoreMutation) EdgeCleared(name string) bool {
+	switch name {
+	case score.EdgeUser:
+		return m.cleareduser
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *ScoreMutation) ClearEdge(name string) error {
+	switch name {
+	case score.EdgeUser:
+		m.ClearUser()
+		return nil
+	}
 	return fmt.Errorf("unknown Score unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *ScoreMutation) ResetEdge(name string) error {
+	switch name {
+	case score.EdgeUser:
+		m.ResetUser()
+		return nil
+	}
 	return fmt.Errorf("unknown Score edge %s", name)
 }
 

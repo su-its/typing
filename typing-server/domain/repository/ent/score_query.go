@@ -13,6 +13,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/domain/repository/ent/predicate"
 	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
 // ScoreQuery is the builder for querying Score entities.
@@ -22,7 +23,7 @@ type ScoreQuery struct {
 	order      []score.OrderOption
 	inters     []Interceptor
 	predicates []predicate.Score
-	withFKs    bool
+	withUser   *UserQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -57,6 +58,28 @@ func (sq *ScoreQuery) Unique(unique bool) *ScoreQuery {
 func (sq *ScoreQuery) Order(o ...score.OrderOption) *ScoreQuery {
 	sq.order = append(sq.order, o...)
 	return sq
+}
+
+// QueryUser chains the current query on the "user" edge.
+func (sq *ScoreQuery) QueryUser() *UserQuery {
+	query := (&UserClient{config: sq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := sq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := sq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(score.Table, score.FieldID, selector),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, score.UserTable, score.UserColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Score entity from the query.
@@ -251,10 +274,22 @@ func (sq *ScoreQuery) Clone() *ScoreQuery {
 		order:      append([]score.OrderOption{}, sq.order...),
 		inters:     append([]Interceptor{}, sq.inters...),
 		predicates: append([]predicate.Score{}, sq.predicates...),
+		withUser:   sq.withUser.Clone(),
 		// clone intermediate query.
 		sql:  sq.sql.Clone(),
 		path: sq.path,
 	}
+}
+
+// WithUser tells the query-builder to eager-load the nodes that are connected to
+// the "user" edge. The optional arguments are used to configure the query builder of the edge.
+func (sq *ScoreQuery) WithUser(opts ...func(*UserQuery)) *ScoreQuery {
+	query := (&UserClient{config: sq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	sq.withUser = query
+	return sq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -263,12 +298,12 @@ func (sq *ScoreQuery) Clone() *ScoreQuery {
 // Example:
 //
 //	var v []struct {
-//		Keystrokes int `json:"keystrokes,omitempty"`
+//		UserID uuid.UUID `json:"user_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Score.Query().
-//		GroupBy(score.FieldKeystrokes).
+//		GroupBy(score.FieldUserID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (sq *ScoreQuery) GroupBy(field string, fields ...string) *ScoreGroupBy {
@@ -286,11 +321,11 @@ func (sq *ScoreQuery) GroupBy(field string, fields ...string) *ScoreGroupBy {
 // Example:
 //
 //	var v []struct {
-//		Keystrokes int `json:"keystrokes,omitempty"`
+//		UserID uuid.UUID `json:"user_id,omitempty"`
 //	}
 //
 //	client.Score.Query().
-//		Select(score.FieldKeystrokes).
+//		Select(score.FieldUserID).
 //		Scan(ctx, &v)
 func (sq *ScoreQuery) Select(fields ...string) *ScoreSelect {
 	sq.ctx.Fields = append(sq.ctx.Fields, fields...)
@@ -333,19 +368,19 @@ func (sq *ScoreQuery) prepareQuery(ctx context.Context) error {
 
 func (sq *ScoreQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Score, error) {
 	var (
-		nodes   = []*Score{}
-		withFKs = sq.withFKs
-		_spec   = sq.querySpec()
+		nodes       = []*Score{}
+		_spec       = sq.querySpec()
+		loadedTypes = [1]bool{
+			sq.withUser != nil,
+		}
 	)
-	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, score.ForeignKeys...)
-	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Score).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &Score{config: sq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -357,7 +392,43 @@ func (sq *ScoreQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Score,
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := sq.withUser; query != nil {
+		if err := sq.loadUser(ctx, query, nodes, nil,
+			func(n *Score, e *User) { n.Edges.User = e }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (sq *ScoreQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*Score, init func(*Score), assign func(*Score, *User)) error {
+	ids := make([]uuid.UUID, 0, len(nodes))
+	nodeids := make(map[uuid.UUID][]*Score)
+	for i := range nodes {
+		fk := nodes[i].UserID
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(user.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "user_id" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
 }
 
 func (sq *ScoreQuery) sqlCount(ctx context.Context) (int, error) {
@@ -384,6 +455,9 @@ func (sq *ScoreQuery) querySpec() *sqlgraph.QuerySpec {
 			if fields[i] != score.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
+		}
+		if sq.withUser != nil {
+			_spec.Node.AddColumnOnce(score.FieldUserID)
 		}
 	}
 	if ps := sq.predicates; len(ps) > 0 {
