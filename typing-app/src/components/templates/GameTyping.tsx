@@ -16,7 +16,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       // ランダムにファイル名を選択
       const randomFile = filenames[Math.floor(Math.random() * filenames.length)];
       // `public` ディレクトリからの相対パスを指定
-      const filePath = `/texts/${randomFile}`;
+      const filePath = `./assets/texts/${randomFile}`;
       // fetch APIを使用してファイルの内容を読み込む
       try {
         const response = await fetch(filePath);
