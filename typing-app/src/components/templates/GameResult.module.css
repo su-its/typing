@@ -1,0 +1,16 @@
+.box {
+  width: 70%;
+  height: calc(100% - 300px);
+  margin: 50px auto 0 auto;
+  position: absolute;
+  left: 15%;
+  top: 100px;
+  background-color: #263238;
+  border: solid 4px #fff;
+}
+
+.centerText {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
