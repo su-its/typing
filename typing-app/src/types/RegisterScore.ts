@@ -7,6 +7,7 @@ interface RegisterScore {
 }
 
 export interface ResultScore {
+  score : number;
   keystrokes: number;
   miss: number;
   time: Date;

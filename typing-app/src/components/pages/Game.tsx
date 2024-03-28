@@ -31,6 +31,7 @@ const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
   type ScreenIndex = (typeof ScreenIndex)[keyof typeof ScreenIndex];
 
   const [resultScore, setResultScore] = useState<ResultScore>({
+    score: 0,
     keystrokes: 0,
     miss: 0,
     time: new Date(),

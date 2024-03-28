@@ -12,7 +12,7 @@ interface GameResultProps {
 const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
   return (
     <div className={styles.box}>
-      <Grid h="100%" w="100%" templateRows="repeat(9, 1fr)" templateColumns="repeat(10, 1fr)" gap={6} bg="white">
+      <Grid h="100%" w="100%" templateRows="repeat(10, 1fr)" templateColumns="repeat(10, 1fr)" gap={6} bg="white">
         <GridItem
           colSpan={10}
           rowSpan={2}
@@ -28,56 +28,66 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
         </GridItem>
         <GridItem colSpan={3} colStart={3} rowStart={3} className={styles.centerText}>
           <Text fontSize="2xl" textAlign="center">
-            打鍵数
+            スコア
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={3} rowStart={4} className={styles.centerText}>
           <Text fontSize="2xl" textAlign="center">
-            ミス入力数
+            打鍵数
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={3} rowStart={5} className={styles.centerText}>
           <Text fontSize="2xl" textAlign="center">
-            入力時間
+            ミス入力数
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={3} rowStart={6} className={styles.centerText}>
           <Text fontSize="2xl" textAlign="center">
-            WPM
+            入力時間
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={3} rowStart={7} className={styles.centerText}>
+          <Text fontSize="2xl" textAlign="center">
+            WPM
+          </Text>
+        </GridItem>
+        <GridItem colSpan={3} colStart={3} rowStart={8} className={styles.centerText}>
           <Text fontSize="2xl" textAlign="center">
             正解率
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={3} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
-            {resultScore.keystrokes}回
+            {resultScore.score}
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={4} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
-            {resultScore.miss}回
+            {resultScore.keystrokes}回
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={5} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
-          {String(resultScore.time.getMinutes() * 60 + resultScore.time.getSeconds()).padStart(2, '0')}秒
-          {String(Math.floor(resultScore.time.getMilliseconds() / 100))}
+            {resultScore.miss}回
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={6} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
-            {Math.floor(resultScore.wpm)}字/分
+            {String(resultScore.time.getMinutes() * 60 + resultScore.time.getSeconds()).padStart(2, '0')}秒
+            {String(Math.floor(resultScore.time.getMilliseconds() / 100))}
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={7} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
+            {Math.floor(resultScore.wpm)}字/分
+          </Text>
+        </GridItem>
+        <GridItem colSpan={3} colStart={6} rowStart={8} className={styles.centerText}>
+          <Text fontSize="2xl" as="b">
             {resultScore.accuracy.toFixed(1)}%
           </Text>
         </GridItem>
-        <GridItem colSpan={4} rowSpan={2} colStart={4} rowStart={8} className={styles.centerText}>
+        <GridItem colSpan={4} rowSpan={2} colStart={4} rowStart={9} className={styles.centerText}>
           <Button onClick={nextPage} colorScheme="blue" size="lg" w="100%" h="90%">
             次へ
           </Button>
