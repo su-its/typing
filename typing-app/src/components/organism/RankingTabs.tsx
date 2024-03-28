@@ -1,5 +1,5 @@
 "use client";
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Button, Flex, Container, Center } from "@chakra-ui/react";
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex, Center } from "@chakra-ui/react";
 import RankingTable from "../organism/RankingTable";
 import { Pagination } from "../molecules/Pagination";
 import { CustomButton } from "../atoms/CustomButton";
@@ -41,7 +41,7 @@ const RankingTabs = () => {
     // TODO: APIを使ってデータをフェッチ
     if (sortBy == "accuracy") {
       setScoreRankings(demoAccuracyRankings);
-    } else if(sortBy == "keystrokes") {
+    } else if (sortBy == "keystrokes") {
       setScoreRankings(demoKeyStrokeRankings);
     }
   };
@@ -177,5 +177,5 @@ const demoAccuracyRankings: ScoreRanking[] = [
     keystrokes: 60,
     accuracy: 60,
     createdAt: new Date(),
-  },
+  }
 ];

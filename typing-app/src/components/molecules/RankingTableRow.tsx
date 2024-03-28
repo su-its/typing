@@ -8,6 +8,7 @@ const RankingTableRow: React.FC<ScoreRanking> = (scoreRanking) => {
       <Td>{scoreRanking.user.studentNumber}</Td>
       <Td isNumeric>{String(scoreRanking.keystrokes)}</Td>
       <Td isNumeric>{String(scoreRanking.accuracy)}</Td>
+      <Td>{scoreRanking.createdAt.toLocaleDateString("ja-JP")}</Td>
     </Tr>
   );
 };

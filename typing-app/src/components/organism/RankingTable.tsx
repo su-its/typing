@@ -1,4 +1,4 @@
-import { Table, TableContainer, Box, Container } from "@chakra-ui/react";
+import { Table, TableContainer, Container } from "@chakra-ui/react";
 import RankingTableHead from "../molecules/RankingTableHead";
 import RankingTableBody, { RankingTableBodyProps } from "../molecules/RankingTableBody";
 
@@ -6,12 +6,10 @@ const RankingTable: React.FC<RankingTableBodyProps> = ({ scoreRankings }) => {
   return (
     <TableContainer>
       <Container>
-      <Box bg="white" borderColor="black" rounded="base">
-          <Table colorScheme="Black">
+          <Table variant='striped' bg='white' rounded='base' shadow='md'>
             <RankingTableHead />
             <RankingTableBody scoreRankings={scoreRankings} />
           </Table>
-      </Box>
       </Container>
     </TableContainer>
   );
