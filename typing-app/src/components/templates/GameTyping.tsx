@@ -47,7 +47,11 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
     if (count <= 0) {
       sendResultData();
     } else {
-      const timer = setInterval(() => setCount(count - updateFrequency / 1000), updateFrequency);
+      const timer = setInterval(() => {
+        const pastTime = (new Date().valueOf() - startedAt.valueOf()) / 1000;
+        const newCount = totalSeconds - pastTime;
+        setCount(newCount);
+      }, updateFrequency);
       return () => clearInterval(timer);
     }
     nextPage();
