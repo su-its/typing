@@ -9,6 +9,7 @@ import styles from "./GameTyping.module.css";
 const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultScore }) => {
   // subjectTextの状態を管理するuseStateフック
   const [subjectText, setSubjectText] = useState("");
+  const [startedAt, setStartedAt] = useState(new Date());
 
   useEffect(() => {
     const loadTextFile = async () => {
@@ -21,6 +22,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
         const response = await fetch(filePath);
         const fetchedText = await response.text();
         setSubjectText(fetchedText); // レスポンスをsubjectTextステートに設定
+        setStartedAt(new Date());
       } catch (error) {
         console.error("Error loading the text file:", error);
       }
@@ -29,23 +31,26 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
     loadTextFile();
   }, [filenames]); // ビルド時の警告防止のためにfilenamesを依存リストに追加
 
-  const totalSeconds = 60;
+  const totalSeconds = 6;
   const [count, setCount] = useState(totalSeconds);
   const damyUserId = "damyId";
 
   const userId = damyUserId; // ToDo: 要変更
   const [correctType, setCorrectType] = useState(0); // 正打数
   const [incorrectType, setIncorrectType] = useState(0); // 誤打数
-  const [typeProgress, setTypeProgress] = useState(0); // 進捗
+  const [typeProgress, setTypeProgress] = useState(0); // 進捗 typeIndexで代替可能
 
   const [typeIndex, setTypeIndex] = useState(0);
+  // 残り時間のカウントダウン
+  const updateFrequency = 100; // 100msごとにカウントダウン
   useEffect(() => {
     if (count <= 0) {
       sendResultData();
     } else {
-      const timer = setInterval(() => setCount(count - 0.1), 100);
+      const timer = setInterval(() => setCount(count - updateFrequency / 100), updateFrequency);
       return () => clearInterval(timer);
     }
+    nextPage();
   }, [count, nextPage, userId]); // ビルド時の警告防止のためにuserIdも依存リストに追加
 
   useEffect(() => {
@@ -56,15 +61,21 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
 
   // スコアデータを送信する
   const sendResultData = () => {
-    const typeTimeSeconds = totalSeconds - count;
     // サーバに送信されるデータ
+    const endedAt = new Date();
+    const actualTypeTimeSeconds = (endedAt.valueOf() - startedAt.valueOf()) / 1000;
+    const typeTimeSeconds = actualTypeTimeSeconds > totalSeconds ? totalSeconds : actualTypeTimeSeconds;
+    console.log(startedAt.valueOf());
+    console.log(endedAt.valueOf());
+    console.log(typeTimeSeconds);
     const registeredScore = {
       keystrokes: correctType,
-      accuracy: (correctType / (correctType + incorrectType)) * 100,
+      accuracy: (correctType / (correctType + incorrectType)) * 100, // ToDo: 0除算対策
       score: (correctType / typeTimeSeconds) * 60,
-      startedAt: new Date(), // ToDo: 要変更
-      endedAt: new Date(), // ToDo: 要変更
-    } as RegisterScore; // ToDo: 要変更
+      startedAt: startedAt,
+      endedAt: endedAt,
+    } as RegisterScore;
+
     // リザルト画面用のデータ
     setResultScore({
       keystrokes: registeredScore.keystrokes,
@@ -73,6 +84,8 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       wpm: (correctType / typeTimeSeconds) * 60,
       accuracy: registeredScore.accuracy,
     } as ResultScore);
+    console.log(registeredScore);
+    console.log(setResultScore);
     fetch(`http://localhost:8080/users/${userId}/scores`, {
       method: `POST`,
       headers: {
@@ -89,9 +102,8 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       });
   };
 
-  const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
-
   // 瞬間タイピング速度計算用
+  const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
   const [typingQueueList] = useState([] as number[]);
   const [currentTypeSpeed, setCurrentTypeSpeed] = useState(0);
   const addTypingQueueList = () => {

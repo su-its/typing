@@ -14,6 +14,7 @@ export interface GameTypingProps {
   nextPage: () => void;
   filenames: string[];
   setResultScore: (data: ResultScore) => void;
+  screenIndex: number;
 }
 
 interface GamePageProps {
@@ -45,6 +46,7 @@ const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
       nextPage={() => setScreenIndex(ScreenIndex.IDX_RESULT)}
       filenames={filenames}
       setResultScore={setResultScore}
+      screenIndex={screenIndex}
     />,
     <GameResult
       key={ScreenIndex.IDX_RESULT}
