@@ -4,7 +4,6 @@ services:
     build:
       context: ../typing-app
       cache_from:
-        - oven/bun:slim
         - node:20.11-slim
   api:
     image: ghcr.io/su-its/typing-server:dev
