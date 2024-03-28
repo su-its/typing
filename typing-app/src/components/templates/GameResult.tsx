@@ -28,7 +28,7 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
         </GridItem>
         <GridItem colSpan={3} colStart={3} rowStart={3} className={styles.centerText}>
           <Text fontSize="2xl" textAlign="center">
-            打鍵率
+            打鍵数
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={3} rowStart={4} className={styles.centerText}>
