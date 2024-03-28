@@ -29,7 +29,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
     loadTextFile();
   }, [filenames]); // ビルド時の警告防止のためにfilenamesを依存リストに追加
 
-  const totalSeconds = 250;
+  const totalSeconds = 60;
   const [count, setCount] = useState(totalSeconds);
   const damyUserId = "damyId";
 
@@ -138,7 +138,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
           {
             // ToDo 時間の計算
           }
-          <ProgressBar maxWidth={330} height={20} maxValue={250} value={count} />
+          <ProgressBar maxWidth={280} height={20} maxValue={60} value={count} />
         </div>
         <div className={`${styles.progress} ${styles.progress_position}`}>
           <ProgressBar maxWidth={330} height={20} maxValue={subjectText.length - 1} value={typeProgress} />
