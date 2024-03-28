@@ -6,10 +6,10 @@ const RankingTable: React.FC<RankingTableBodyProps> = ({ scoreRankings }) => {
   return (
     <TableContainer>
       <Container>
-          <Table variant='striped' bg='white' rounded='base' shadow='md'>
-            <RankingTableHead />
-            <RankingTableBody scoreRankings={scoreRankings} />
-          </Table>
+        <Table variant='striped' bg='white' rounded='base' shadow='md'>
+          <RankingTableHead />
+          <RankingTableBody scoreRankings={scoreRankings} />
+        </Table>
       </Container>
     </TableContainer>
   );

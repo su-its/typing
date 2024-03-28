@@ -48,15 +48,17 @@ const RankingTabs = () => {
 
   return (
     <Tabs onChange={handleTabChange}>
-      <Flex justifyContent="right">
+      <Flex  justifyContent="right">
         <CustomButton onClick={() => fetchData()} isDisabled={false}>
           Reload
         </CustomButton>
       </Flex>
-      <TabList>
-        <Tab>Accuracy</Tab>
-        <Tab>KeyStroke</Tab>
-      </TabList>
+      <Center>
+        <TabList>
+          <Tab>Accuracy</Tab>
+          <Tab>KeyStroke</Tab>
+        </TabList>
+      </Center>
 
       <TabPanels>
         <TabPanel>
@@ -96,17 +98,17 @@ export interface ScoreRanking {
 const demoUsers: User[] = [
   {
     id: "1",
-    studentNumber: "X",
+    studentNumber: "70310000",
     handleName: "X",
   },
   {
     id: "2",
-    studentNumber: "Y",
+    studentNumber: "70310000",
     handleName: "Y",
   },
   {
     id: "3",
-    studentNumber: "Z",
+    studentNumber: "70310000",
     handleName: "Z",
   },
 ];
