@@ -101,10 +101,11 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
     nextPage();
   };
 
-  // 瞬間タイピング速度計算用
+  // タイピング速度計算用
   const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
   const [typingQueueList] = useState([] as number[]);
   const [currentTypeSpeed, setCurrentTypeSpeed] = useState(0);
+  const [averageTypeSpeed, setAverageTypeSpeed] = useState(0);
   const addTypingQueueList = () => {
     const time = new Date().valueOf();
     typingQueueList.push(time);
@@ -119,11 +120,21 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
     }
     const typeTime = typingQueueList[typingQueueList.length - 1] - typingQueueList[0];
     const currentWpm = (typingQueueList.length / typeTime) * 60000;
-    const currentWpmForProgressBar = (1000 / 3) * Math.log10((999 / 1000) * currentWpm + 1);
-    if (currentWpmForProgressBar > 1000) {
+    return toLogarithmWpm(currentWpm);
+  };
+
+  const calcAverageTypingSpeed = (): number => {
+    const timeFromStart = new Date().valueOf() - startedAt.valueOf();
+    const averageTypingSpeed = (correctType / timeFromStart) * 60000;
+    return toLogarithmWpm(averageTypingSpeed);
+  };
+
+  const toLogarithmWpm = (wpm: number) => {
+    const wpmForProgressBar = (1000 / 3) * Math.log10((999 / 1000) * wpm + 1);
+    if (wpmForProgressBar > 1000) {
       return 1000;
     }
-    return currentWpmForProgressBar;
+    return wpmForProgressBar;
   };
 
   const handleOnKeyDown = (e: React.KeyboardEvent) => {
@@ -137,6 +148,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       setCorrectType(correctType + 1);
       addTypingQueueList();
       setCurrentTypeSpeed(calcCurrentTypingSpeed());
+      setAverageTypeSpeed(calcAverageTypingSpeed());
     } else {
       setIncorrectType(incorrectType + 1);
     }
@@ -160,7 +172,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
             // ToDo 速度の計算
           }
           <ProgressBar maxWidth={330} height={10} maxValue={1000} value={currentTypeSpeed} />
-          <ProgressBar maxWidth={330} height={10} maxValue={500} value={300} />
+          <ProgressBar maxWidth={330} height={10} maxValue={1000} value={averageTypeSpeed} />
         </div>
         <Image
           className={styles.gauge_time}
