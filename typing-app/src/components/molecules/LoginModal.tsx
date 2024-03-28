@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Modal,
   ModalOverlay,
@@ -14,15 +15,17 @@ import {
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLogin: (studentId: string) => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin }) => {
+const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const [studentId, setStudentId] = useState("");
+  const router = useRouter();
 
-  const handleLogin = () => {
-    onLogin(studentId);
-    onClose();
+  const handleLogin = async () => {
+    // TODO:ログイン済みかどうかを判別
+    // TODO:学籍番号を使用したログイン処理
+    console.log(studentId);
+    router.push("/game");
   };
 
   return (
