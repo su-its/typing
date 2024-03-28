@@ -7,18 +7,12 @@ $ git clone https://github.com/su-its/typing.git
 $ cd typing/typing-app
 ```
 
-## 2. パッケージのインストール(npm ではなく bun を採用しています)
-
-### Bun をインストールする (まだインストールしていない場合)
-
-```bash
-$ curl -fsSL https://bun.sh/install | bash
-```
+## 2. パッケージのインストール(npm ではなく yarn を採用しています)
 
 ### プロジェクトの依存パッケージをインストール(typing-app ディレクトリで実行)
 
 ```bash
-$ bun install
+$ yarn
 ```
 
 ## 3. API & DB の起動(typing-server ディレクトリで実行)
@@ -30,5 +24,5 @@ $ docker-compose --file docker-compose.dev.yml up --build
 ## 4. フロントエンドの起動(typing-app ディレクトリで実行)
 
 ```bash
-$ bun dev
+$ yarn dev
 ```
