@@ -177,9 +177,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
           <ProgressBar maxWidth={330} height={20} maxValue={subjectText.length - 1} value={typeIndex} />
         </div>
         <div className={`${styles.progress} ${styles.progress_speed}`}>
-          {
-            // ToDo 速度の計算
-          }
           <ProgressBar maxWidth={330} height={10} maxValue={1000} value={currentTypeSpeed} />
           <ProgressBar maxWidth={330} height={10} maxValue={1000} value={averageTypeSpeed} />
         </div>
