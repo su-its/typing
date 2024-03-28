@@ -86,8 +86,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       wpm: (correctType / typeTimeSeconds) * 60,
       accuracy: registeredScore.accuracy,
     } as ResultScore);
-    console.log(registeredScore);
-    console.log(setResultScore);
     fetch(`http://localhost:8080/users/${userId}/scores`, {
       method: `POST`,
       headers: {
@@ -147,9 +145,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
         <div className={`${styles.heading} ${styles.heading_position}`}>Progress</div>
         <div className={`${styles.heading} ${styles.heading_speed}`}>Speed</div>
         <div className={`${styles.progress} ${styles.progress_time}`}>
-          {
-            // ToDo 時間の計算
-          }
           <ProgressBar maxWidth={280} height={20} maxValue={60} value={count} />
         </div>
         <div className={`${styles.progress} ${styles.progress_position}`}>
