@@ -37,7 +37,7 @@ jobs:
           npx openapi-typescript ../typing-server/openapi.yaml --output ./src/libs/api/v${SCHEMA_MAJOR_VERSION}.d.ts
       - name: Validate
         working-directory: typing-app
-        run: npx tsc --noEmit
+        run: yarn exec tsc --noEmit
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
