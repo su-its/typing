@@ -13,9 +13,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/prepare-nodemodules
-        with:
-          root: ${{ github.workspace }}/typing-app
       - name: Retrieve the Schema version
         uses: mikefarah/yq@master
         id: get_schema_version
