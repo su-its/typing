@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: podman-compose up
         shell: bash
-        run: podman-compose -f compose.yml up -d
+        run: podman-compose -f compose.yaml up -d
         working-directory: docker
         env:
           COMPOSE_PROJECT_NAME: typing
