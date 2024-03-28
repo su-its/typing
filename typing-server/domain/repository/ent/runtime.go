@@ -17,6 +17,10 @@ import (
 func init() {
 	scoreFields := schema.Score{}.Fields()
 	_ = scoreFields
+	// scoreDescCreatedAt is the schema descriptor for created_at field.
+	scoreDescCreatedAt := scoreFields[6].Descriptor()
+	// score.DefaultCreatedAt holds the default value on creation for the created_at field.
+	score.DefaultCreatedAt = scoreDescCreatedAt.Default.(func() time.Time)
 	// scoreDescID is the schema descriptor for id field.
 	scoreDescID := scoreFields[0].Descriptor()
 	// score.DefaultID holds the default value on creation for the id field.

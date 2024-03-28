@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/domain/repository/ent/predicate"
 )
@@ -55,6 +56,11 @@ func IDLTE(id uuid.UUID) predicate.Score {
 	return predicate.Score(sql.FieldLTE(FieldID, id))
 }
 
+// UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
+func UserID(v uuid.UUID) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldUserID, v))
+}
+
 // Keystrokes applies equality check predicate on the "keystrokes" field. It's identical to KeystrokesEQ.
 func Keystrokes(v int) predicate.Score {
 	return predicate.Score(sql.FieldEQ(FieldKeystrokes, v))
@@ -65,9 +71,39 @@ func Accuracy(v float64) predicate.Score {
 	return predicate.Score(sql.FieldEQ(FieldAccuracy, v))
 }
 
-// CreatedAt applies equality check predicate on the "createdAt" field. It's identical to CreatedAtEQ.
+// IsMaxKeystrokes applies equality check predicate on the "is_max_keystrokes" field. It's identical to IsMaxKeystrokesEQ.
+func IsMaxKeystrokes(v bool) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldIsMaxKeystrokes, v))
+}
+
+// IsMaxAccuracy applies equality check predicate on the "is_max_accuracy" field. It's identical to IsMaxAccuracyEQ.
+func IsMaxAccuracy(v bool) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldIsMaxAccuracy, v))
+}
+
+// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v time.Time) predicate.Score {
 	return predicate.Score(sql.FieldEQ(FieldCreatedAt, v))
+}
+
+// UserIDEQ applies the EQ predicate on the "user_id" field.
+func UserIDEQ(v uuid.UUID) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldUserID, v))
+}
+
+// UserIDNEQ applies the NEQ predicate on the "user_id" field.
+func UserIDNEQ(v uuid.UUID) predicate.Score {
+	return predicate.Score(sql.FieldNEQ(FieldUserID, v))
+}
+
+// UserIDIn applies the In predicate on the "user_id" field.
+func UserIDIn(vs ...uuid.UUID) predicate.Score {
+	return predicate.Score(sql.FieldIn(FieldUserID, vs...))
+}
+
+// UserIDNotIn applies the NotIn predicate on the "user_id" field.
+func UserIDNotIn(vs ...uuid.UUID) predicate.Score {
+	return predicate.Score(sql.FieldNotIn(FieldUserID, vs...))
 }
 
 // KeystrokesEQ applies the EQ predicate on the "keystrokes" field.
@@ -150,44 +186,107 @@ func AccuracyLTE(v float64) predicate.Score {
 	return predicate.Score(sql.FieldLTE(FieldAccuracy, v))
 }
 
-// CreatedAtEQ applies the EQ predicate on the "createdAt" field.
+// IsMaxKeystrokesEQ applies the EQ predicate on the "is_max_keystrokes" field.
+func IsMaxKeystrokesEQ(v bool) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldIsMaxKeystrokes, v))
+}
+
+// IsMaxKeystrokesNEQ applies the NEQ predicate on the "is_max_keystrokes" field.
+func IsMaxKeystrokesNEQ(v bool) predicate.Score {
+	return predicate.Score(sql.FieldNEQ(FieldIsMaxKeystrokes, v))
+}
+
+// IsMaxKeystrokesIsNil applies the IsNil predicate on the "is_max_keystrokes" field.
+func IsMaxKeystrokesIsNil() predicate.Score {
+	return predicate.Score(sql.FieldIsNull(FieldIsMaxKeystrokes))
+}
+
+// IsMaxKeystrokesNotNil applies the NotNil predicate on the "is_max_keystrokes" field.
+func IsMaxKeystrokesNotNil() predicate.Score {
+	return predicate.Score(sql.FieldNotNull(FieldIsMaxKeystrokes))
+}
+
+// IsMaxAccuracyEQ applies the EQ predicate on the "is_max_accuracy" field.
+func IsMaxAccuracyEQ(v bool) predicate.Score {
+	return predicate.Score(sql.FieldEQ(FieldIsMaxAccuracy, v))
+}
+
+// IsMaxAccuracyNEQ applies the NEQ predicate on the "is_max_accuracy" field.
+func IsMaxAccuracyNEQ(v bool) predicate.Score {
+	return predicate.Score(sql.FieldNEQ(FieldIsMaxAccuracy, v))
+}
+
+// IsMaxAccuracyIsNil applies the IsNil predicate on the "is_max_accuracy" field.
+func IsMaxAccuracyIsNil() predicate.Score {
+	return predicate.Score(sql.FieldIsNull(FieldIsMaxAccuracy))
+}
+
+// IsMaxAccuracyNotNil applies the NotNil predicate on the "is_max_accuracy" field.
+func IsMaxAccuracyNotNil() predicate.Score {
+	return predicate.Score(sql.FieldNotNull(FieldIsMaxAccuracy))
+}
+
+// CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.Score {
 	return predicate.Score(sql.FieldEQ(FieldCreatedAt, v))
 }
 
-// CreatedAtNEQ applies the NEQ predicate on the "createdAt" field.
+// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
 func CreatedAtNEQ(v time.Time) predicate.Score {
 	return predicate.Score(sql.FieldNEQ(FieldCreatedAt, v))
 }
 
-// CreatedAtIn applies the In predicate on the "createdAt" field.
+// CreatedAtIn applies the In predicate on the "created_at" field.
 func CreatedAtIn(vs ...time.Time) predicate.Score {
 	return predicate.Score(sql.FieldIn(FieldCreatedAt, vs...))
 }
 
-// CreatedAtNotIn applies the NotIn predicate on the "createdAt" field.
+// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
 func CreatedAtNotIn(vs ...time.Time) predicate.Score {
 	return predicate.Score(sql.FieldNotIn(FieldCreatedAt, vs...))
 }
 
-// CreatedAtGT applies the GT predicate on the "createdAt" field.
+// CreatedAtGT applies the GT predicate on the "created_at" field.
 func CreatedAtGT(v time.Time) predicate.Score {
 	return predicate.Score(sql.FieldGT(FieldCreatedAt, v))
 }
 
-// CreatedAtGTE applies the GTE predicate on the "createdAt" field.
+// CreatedAtGTE applies the GTE predicate on the "created_at" field.
 func CreatedAtGTE(v time.Time) predicate.Score {
 	return predicate.Score(sql.FieldGTE(FieldCreatedAt, v))
 }
 
-// CreatedAtLT applies the LT predicate on the "createdAt" field.
+// CreatedAtLT applies the LT predicate on the "created_at" field.
 func CreatedAtLT(v time.Time) predicate.Score {
 	return predicate.Score(sql.FieldLT(FieldCreatedAt, v))
 }
 
-// CreatedAtLTE applies the LTE predicate on the "createdAt" field.
+// CreatedAtLTE applies the LTE predicate on the "created_at" field.
 func CreatedAtLTE(v time.Time) predicate.Score {
 	return predicate.Score(sql.FieldLTE(FieldCreatedAt, v))
+}
+
+// HasUser applies the HasEdge predicate on the "user" edge.
+func HasUser() predicate.Score {
+	return predicate.Score(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasUserWith applies the HasEdge predicate on the "user" edge with a given conditions (other predicates).
+func HasUserWith(preds ...predicate.User) predicate.Score {
+	return predicate.Score(func(s *sql.Selector) {
+		step := newUserStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

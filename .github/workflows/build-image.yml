@@ -1,0 +1,31 @@
+name: Build / Push Docker Image to Registry
+
+on:
+  push:
+    branches:
+      - develop
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  image:
+    name: Build / Push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: su-its
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker Buildx Bake
+        uses: docker/bake-action@v4
+        with:
+          workdir: docker
+          files: compose.ci.yaml
+          push: true
