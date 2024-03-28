@@ -9,6 +9,9 @@ import styles from "./GameTyping.module.css";
 const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultScore }) => {
   // subjectTextの状態を管理するuseStateフック
   const [subjectText, setSubjectText] = useState("");
+  // ゲーム開始時刻と終了時刻を管理するuseStateフック
+  const [startTime, setStartTime] = useState<Date |null>(null) ;
+  const [endTime, setEndTime] = useState<Date |null>(null) ;
 
   useEffect(() => {
     const loadTextFile = async () => {
@@ -27,6 +30,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
     };
 
     loadTextFile();
+    setStartTime(new Date());
   }, [filenames]); // ビルド時の警告防止のためにfilenamesを依存リストに追加
 
   const totalSeconds = 60;
@@ -42,6 +46,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
   useEffect(() => {
     if (count <= 0) {
       sendResultData();
+      setEndTime(new Date());
     } else {
       const timer = setInterval(() => setCount(count - 0.1), 100);
       return () => clearInterval(timer);
@@ -51,6 +56,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
   useEffect(() => {
     if (typeIndex === subjectText.length - 1) {
       sendResultData();
+      setEndTime(new Date());
     }
   }, [nextPage, userId, typeIndex]); // ビルド時の警告防止のためにuserIdも依存リストに追加
 
@@ -62,8 +68,8 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       keystrokes: correctType,
       accuracy: (correctType / (correctType + incorrectType)) * 100,
       score: (correctType / typeTimeSeconds) * 60,
-      startedAt: new Date(), // ToDo: 要変更
-      endedAt: new Date(), // ToDo: 要変更
+      startedAt: startTime, 
+      endedAt: endTime,
     } as RegisterScore; // ToDo: 要変更
     // リザルト画面用のデータ
     setResultScore({
