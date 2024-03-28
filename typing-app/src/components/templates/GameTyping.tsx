@@ -69,12 +69,11 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
     const endedAt = new Date();
     const actualTypeTimeSeconds = (endedAt.valueOf() - startedAt.valueOf()) / 1000;
     const typeTimeSeconds = actualTypeTimeSeconds > totalSeconds ? totalSeconds : actualTypeTimeSeconds;
-    console.log(startedAt.valueOf());
-    console.log(endedAt.valueOf());
-    console.log(typeTimeSeconds);
+    const totalType = correctType + incorrectType;
+    const accuracy = totalType === 0 ? 0 : (correctType / totalType) * 100; // [%]
     const registeredScore = {
       keystrokes: correctType,
-      accuracy: (correctType / (correctType + incorrectType)) * 100, // ToDo: 0除算対策
+      accuracy: accuracy,
       score: (correctType / typeTimeSeconds) * 60,
       startedAt: startedAt,
       endedAt: endedAt,
