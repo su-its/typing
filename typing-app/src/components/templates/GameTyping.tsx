@@ -1,7 +1,7 @@
 import RegisterScore, { ResultScore } from "@/types/RegisterScore";
 import { Box } from "@chakra-ui/react";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ProgressBar from "../atoms/ProgressBar";
 import { GameTypingProps } from "../pages/Game";
 import styles from "./GameTyping.module.css";
@@ -155,8 +155,16 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
     }
   };
 
+  // ゲーム開始直後にフォーカスする
+  const boxRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (boxRef.current) {
+      boxRef.current.focus();
+    }
+  }, []);
+
   return (
-    <Box onKeyDown={handleOnKeyDown} tabIndex={0}>
+    <Box onKeyDown={handleOnKeyDown} tabIndex={0} ref={boxRef}>
       <div className={styles.box}>
         <div className={`${styles.heading} ${styles.heading_name}`}>Article Name</div>
         <div className={`${styles.heading} ${styles.heading_time}`}>Time Remain</div>
