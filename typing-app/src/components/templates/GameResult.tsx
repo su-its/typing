@@ -58,7 +58,7 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={3} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
-            {resultScore.score}
+            {Math.floor(resultScore.score)}
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={4} className={styles.centerText}>
