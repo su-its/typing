@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM node:20.11-slim as base
 WORKDIR /app
 ENV NODE_ENV production
@@ -5,7 +6,7 @@ RUN corepack enable yarn # to read "packageManager" in package.json
 
 FROM base as build
 COPY package.json yarn.lock .yarnrc.yml ./
-RUN yarn --immutable
+RUN --mount=type=cache,target=/root/.cache/yarn/v6 yarn --immutable
 
 COPY . .
 RUN yarn build
