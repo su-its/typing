@@ -12,6 +12,7 @@ $ cd typing/typing-app
 ### プロジェクトの依存パッケージをインストール(typing-app ディレクトリで実行)
 
 ```bash
+$ corepack enable yarn
 $ yarn
 ```
 
