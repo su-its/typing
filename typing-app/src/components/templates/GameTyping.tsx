@@ -85,6 +85,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       time: new Date(typeTimeSeconds * 1000),
       wpm: (correctType / typeTimeSeconds) * 60,
       accuracy: registeredScore.accuracy,
+      score: registeredScore.score,
     } as ResultScore);
     fetch(`http://localhost:8080/users/${userId}/scores`, {
       method: `POST`,
