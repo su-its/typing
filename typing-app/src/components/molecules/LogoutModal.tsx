@@ -4,10 +4,9 @@ import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter,
 interface LogoutModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
 }
 
-const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onConfirm }) => {
+const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -15,7 +14,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onConfirm })
         <ModalHeader>ログアウトしました</ModalHeader>
         <ModalBody>ご利用ありがとうございました。</ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onConfirm}>
+          <Button colorScheme="blue" mr={3}>
             OK
           </Button>
         </ModalFooter>

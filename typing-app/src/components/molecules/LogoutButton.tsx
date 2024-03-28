@@ -14,18 +14,13 @@ const LogoutButton: React.FC = () => {
     onOpen();
   };
 
-  const handleModalClose = () => {
-    onClose();
-    router.push("/"); //リダイレクト
-  };
-
   return (
     <>
       <Button colorScheme="blue" size="lg" onClick={handleLogout}>
         Logout
       </Button>
 
-      <LogoutModal isOpen={isOpen} onClose={onClose} onConfirm={handleModalClose} />
+      <LogoutModal isOpen={isOpen} onClose={onClose} />
     </>
   );
 };
