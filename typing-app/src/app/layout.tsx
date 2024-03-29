@@ -20,9 +20,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ChakraProvider>
-          <Box minH="100vh" display="flex" flexDirection="column">
+          <Box minH="100vh" display="flex" flexDirection="column" bg="black">
             <Header />
-            <Box flex="1" bg="gray.100" py={2}>
+            <Box flex="1" py={2}>
               {children}
             </Box>
             <Footer />

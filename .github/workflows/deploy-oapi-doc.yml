@@ -1,9 +1,9 @@
 name: Generate / Deploy API docs
 
 on:
-  pull_request:
-    type:
-      - closed
+  push:
+    branches:
+      - develop
     paths:
       - typing-server/openapi.yaml
 
