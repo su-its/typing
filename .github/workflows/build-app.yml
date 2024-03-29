@@ -26,8 +26,22 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/prepare-nodemodules
+
+      # Corepack enable をしておけば package.json の packageManager を読んで適切なバージョンの yarn を使ってくれる。
+      # ただし非公式な方法であり、あくまでワークアラウンド。
+      # https://github.com/actions/setup-node/issues/480#issuecomment-1820622085
+      # > enable corepack **before** setup-node.
+      - name: Enable Corepack
+        run: corepack enable
+
+      - uses: actions/setup-node@v4
         with:
-          root: ${{ github.workspace }}/typing-app
+          node-version: "20"
+          cache: "yarn"
+          cache-dependency-path: typing-app/yarn.lock
+
+      - name: Install Dependencies
+        run: yarn
+
       - name: Build Next.js Project
-        run: npm run build
+        run: yarn build

@@ -1,0 +1,21 @@
+name: Deploy Containers
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: podman-compose up
+        shell: bash
+        run: podman-compose -f compose.yaml up -d
+        working-directory: docker
+        env:
+          COMPOSE_PROJECT_NAME: typing
