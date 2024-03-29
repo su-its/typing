@@ -5,8 +5,12 @@ const BrandText: React.FC = () => {
   return (
     <Box>
       <HStack>
-        <Text fontSize="50px">ITS</Text>
-        <Text fontSize="sm">静岡大学ITソルーション室</Text>
+        <Text fontSize="50px" color={"white"}>
+          ITS
+        </Text>
+        <Text fontSize="20px" color={"white"}>
+          静岡大学ITソルーション室
+        </Text>
       </HStack>
     </Box>
   );
