@@ -20,7 +20,7 @@ const LogoutButton: React.FC = () => {
         Logout
       </Button>
 
-      <LogoutModal isOpen={isOpen} onClose={onClose} />
+      <LogoutModal isOpen={isOpen} onClose={onClose}/>
     </>
   );
 };

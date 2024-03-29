@@ -33,7 +33,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>続けるにはログインが必要です</ModalHeader>
-        <ModalCloseButton />
         <ModalBody>
           <Input
             placeholder="学籍番号を入力してください"
