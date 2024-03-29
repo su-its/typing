@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
 // Score is the model entity for the Score schema.
@@ -18,18 +19,42 @@ type Score struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// UserID holds the value of the "user_id" field.
+	UserID uuid.UUID `json:"user_id,omitempty"`
 	// Keystrokes holds the value of the "keystrokes" field.
 	Keystrokes int `json:"keystrokes,omitempty"`
 	// Accuracy holds the value of the "accuracy" field.
 	Accuracy float64 `json:"accuracy,omitempty"`
-	// スコアはaccuracyとkeystrokesの積で計算される
-	Score float64 `json:"score,omitempty"`
-	// StartedAt holds the value of the "startedAt" field.
-	StartedAt time.Time `json:"startedAt,omitempty"`
-	// EndedAt holds the value of the "endedAt" field.
-	EndedAt      time.Time `json:"endedAt,omitempty"`
-	user_scores  *uuid.UUID
+	// 条件を満たす結果のうち、Userのkeystrokesが最大のもの
+	IsMaxKeystrokes bool `json:"is_max_keystrokes,omitempty"`
+	// 条件を満たす結果のうち、Userのaccuracyが最大のもの
+	IsMaxAccuracy bool `json:"is_max_accuracy,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the ScoreQuery when eager-loading is set.
+	Edges        ScoreEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// ScoreEdges holds the relations/edges for other nodes in the graph.
+type ScoreEdges struct {
+	// User holds the value of the user edge.
+	User *User `json:"user,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// UserOrErr returns the User value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e ScoreEdges) UserOrErr() (*User, error) {
+	if e.User != nil {
+		return e.User, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: user.Label}
+	}
+	return nil, &NotLoadedError{edge: "user"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -37,16 +62,16 @@ func (*Score) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case score.FieldAccuracy, score.FieldScore:
+		case score.FieldIsMaxKeystrokes, score.FieldIsMaxAccuracy:
+			values[i] = new(sql.NullBool)
+		case score.FieldAccuracy:
 			values[i] = new(sql.NullFloat64)
 		case score.FieldKeystrokes:
 			values[i] = new(sql.NullInt64)
-		case score.FieldStartedAt, score.FieldEndedAt:
+		case score.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
-		case score.FieldID:
+		case score.FieldID, score.FieldUserID:
 			values[i] = new(uuid.UUID)
-		case score.ForeignKeys[0]: // user_scores
-			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -68,6 +93,12 @@ func (s *Score) assignValues(columns []string, values []any) error {
 			} else if value != nil {
 				s.ID = *value
 			}
+		case score.FieldUserID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field user_id", values[i])
+			} else if value != nil {
+				s.UserID = *value
+			}
 		case score.FieldKeystrokes:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field keystrokes", values[i])
@@ -80,30 +111,23 @@ func (s *Score) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				s.Accuracy = value.Float64
 			}
-		case score.FieldScore:
-			if value, ok := values[i].(*sql.NullFloat64); !ok {
-				return fmt.Errorf("unexpected type %T for field score", values[i])
+		case score.FieldIsMaxKeystrokes:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_max_keystrokes", values[i])
 			} else if value.Valid {
-				s.Score = value.Float64
+				s.IsMaxKeystrokes = value.Bool
 			}
-		case score.FieldStartedAt:
+		case score.FieldIsMaxAccuracy:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_max_accuracy", values[i])
+			} else if value.Valid {
+				s.IsMaxAccuracy = value.Bool
+			}
+		case score.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field startedAt", values[i])
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				s.StartedAt = value.Time
-			}
-		case score.FieldEndedAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field endedAt", values[i])
-			} else if value.Valid {
-				s.EndedAt = value.Time
-			}
-		case score.ForeignKeys[0]:
-			if value, ok := values[i].(*sql.NullScanner); !ok {
-				return fmt.Errorf("unexpected type %T for field user_scores", values[i])
-			} else if value.Valid {
-				s.user_scores = new(uuid.UUID)
-				*s.user_scores = *value.S.(*uuid.UUID)
+				s.CreatedAt = value.Time
 			}
 		default:
 			s.selectValues.Set(columns[i], values[i])
@@ -116,6 +140,11 @@ func (s *Score) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (s *Score) Value(name string) (ent.Value, error) {
 	return s.selectValues.Get(name)
+}
+
+// QueryUser queries the "user" edge of the Score entity.
+func (s *Score) QueryUser() *UserQuery {
+	return NewScoreClient(s.config).QueryUser(s)
 }
 
 // Update returns a builder for updating this Score.
@@ -141,20 +170,23 @@ func (s *Score) String() string {
 	var builder strings.Builder
 	builder.WriteString("Score(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", s.ID))
+	builder.WriteString("user_id=")
+	builder.WriteString(fmt.Sprintf("%v", s.UserID))
+	builder.WriteString(", ")
 	builder.WriteString("keystrokes=")
 	builder.WriteString(fmt.Sprintf("%v", s.Keystrokes))
 	builder.WriteString(", ")
 	builder.WriteString("accuracy=")
 	builder.WriteString(fmt.Sprintf("%v", s.Accuracy))
 	builder.WriteString(", ")
-	builder.WriteString("score=")
-	builder.WriteString(fmt.Sprintf("%v", s.Score))
+	builder.WriteString("is_max_keystrokes=")
+	builder.WriteString(fmt.Sprintf("%v", s.IsMaxKeystrokes))
 	builder.WriteString(", ")
-	builder.WriteString("startedAt=")
-	builder.WriteString(s.StartedAt.Format(time.ANSIC))
+	builder.WriteString("is_max_accuracy=")
+	builder.WriteString(fmt.Sprintf("%v", s.IsMaxAccuracy))
 	builder.WriteString(", ")
-	builder.WriteString("endedAt=")
-	builder.WriteString(s.EndedAt.Format(time.ANSIC))
+	builder.WriteString("created_at=")
+	builder.WriteString(s.CreatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

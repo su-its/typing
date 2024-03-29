@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
+	"flag"
+	"fmt"
 	"log/slog"
+	"math/rand"
 	"net/http"
 	"os"
 	"os/signal"
@@ -11,11 +14,16 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/su-its/typing/typing-server/api/presenter"
+	"github.com/su-its/typing/typing-server/api/handler"
+	"github.com/su-its/typing/typing-server/api/router"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
 func main() {
+	seedFlag := flag.Bool("seed", false, "シードデータを挿入する場合はtrueを指定")
+	flag.Parse()
+
 	logger := slog.Default()
 
 	// タイムゾーンの設定
@@ -48,6 +56,7 @@ func main() {
 		return
 	}
 	defer entClient.Close()
+	handler.SetEntClient(entClient)
 	logger.Info("ent client is opened")
 
 	// スキーマの作成
@@ -57,8 +66,16 @@ func main() {
 	}
 	logger.Info("schema is created")
 
-	// ルートの登録
-	presenter.RegisterRoutes()
+	// シードデータの挿入
+	if *seedFlag {
+		if err := seedData(context.Background(), entClient, logger); err != nil {
+			logger.Error("failed to seed data: %v", err)
+			return
+		}
+		logger.Info("シードデータが挿入されました")
+	} else {
+		logger.Info("シードデータは挿入されませんでした")
+	}
 
 	// WaitGroupの宣言
 	var wg sync.WaitGroup
@@ -72,7 +89,14 @@ func main() {
 	go func() {
 		defer wg.Done() // 関数終了時にWaitGroupをデクリメント
 		// サーバーの設定
-		server := &http.Server{Addr: ":8080"}
+		// ルーティングの設定
+		r := router.SetupRouter()
+
+		// サーバーの設定
+		server := &http.Server{
+			Addr:    ":8080",
+			Handler: r,
+		}
 		// 非同期でサーバーを開始
 		go func() {
 			logger.Info("server is running at Addr :8080")
@@ -99,4 +123,79 @@ func main() {
 	wg.Wait() // HTTPサーバーの終了を待機
 	close(errChan)
 	logger.Info("server exited")
+}
+
+func seedData(ctx context.Context, client *ent.Client, logger *slog.Logger) error {
+	// シードデータの作成
+	for i := 0; i < 10; i++ {
+		studentNumber := fmt.Sprintf("user%d", i+1)
+		handleName := fmt.Sprintf("handle%d", i+1)
+
+		isAlreadySeeded, err := client.User.Query().Where(user.StudentNumber(studentNumber)).Exist(ctx)
+		if err != nil {
+			return err
+		}
+		if isAlreadySeeded {
+			logger.Info("User with student number already seeded, skipping", slog.String("studentNumber", studentNumber))
+			continue
+		}
+
+		u, err := client.User.Create().
+			SetStudentNumber(studentNumber).
+			SetHandleName(handleName).
+			Save(ctx)
+		if err != nil {
+			panic(err)
+		}
+
+		logger.Info("Created user", slog.String("studentNumber", studentNumber), slog.String("handleName", handleName))
+
+		var maxKeystrokesScore, maxAccuracyScore *ent.Score
+
+		for j := 0; j < 5; j++ {
+			keystrokes := rand.Intn(200) + 100
+			accuracy := rand.Float64()
+
+			s, err := client.Score.Create().
+				SetKeystrokes(keystrokes).
+				SetAccuracy(accuracy).
+				SetCreatedAt(time.Now()).
+				SetUser(u).
+				Save(ctx)
+			if err != nil {
+				panic(err)
+			}
+
+			logger.Info("Created score", slog.Int("keystrokes", keystrokes), slog.Float64("accuracy", accuracy), slog.String("studentNumber", studentNumber))
+
+			if s.Keystrokes < 120 || s.Accuracy < 0.95 {
+				continue
+			}
+
+			if maxKeystrokesScore == nil || s.Keystrokes > maxKeystrokesScore.Keystrokes {
+				maxKeystrokesScore = s
+			}
+			if maxAccuracyScore == nil || s.Accuracy > maxAccuracyScore.Accuracy {
+				maxAccuracyScore = s
+			}
+		}
+
+		// 最大のKeystrokesスコアと最大のAccuracyスコアのフラグを設定
+		if maxKeystrokesScore != nil {
+			err = maxKeystrokesScore.Update().SetIsMaxKeystrokes(true).Exec(ctx)
+			if err != nil {
+				return err
+			}
+			logger.Info("Set is_max_keystrokes flag", slog.Int("keystrokes", maxKeystrokesScore.Keystrokes), slog.String("studentNumber", studentNumber))
+		}
+		if maxAccuracyScore != nil {
+			err = maxAccuracyScore.Update().SetIsMaxAccuracy(true).Exec(ctx)
+			if err != nil {
+				return err
+			}
+			logger.Info("Set is_max_accuracy flag", slog.Float64("accuracy", maxAccuracyScore.Accuracy), slog.String("studentNumber", studentNumber))
+		}
+	}
+
+	return nil
 }

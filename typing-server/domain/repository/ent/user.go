@@ -18,16 +18,10 @@ type User struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
-	// MailAdress holds the value of the "MailAdress" field.
-	MailAdress string `json:"MailAdress,omitempty"`
-	// HandleName holds the value of the "HandleName" field.
-	HandleName string `json:"HandleName,omitempty"`
-	// Name holds the value of the "Name" field.
-	Name string `json:"Name,omitempty"`
-	// HashedPassword holds the value of the "HashedPassword" field.
-	HashedPassword string `json:"HashedPassword,omitempty"`
-	// Department holds the value of the "Department" field.
-	Department user.Department `json:"Department,omitempty"`
+	// StudentNumber holds the value of the "student_number" field.
+	StudentNumber string `json:"student_number,omitempty"`
+	// HandleName holds the value of the "handle_name" field.
+	HandleName string `json:"handle_name,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -61,7 +55,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldMailAdress, user.FieldHandleName, user.FieldName, user.FieldHashedPassword, user.FieldDepartment:
+		case user.FieldStudentNumber, user.FieldHandleName:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt, user.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -88,35 +82,17 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value != nil {
 				u.ID = *value
 			}
-		case user.FieldMailAdress:
+		case user.FieldStudentNumber:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field MailAdress", values[i])
+				return fmt.Errorf("unexpected type %T for field student_number", values[i])
 			} else if value.Valid {
-				u.MailAdress = value.String
+				u.StudentNumber = value.String
 			}
 		case user.FieldHandleName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field HandleName", values[i])
+				return fmt.Errorf("unexpected type %T for field handle_name", values[i])
 			} else if value.Valid {
 				u.HandleName = value.String
-			}
-		case user.FieldName:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field Name", values[i])
-			} else if value.Valid {
-				u.Name = value.String
-			}
-		case user.FieldHashedPassword:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field HashedPassword", values[i])
-			} else if value.Valid {
-				u.HashedPassword = value.String
-			}
-		case user.FieldDepartment:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field Department", values[i])
-			} else if value.Valid {
-				u.Department = user.Department(value.String)
 			}
 		case user.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -171,20 +147,11 @@ func (u *User) String() string {
 	var builder strings.Builder
 	builder.WriteString("User(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", u.ID))
-	builder.WriteString("MailAdress=")
-	builder.WriteString(u.MailAdress)
+	builder.WriteString("student_number=")
+	builder.WriteString(u.StudentNumber)
 	builder.WriteString(", ")
-	builder.WriteString("HandleName=")
+	builder.WriteString("handle_name=")
 	builder.WriteString(u.HandleName)
-	builder.WriteString(", ")
-	builder.WriteString("Name=")
-	builder.WriteString(u.Name)
-	builder.WriteString(", ")
-	builder.WriteString("HashedPassword=")
-	builder.WriteString(u.HashedPassword)
-	builder.WriteString(", ")
-	builder.WriteString("Department=")
-	builder.WriteString(fmt.Sprintf("%v", u.Department))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(u.CreatedAt.Format(time.ANSIC))

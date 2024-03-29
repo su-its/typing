@@ -1,29 +1,25 @@
-FROM oven/bun:slim as base
+# syntax=docker/dockerfile:1
+FROM node:20.11-slim as base
 WORKDIR /app
 ENV NODE_ENV production
+RUN corepack enable yarn # to read "packageManager" in package.json
 
-FROM base as deps
-COPY package.json bun.lockb ./
-RUN bun install
+FROM base as build
+COPY package.json yarn.lock .yarnrc.yml ./
+RUN --mount=type=cache,target=/root/.cache/yarn/v6 yarn --immutable
 
-# bypass node image on build and use bun on runtime
-# https://github.com/oven-sh/bun/issues/4795
-FROM node:20.11-slim as build
-WORKDIR /app
-
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
+RUN yarn build
 
 FROM base as final
-USER bun
+USER node
 
-COPY --from=build --chown=bun:bun /app/public ./public
-COPY --from=build --chown=bun:bun /app/.next/standalone ./
-COPY --from=build --chown=bun:bun /app/.next/static ./.next/static
+COPY --from=build --chown=node:node /app/public ./public
+COPY --from=build --chown=node:node /app/.next/standalone ./
+COPY --from=build --chown=node:node /app/.next/static ./.next/static
 
 EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-CMD ["bun", "server.js"]
+CMD ["node", "server.js"]

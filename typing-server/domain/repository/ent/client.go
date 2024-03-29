@@ -316,6 +316,22 @@ func (c *ScoreClient) GetX(ctx context.Context, id uuid.UUID) *Score {
 	return obj
 }
 
+// QueryUser queries the user edge of a Score.
+func (c *ScoreClient) QueryUser(s *Score) *UserQuery {
+	query := (&UserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(score.Table, score.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, score.UserTable, score.UserColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *ScoreClient) Hooks() []Hook {
 	return c.hooks.Score

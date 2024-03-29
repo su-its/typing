@@ -6,13 +6,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/domain/repository/ent/predicate"
 	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
 // ScoreUpdate is the builder for updating Score entities.
@@ -25,6 +26,20 @@ type ScoreUpdate struct {
 // Where appends a list predicates to the ScoreUpdate builder.
 func (su *ScoreUpdate) Where(ps ...predicate.Score) *ScoreUpdate {
 	su.mutation.Where(ps...)
+	return su
+}
+
+// SetUserID sets the "user_id" field.
+func (su *ScoreUpdate) SetUserID(u uuid.UUID) *ScoreUpdate {
+	su.mutation.SetUserID(u)
+	return su
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (su *ScoreUpdate) SetNillableUserID(u *uuid.UUID) *ScoreUpdate {
+	if u != nil {
+		su.SetUserID(*u)
+	}
 	return su
 }
 
@@ -70,58 +85,60 @@ func (su *ScoreUpdate) AddAccuracy(f float64) *ScoreUpdate {
 	return su
 }
 
-// SetScore sets the "score" field.
-func (su *ScoreUpdate) SetScore(f float64) *ScoreUpdate {
-	su.mutation.ResetScore()
-	su.mutation.SetScore(f)
+// SetIsMaxKeystrokes sets the "is_max_keystrokes" field.
+func (su *ScoreUpdate) SetIsMaxKeystrokes(b bool) *ScoreUpdate {
+	su.mutation.SetIsMaxKeystrokes(b)
 	return su
 }
 
-// SetNillableScore sets the "score" field if the given value is not nil.
-func (su *ScoreUpdate) SetNillableScore(f *float64) *ScoreUpdate {
-	if f != nil {
-		su.SetScore(*f)
+// SetNillableIsMaxKeystrokes sets the "is_max_keystrokes" field if the given value is not nil.
+func (su *ScoreUpdate) SetNillableIsMaxKeystrokes(b *bool) *ScoreUpdate {
+	if b != nil {
+		su.SetIsMaxKeystrokes(*b)
 	}
 	return su
 }
 
-// AddScore adds f to the "score" field.
-func (su *ScoreUpdate) AddScore(f float64) *ScoreUpdate {
-	su.mutation.AddScore(f)
+// ClearIsMaxKeystrokes clears the value of the "is_max_keystrokes" field.
+func (su *ScoreUpdate) ClearIsMaxKeystrokes() *ScoreUpdate {
+	su.mutation.ClearIsMaxKeystrokes()
 	return su
 }
 
-// SetStartedAt sets the "startedAt" field.
-func (su *ScoreUpdate) SetStartedAt(t time.Time) *ScoreUpdate {
-	su.mutation.SetStartedAt(t)
+// SetIsMaxAccuracy sets the "is_max_accuracy" field.
+func (su *ScoreUpdate) SetIsMaxAccuracy(b bool) *ScoreUpdate {
+	su.mutation.SetIsMaxAccuracy(b)
 	return su
 }
 
-// SetNillableStartedAt sets the "startedAt" field if the given value is not nil.
-func (su *ScoreUpdate) SetNillableStartedAt(t *time.Time) *ScoreUpdate {
-	if t != nil {
-		su.SetStartedAt(*t)
+// SetNillableIsMaxAccuracy sets the "is_max_accuracy" field if the given value is not nil.
+func (su *ScoreUpdate) SetNillableIsMaxAccuracy(b *bool) *ScoreUpdate {
+	if b != nil {
+		su.SetIsMaxAccuracy(*b)
 	}
 	return su
 }
 
-// SetEndedAt sets the "endedAt" field.
-func (su *ScoreUpdate) SetEndedAt(t time.Time) *ScoreUpdate {
-	su.mutation.SetEndedAt(t)
+// ClearIsMaxAccuracy clears the value of the "is_max_accuracy" field.
+func (su *ScoreUpdate) ClearIsMaxAccuracy() *ScoreUpdate {
+	su.mutation.ClearIsMaxAccuracy()
 	return su
 }
 
-// SetNillableEndedAt sets the "endedAt" field if the given value is not nil.
-func (su *ScoreUpdate) SetNillableEndedAt(t *time.Time) *ScoreUpdate {
-	if t != nil {
-		su.SetEndedAt(*t)
-	}
-	return su
+// SetUser sets the "user" edge to the User entity.
+func (su *ScoreUpdate) SetUser(u *User) *ScoreUpdate {
+	return su.SetUserID(u.ID)
 }
 
 // Mutation returns the ScoreMutation object of the builder.
 func (su *ScoreUpdate) Mutation() *ScoreMutation {
 	return su.mutation
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (su *ScoreUpdate) ClearUser() *ScoreUpdate {
+	su.mutation.ClearUser()
+	return su
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -151,7 +168,18 @@ func (su *ScoreUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (su *ScoreUpdate) check() error {
+	if _, ok := su.mutation.UserID(); su.mutation.UserCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "Score.user"`)
+	}
+	return nil
+}
+
 func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
+	if err := su.check(); err != nil {
+		return n, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(score.Table, score.Columns, sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID))
 	if ps := su.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -172,17 +200,46 @@ func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := su.mutation.AddedAccuracy(); ok {
 		_spec.AddField(score.FieldAccuracy, field.TypeFloat64, value)
 	}
-	if value, ok := su.mutation.Score(); ok {
-		_spec.SetField(score.FieldScore, field.TypeFloat64, value)
+	if value, ok := su.mutation.IsMaxKeystrokes(); ok {
+		_spec.SetField(score.FieldIsMaxKeystrokes, field.TypeBool, value)
 	}
-	if value, ok := su.mutation.AddedScore(); ok {
-		_spec.AddField(score.FieldScore, field.TypeFloat64, value)
+	if su.mutation.IsMaxKeystrokesCleared() {
+		_spec.ClearField(score.FieldIsMaxKeystrokes, field.TypeBool)
 	}
-	if value, ok := su.mutation.StartedAt(); ok {
-		_spec.SetField(score.FieldStartedAt, field.TypeTime, value)
+	if value, ok := su.mutation.IsMaxAccuracy(); ok {
+		_spec.SetField(score.FieldIsMaxAccuracy, field.TypeBool, value)
 	}
-	if value, ok := su.mutation.EndedAt(); ok {
-		_spec.SetField(score.FieldEndedAt, field.TypeTime, value)
+	if su.mutation.IsMaxAccuracyCleared() {
+		_spec.ClearField(score.FieldIsMaxAccuracy, field.TypeBool)
+	}
+	if su.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   score.UserTable,
+			Columns: []string{score.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := su.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   score.UserTable,
+			Columns: []string{score.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, su.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -202,6 +259,20 @@ type ScoreUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *ScoreMutation
+}
+
+// SetUserID sets the "user_id" field.
+func (suo *ScoreUpdateOne) SetUserID(u uuid.UUID) *ScoreUpdateOne {
+	suo.mutation.SetUserID(u)
+	return suo
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (suo *ScoreUpdateOne) SetNillableUserID(u *uuid.UUID) *ScoreUpdateOne {
+	if u != nil {
+		suo.SetUserID(*u)
+	}
+	return suo
 }
 
 // SetKeystrokes sets the "keystrokes" field.
@@ -246,58 +317,60 @@ func (suo *ScoreUpdateOne) AddAccuracy(f float64) *ScoreUpdateOne {
 	return suo
 }
 
-// SetScore sets the "score" field.
-func (suo *ScoreUpdateOne) SetScore(f float64) *ScoreUpdateOne {
-	suo.mutation.ResetScore()
-	suo.mutation.SetScore(f)
+// SetIsMaxKeystrokes sets the "is_max_keystrokes" field.
+func (suo *ScoreUpdateOne) SetIsMaxKeystrokes(b bool) *ScoreUpdateOne {
+	suo.mutation.SetIsMaxKeystrokes(b)
 	return suo
 }
 
-// SetNillableScore sets the "score" field if the given value is not nil.
-func (suo *ScoreUpdateOne) SetNillableScore(f *float64) *ScoreUpdateOne {
-	if f != nil {
-		suo.SetScore(*f)
+// SetNillableIsMaxKeystrokes sets the "is_max_keystrokes" field if the given value is not nil.
+func (suo *ScoreUpdateOne) SetNillableIsMaxKeystrokes(b *bool) *ScoreUpdateOne {
+	if b != nil {
+		suo.SetIsMaxKeystrokes(*b)
 	}
 	return suo
 }
 
-// AddScore adds f to the "score" field.
-func (suo *ScoreUpdateOne) AddScore(f float64) *ScoreUpdateOne {
-	suo.mutation.AddScore(f)
+// ClearIsMaxKeystrokes clears the value of the "is_max_keystrokes" field.
+func (suo *ScoreUpdateOne) ClearIsMaxKeystrokes() *ScoreUpdateOne {
+	suo.mutation.ClearIsMaxKeystrokes()
 	return suo
 }
 
-// SetStartedAt sets the "startedAt" field.
-func (suo *ScoreUpdateOne) SetStartedAt(t time.Time) *ScoreUpdateOne {
-	suo.mutation.SetStartedAt(t)
+// SetIsMaxAccuracy sets the "is_max_accuracy" field.
+func (suo *ScoreUpdateOne) SetIsMaxAccuracy(b bool) *ScoreUpdateOne {
+	suo.mutation.SetIsMaxAccuracy(b)
 	return suo
 }
 
-// SetNillableStartedAt sets the "startedAt" field if the given value is not nil.
-func (suo *ScoreUpdateOne) SetNillableStartedAt(t *time.Time) *ScoreUpdateOne {
-	if t != nil {
-		suo.SetStartedAt(*t)
+// SetNillableIsMaxAccuracy sets the "is_max_accuracy" field if the given value is not nil.
+func (suo *ScoreUpdateOne) SetNillableIsMaxAccuracy(b *bool) *ScoreUpdateOne {
+	if b != nil {
+		suo.SetIsMaxAccuracy(*b)
 	}
 	return suo
 }
 
-// SetEndedAt sets the "endedAt" field.
-func (suo *ScoreUpdateOne) SetEndedAt(t time.Time) *ScoreUpdateOne {
-	suo.mutation.SetEndedAt(t)
+// ClearIsMaxAccuracy clears the value of the "is_max_accuracy" field.
+func (suo *ScoreUpdateOne) ClearIsMaxAccuracy() *ScoreUpdateOne {
+	suo.mutation.ClearIsMaxAccuracy()
 	return suo
 }
 
-// SetNillableEndedAt sets the "endedAt" field if the given value is not nil.
-func (suo *ScoreUpdateOne) SetNillableEndedAt(t *time.Time) *ScoreUpdateOne {
-	if t != nil {
-		suo.SetEndedAt(*t)
-	}
-	return suo
+// SetUser sets the "user" edge to the User entity.
+func (suo *ScoreUpdateOne) SetUser(u *User) *ScoreUpdateOne {
+	return suo.SetUserID(u.ID)
 }
 
 // Mutation returns the ScoreMutation object of the builder.
 func (suo *ScoreUpdateOne) Mutation() *ScoreMutation {
 	return suo.mutation
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (suo *ScoreUpdateOne) ClearUser() *ScoreUpdateOne {
+	suo.mutation.ClearUser()
+	return suo
 }
 
 // Where appends a list predicates to the ScoreUpdate builder.
@@ -340,7 +413,18 @@ func (suo *ScoreUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (suo *ScoreUpdateOne) check() error {
+	if _, ok := suo.mutation.UserID(); suo.mutation.UserCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "Score.user"`)
+	}
+	return nil
+}
+
 func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error) {
+	if err := suo.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(score.Table, score.Columns, sqlgraph.NewFieldSpec(score.FieldID, field.TypeUUID))
 	id, ok := suo.mutation.ID()
 	if !ok {
@@ -378,17 +462,46 @@ func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error
 	if value, ok := suo.mutation.AddedAccuracy(); ok {
 		_spec.AddField(score.FieldAccuracy, field.TypeFloat64, value)
 	}
-	if value, ok := suo.mutation.Score(); ok {
-		_spec.SetField(score.FieldScore, field.TypeFloat64, value)
+	if value, ok := suo.mutation.IsMaxKeystrokes(); ok {
+		_spec.SetField(score.FieldIsMaxKeystrokes, field.TypeBool, value)
 	}
-	if value, ok := suo.mutation.AddedScore(); ok {
-		_spec.AddField(score.FieldScore, field.TypeFloat64, value)
+	if suo.mutation.IsMaxKeystrokesCleared() {
+		_spec.ClearField(score.FieldIsMaxKeystrokes, field.TypeBool)
 	}
-	if value, ok := suo.mutation.StartedAt(); ok {
-		_spec.SetField(score.FieldStartedAt, field.TypeTime, value)
+	if value, ok := suo.mutation.IsMaxAccuracy(); ok {
+		_spec.SetField(score.FieldIsMaxAccuracy, field.TypeBool, value)
 	}
-	if value, ok := suo.mutation.EndedAt(); ok {
-		_spec.SetField(score.FieldEndedAt, field.TypeTime, value)
+	if suo.mutation.IsMaxAccuracyCleared() {
+		_spec.ClearField(score.FieldIsMaxAccuracy, field.TypeBool)
+	}
+	if suo.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   score.UserTable,
+			Columns: []string{score.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := suo.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   score.UserTable,
+			Columns: []string{score.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Score{config: suo.config}
 	_spec.Assign = _node.assignValues
