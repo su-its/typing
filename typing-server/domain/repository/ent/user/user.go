@@ -33,7 +33,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "score" package.
 	ScoresInverseTable = "scores"
 	// ScoresColumn is the table column denoting the scores relation/edge.
-	ScoresColumn = "user_scores"
+	ScoresColumn = "user_id"
 )
 
 // Columns holds all SQL columns for user fields.
