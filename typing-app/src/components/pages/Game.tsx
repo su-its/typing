@@ -12,15 +12,15 @@ export interface SubGamePageProps {
 
 export interface GameTypingProps {
   nextPage: () => void;
-  filenames: string[];
+  subjectText: string;
   setResultScore: (data: ResultScore) => void;
 }
 
 interface GamePageProps {
-  filenames: string[];
+  fileContent: string;
 }
 
-const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
+const GamePage: React.FC<GamePageProps> = ({ fileContent }) => {
   enum ScreenIndex {
     IDX_PRE,
     IDX_TYPING,
@@ -41,7 +41,7 @@ const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
     <GameTyping
       key={ScreenIndex.IDX_TYPING}
       nextPage={() => setScreenIndex(ScreenIndex.IDX_RESULT)}
-      filenames={filenames}
+      subjectText={fileContent}
       setResultScore={setResultScore}
     />,
     <GameResult

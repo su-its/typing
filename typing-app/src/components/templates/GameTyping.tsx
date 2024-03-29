@@ -7,29 +7,7 @@ import ProgressBar from "../atoms/ProgressBar";
 import { GameTypingProps } from "../pages/Game";
 import styles from "./GameTyping.module.css";
 
-const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultScore }) => {
-  // subjectTextの状態を管理するuseStateフック
-  const [subjectText, setSubjectText] = useState("");
-
-  useEffect(() => {
-    const loadTextFile = async () => {
-      // ランダムにファイル名を選択
-      const randomFile = filenames[Math.floor(Math.random() * filenames.length)];
-      // `public` ディレクトリからの相対パスを指定
-      const filePath = `./assets/texts/${randomFile}`;
-      // fetch APIを使用してファイルの内容を読み込む
-      try {
-        const response = await fetch(filePath);
-        const fetchedText = await response.text();
-        setSubjectText(fetchedText); // レスポンスをsubjectTextステートに設定
-      } catch (error) {
-        console.error("Error loading the text file:", error);
-      }
-    };
-
-    loadTextFile();
-  }, [filenames]); // ビルド時の警告防止のためにfilenamesを依存リストに追加
-
+const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResultScore }) => {
   const totalSeconds = 250;
   const [count, setCount] = useState(totalSeconds);
   const damyScoreData = {
