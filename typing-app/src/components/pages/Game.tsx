@@ -12,16 +12,16 @@ export interface SubGamePageProps {
 
 export interface GameTypingProps {
   nextPage: () => void;
-  filenames: string[];
+  subjectText: string;
   setResultScore: (data: ResultScore) => void;
   screenIndex: number;
 }
 
 interface GamePageProps {
-  filenames: string[];
+  fileContent: string;
 }
 
-const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
+const GamePage: React.FC<GamePageProps> = ({ fileContent }) => {
   const ScreenIndex = {
     IDX_PRE: 0,
     IDX_TYPING: 1,
@@ -45,7 +45,7 @@ const GamePage: React.FC<GamePageProps> = ({ filenames }) => {
     <GameTyping
       key={ScreenIndex.IDX_TYPING}
       nextPage={() => setScreenIndex(ScreenIndex.IDX_RESULT)}
-      filenames={filenames}
+      subjectText={fileContent}
       setResultScore={setResultScore}
       screenIndex={screenIndex}
     />,
