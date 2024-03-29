@@ -17,10 +17,10 @@ const UserCard: React.FC = () => {
         <HStack spacing={4}>
           <Avatar src={user.avatarUrl} maxW="100px" borderRadius="9" />
           <VStack align="start" spacing={1}>
-            <Text fontSize="lg" fontWeight="bold">
+            <Text fontSize="lg" fontWeight="bold" color={"white"}>
               名前: {user.name}
             </Text>
-            <Text>学籍番号: {user.studentId}</Text>
+            <Text color={"white"}>学籍番号: {user.studentId}</Text>
           </VStack>
         </HStack>
       </Box>
