@@ -1,6 +1,8 @@
 openapi: 3.0.0
 info:
   title: Typing API
+  description: >-
+    This is Typing API
   version: 1.0.0
 servers:
   - url: http://localhost:8080
@@ -14,6 +16,7 @@ tags:
     description: ユーザー関係(仮)
   - name: score
     description: スコア関係(仮)
+    title: Sample Pet Store App
 paths:
   /health:
     get:

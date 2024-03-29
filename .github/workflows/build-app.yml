@@ -36,8 +36,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'yarn'
+          node-version: "20"
+          cache: "yarn"
           cache-dependency-path: typing-app/yarn.lock
 
       - name: Install Dependencies
