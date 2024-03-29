@@ -54,9 +54,9 @@ const RankingTabs = () => {
         </CustomButton>
       </Flex>
       <Center>
-        <TabList>
-          <Tab>Accuracy</Tab>
-          <Tab>KeyStroke</Tab>
+        <TabList color={"white"}>
+          <Tab _selected={{ color: '#00ace6' }}>Accuracy</Tab>
+          <Tab _selected={{ color: '#00ace6' }}>KeyStroke</Tab>
         </TabList>
       </Center>
 
