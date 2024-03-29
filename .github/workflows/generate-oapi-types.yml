@@ -21,6 +21,7 @@ jobs:
           cache: "yarn"
           cache-dependency-path: typing-app/yarn.lock
       - name: Install Dependencies
+        working-directory: typing-app
         run: yarn
       - name: Retrieve the Schema version
         uses: mikefarah/yq@master
