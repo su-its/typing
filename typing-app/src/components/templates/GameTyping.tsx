@@ -115,11 +115,21 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
     }
   };
 
+  const getTypingQueueListIndex = (index: number): number => {
+    if (index < 0) {
+      return 0;
+    }
+    if (index >= typingQueueList.length) {
+      return typingQueueList.length - 1;
+    }
+    return 0;
+  };
+
   const calcCurrentTypingSpeed = (): number => {
     if (typingQueueList.length <= 1) {
       return 0;
     }
-    const typeTime = typingQueueList[typingQueueList.length - 1] - typingQueueList[0];
+    const typeTime = getTypingQueueListIndex(typingQueueList.length - 1) - getTypingQueueListIndex(0);
     const currentWpm = (typingQueueList.length / typeTime) * 60000;
     return toLogarithmWpm(currentWpm);
   };
