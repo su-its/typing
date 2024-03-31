@@ -11,10 +11,10 @@ interface PaginationProps {
 export const Pagination = ({ onPrev, onNext, isPrevDisabled, isNextDisabled }: PaginationProps) => (
   <Flex>
     <CustomButton onClick={onPrev} isDisabled={isPrevDisabled}>
-      Prev
+      前のページ
     </CustomButton>
     <CustomButton onClick={onNext} isDisabled={isNextDisabled}>
-      Next
+      次のページ
     </CustomButton>
   </Flex>
 );

@@ -48,15 +48,15 @@ const RankingTabs = () => {
 
   return (
     <Tabs onChange={handleTabChange}>
-      <Flex  justifyContent="right">
+      <Flex justifyContent="right">
         <CustomButton onClick={() => fetchData()} isDisabled={false}>
-          Reload
+          再読み込み
         </CustomButton>
       </Flex>
       <Center>
         <TabList color={"white"}>
-          <Tab _selected={{ color: '#00ace6' }}>Accuracy</Tab>
-          <Tab _selected={{ color: '#00ace6' }}>KeyStroke</Tab>
+          <Tab _selected={{ color: "#00ace6" }}>正打率</Tab>
+          <Tab _selected={{ color: "#00ace6" }}>入力文字数</Tab>
         </TabList>
       </Center>
 
@@ -179,5 +179,5 @@ const demoAccuracyRankings: ScoreRanking[] = [
     keystrokes: 60,
     accuracy: 60,
     createdAt: new Date(),
-  }
+  },
 ];
