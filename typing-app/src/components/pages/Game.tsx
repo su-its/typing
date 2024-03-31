@@ -6,7 +6,7 @@ import GamePre from "../templates/GamePre";
 import GameResult from "../templates/GameResult";
 import GameTyping from "../templates/GameTyping";
 
-export interface SubGamePageProps {
+export interface GamePreProps {
   nextPage: () => void;
 }
 

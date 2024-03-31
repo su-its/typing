@@ -1,8 +1,8 @@
 import { Box, Text } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { SubGamePageProps } from "../pages/Game";
+import { GamePreProps } from "../pages/Game";
 
-const GamePre: React.FC<SubGamePageProps> = ({ nextPage }) => {
+const GamePre: React.FC<GamePreProps> = ({ nextPage }) => {
   useEffect(() => {
     // Spaceキーを押したときに実行する関数
     const handleSpaceButtonDown = (e: KeyboardEvent) => {
