@@ -1,7 +1,7 @@
 import RegisterScore, { ResultScore } from "@/types/RegisterScore";
 import { Box } from "@chakra-ui/react";
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ProgressBar from "../atoms/ProgressBar";
 import { GameTypingProps } from "../pages/Game";
 import styles from "./GameTyping.module.css";
@@ -39,31 +39,8 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
   const [correctType, setCorrectType] = useState(0); // 正打数
   const [incorrectType, setIncorrectType] = useState(0); // 誤打数
 
-  const [typeIndex, setTypeIndex] = useState(0);
-  // 残り時間のカウントダウン
-  const updateFrequency = 100; // 100msごとにカウントダウン
-  useEffect(() => {
-    if (count <= 0) {
-      sendResultData();
-    } else {
-      const timer = setInterval(() => {
-        const pastTime = (new Date().valueOf() - startedAt.valueOf()) / 1000;
-        const newCount = totalSeconds - pastTime;
-        setCount(newCount);
-      }, updateFrequency);
-      return () => clearInterval(timer);
-    }
-  }, [count, nextPage, userId]); // ビルド時の警告防止のためにuserIdも依存リストに追加
-
-  // 打ち終わった時にスコアを送信する
-  useEffect(() => {
-    if (typeIndex === subjectText.length - 1) {
-      sendResultData();
-    }
-  }, [nextPage, userId, typeIndex]); // ビルド時の警告防止のためにuserIdも依存リストに追加
-
   // スコアデータを送信する
-  const sendResultData = () => {
+  const sendResultData = useCallback(() => {
     // サーバに送信されるデータ
     const endedAt = new Date();
     const actualTypeTimeSeconds = (endedAt.valueOf() - startedAt.valueOf()) / 1000;
@@ -100,7 +77,30 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
         console.error(error);
       });
     nextPage();
-  };
+  }, [startedAt, totalSeconds, correctType, incorrectType, setResultScore, userId, nextPage]);
+
+  const [typeIndex, setTypeIndex] = useState(0);
+  // 残り時間のカウントダウン
+  const updateFrequency = 100; // 100msごとにカウントダウン
+  useEffect(() => {
+    if (count <= 0) {
+      sendResultData();
+    } else {
+      const timer = setInterval(() => {
+        const pastTime = (new Date().valueOf() - startedAt.valueOf()) / 1000;
+        const newCount = totalSeconds - pastTime;
+        setCount(newCount);
+      }, updateFrequency);
+      return () => clearInterval(timer);
+    }
+  }, [count, nextPage, sendResultData, startedAt, userId]); // ビルド時の警告防止のためにuserIdも依存リストに追加
+
+  // 打ち終わった時にスコアを送信する
+  useEffect(() => {
+    if (typeIndex === subjectText.length - 1) {
+      sendResultData();
+    }
+  }, [nextPage, userId, sendResultData, subjectText.length, typeIndex]); // ビルド時の警告防止のためにuserIdも依存リストに追加
 
   // タイピング速度計算用
   const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
