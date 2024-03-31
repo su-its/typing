@@ -1,8 +1,7 @@
-import { Box, Button, Grid, GridItem, Text } from "@chakra-ui/react";
-import React from "react";
-import { SubGamePageProps } from "../pages/Game";
-import styles from "./GameResult.module.css";
 import { ResultScore } from "@/types/RegisterScore";
+import { Button, Grid, GridItem, Text } from "@chakra-ui/react";
+import React from "react";
+import styles from "./GameResult.module.css";
 
 interface GameResultProps {
   nextPage: () => void;
@@ -73,7 +72,7 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={6} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
-            {String(resultScore.time.getMinutes() * 60 + resultScore.time.getSeconds()).padStart(2, '0')}秒
+            {String(resultScore.time.getMinutes() * 60 + resultScore.time.getSeconds()).padStart(2, "0")}秒
             {String(Math.floor(resultScore.time.getMilliseconds() / 100))}
           </Text>
         </GridItem>
