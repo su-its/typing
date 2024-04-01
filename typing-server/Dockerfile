@@ -14,7 +14,7 @@ RUN go mod download
 RUN CGO_ENABLED=0 GOOS=linux go build -v -o server ./api/cmd/main.go
 
 # 実行イメージ
-FROM alpine:latest  
+FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 
 # tzdataパッケージのインストール
@@ -26,4 +26,4 @@ WORKDIR /root
 COPY --from=builder /app/server .
 
 # アプリケーションの実行
-CMD ["./server"]
+CMD ["./server","-seed","false"]

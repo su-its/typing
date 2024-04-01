@@ -13,10 +13,10 @@ var (
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "keystrokes", Type: field.TypeInt},
 		{Name: "accuracy", Type: field.TypeFloat64},
-		{Name: "score", Type: field.TypeFloat64},
-		{Name: "started_at", Type: field.TypeTime},
-		{Name: "ended_at", Type: field.TypeTime},
-		{Name: "user_scores", Type: field.TypeUUID, Nullable: true},
+		{Name: "is_max_keystrokes", Type: field.TypeBool, Nullable: true},
+		{Name: "is_max_accuracy", Type: field.TypeBool, Nullable: true},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "user_id", Type: field.TypeUUID},
 	}
 	// ScoresTable holds the schema information for the "scores" table.
 	ScoresTable = &schema.Table{
@@ -28,18 +28,15 @@ var (
 				Symbol:     "scores_users_scores",
 				Columns:    []*schema.Column{ScoresColumns[6]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.NoAction,
 			},
 		},
 	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "mail_adress", Type: field.TypeString, Size: 255},
+		{Name: "student_number", Type: field.TypeString, Unique: true},
 		{Name: "handle_name", Type: field.TypeString, Size: 36},
-		{Name: "name", Type: field.TypeString, Size: 36},
-		{Name: "hashed_password", Type: field.TypeString, Size: 255},
-		{Name: "department", Type: field.TypeEnum, Enums: []string{"CS", "BI", "IA"}},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 	}

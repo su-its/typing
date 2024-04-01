@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
+	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
 // ScoreCreate is the builder for creating a Score entity.
@@ -19,6 +20,12 @@ type ScoreCreate struct {
 	config
 	mutation *ScoreMutation
 	hooks    []Hook
+}
+
+// SetUserID sets the "user_id" field.
+func (sc *ScoreCreate) SetUserID(u uuid.UUID) *ScoreCreate {
+	sc.mutation.SetUserID(u)
+	return sc
 }
 
 // SetKeystrokes sets the "keystrokes" field.
@@ -33,21 +40,45 @@ func (sc *ScoreCreate) SetAccuracy(f float64) *ScoreCreate {
 	return sc
 }
 
-// SetScore sets the "score" field.
-func (sc *ScoreCreate) SetScore(f float64) *ScoreCreate {
-	sc.mutation.SetScore(f)
+// SetIsMaxKeystrokes sets the "is_max_keystrokes" field.
+func (sc *ScoreCreate) SetIsMaxKeystrokes(b bool) *ScoreCreate {
+	sc.mutation.SetIsMaxKeystrokes(b)
 	return sc
 }
 
-// SetStartedAt sets the "startedAt" field.
-func (sc *ScoreCreate) SetStartedAt(t time.Time) *ScoreCreate {
-	sc.mutation.SetStartedAt(t)
+// SetNillableIsMaxKeystrokes sets the "is_max_keystrokes" field if the given value is not nil.
+func (sc *ScoreCreate) SetNillableIsMaxKeystrokes(b *bool) *ScoreCreate {
+	if b != nil {
+		sc.SetIsMaxKeystrokes(*b)
+	}
 	return sc
 }
 
-// SetEndedAt sets the "endedAt" field.
-func (sc *ScoreCreate) SetEndedAt(t time.Time) *ScoreCreate {
-	sc.mutation.SetEndedAt(t)
+// SetIsMaxAccuracy sets the "is_max_accuracy" field.
+func (sc *ScoreCreate) SetIsMaxAccuracy(b bool) *ScoreCreate {
+	sc.mutation.SetIsMaxAccuracy(b)
+	return sc
+}
+
+// SetNillableIsMaxAccuracy sets the "is_max_accuracy" field if the given value is not nil.
+func (sc *ScoreCreate) SetNillableIsMaxAccuracy(b *bool) *ScoreCreate {
+	if b != nil {
+		sc.SetIsMaxAccuracy(*b)
+	}
+	return sc
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (sc *ScoreCreate) SetCreatedAt(t time.Time) *ScoreCreate {
+	sc.mutation.SetCreatedAt(t)
+	return sc
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (sc *ScoreCreate) SetNillableCreatedAt(t *time.Time) *ScoreCreate {
+	if t != nil {
+		sc.SetCreatedAt(*t)
+	}
 	return sc
 }
 
@@ -63,6 +94,11 @@ func (sc *ScoreCreate) SetNillableID(u *uuid.UUID) *ScoreCreate {
 		sc.SetID(*u)
 	}
 	return sc
+}
+
+// SetUser sets the "user" edge to the User entity.
+func (sc *ScoreCreate) SetUser(u *User) *ScoreCreate {
+	return sc.SetUserID(u.ID)
 }
 
 // Mutation returns the ScoreMutation object of the builder.
@@ -100,6 +136,10 @@ func (sc *ScoreCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (sc *ScoreCreate) defaults() {
+	if _, ok := sc.mutation.CreatedAt(); !ok {
+		v := score.DefaultCreatedAt()
+		sc.mutation.SetCreatedAt(v)
+	}
 	if _, ok := sc.mutation.ID(); !ok {
 		v := score.DefaultID()
 		sc.mutation.SetID(v)
@@ -108,20 +148,20 @@ func (sc *ScoreCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (sc *ScoreCreate) check() error {
+	if _, ok := sc.mutation.UserID(); !ok {
+		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Score.user_id"`)}
+	}
 	if _, ok := sc.mutation.Keystrokes(); !ok {
 		return &ValidationError{Name: "keystrokes", err: errors.New(`ent: missing required field "Score.keystrokes"`)}
 	}
 	if _, ok := sc.mutation.Accuracy(); !ok {
 		return &ValidationError{Name: "accuracy", err: errors.New(`ent: missing required field "Score.accuracy"`)}
 	}
-	if _, ok := sc.mutation.Score(); !ok {
-		return &ValidationError{Name: "score", err: errors.New(`ent: missing required field "Score.score"`)}
+	if _, ok := sc.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Score.created_at"`)}
 	}
-	if _, ok := sc.mutation.StartedAt(); !ok {
-		return &ValidationError{Name: "startedAt", err: errors.New(`ent: missing required field "Score.startedAt"`)}
-	}
-	if _, ok := sc.mutation.EndedAt(); !ok {
-		return &ValidationError{Name: "endedAt", err: errors.New(`ent: missing required field "Score.endedAt"`)}
+	if _, ok := sc.mutation.UserID(); !ok {
+		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "Score.user"`)}
 	}
 	return nil
 }
@@ -166,17 +206,34 @@ func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 		_spec.SetField(score.FieldAccuracy, field.TypeFloat64, value)
 		_node.Accuracy = value
 	}
-	if value, ok := sc.mutation.Score(); ok {
-		_spec.SetField(score.FieldScore, field.TypeFloat64, value)
-		_node.Score = value
+	if value, ok := sc.mutation.IsMaxKeystrokes(); ok {
+		_spec.SetField(score.FieldIsMaxKeystrokes, field.TypeBool, value)
+		_node.IsMaxKeystrokes = value
 	}
-	if value, ok := sc.mutation.StartedAt(); ok {
-		_spec.SetField(score.FieldStartedAt, field.TypeTime, value)
-		_node.StartedAt = value
+	if value, ok := sc.mutation.IsMaxAccuracy(); ok {
+		_spec.SetField(score.FieldIsMaxAccuracy, field.TypeBool, value)
+		_node.IsMaxAccuracy = value
 	}
-	if value, ok := sc.mutation.EndedAt(); ok {
-		_spec.SetField(score.FieldEndedAt, field.TypeTime, value)
-		_node.EndedAt = value
+	if value, ok := sc.mutation.CreatedAt(); ok {
+		_spec.SetField(score.FieldCreatedAt, field.TypeTime, value)
+		_node.CreatedAt = value
+	}
+	if nodes := sc.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   score.UserTable,
+			Columns: []string{score.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.UserID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

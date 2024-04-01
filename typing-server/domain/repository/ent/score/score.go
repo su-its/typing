@@ -3,7 +3,10 @@
 package score
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
 )
 
@@ -12,34 +15,40 @@ const (
 	Label = "score"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldUserID holds the string denoting the user_id field in the database.
+	FieldUserID = "user_id"
 	// FieldKeystrokes holds the string denoting the keystrokes field in the database.
 	FieldKeystrokes = "keystrokes"
 	// FieldAccuracy holds the string denoting the accuracy field in the database.
 	FieldAccuracy = "accuracy"
-	// FieldScore holds the string denoting the score field in the database.
-	FieldScore = "score"
-	// FieldStartedAt holds the string denoting the startedat field in the database.
-	FieldStartedAt = "started_at"
-	// FieldEndedAt holds the string denoting the endedat field in the database.
-	FieldEndedAt = "ended_at"
+	// FieldIsMaxKeystrokes holds the string denoting the is_max_keystrokes field in the database.
+	FieldIsMaxKeystrokes = "is_max_keystrokes"
+	// FieldIsMaxAccuracy holds the string denoting the is_max_accuracy field in the database.
+	FieldIsMaxAccuracy = "is_max_accuracy"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// EdgeUser holds the string denoting the user edge name in mutations.
+	EdgeUser = "user"
 	// Table holds the table name of the score in the database.
 	Table = "scores"
+	// UserTable is the table that holds the user relation/edge.
+	UserTable = "scores"
+	// UserInverseTable is the table name for the User entity.
+	// It exists in this package in order to avoid circular dependency with the "user" package.
+	UserInverseTable = "users"
+	// UserColumn is the table column denoting the user relation/edge.
+	UserColumn = "user_id"
 )
 
 // Columns holds all SQL columns for score fields.
 var Columns = []string{
 	FieldID,
+	FieldUserID,
 	FieldKeystrokes,
 	FieldAccuracy,
-	FieldScore,
-	FieldStartedAt,
-	FieldEndedAt,
-}
-
-// ForeignKeys holds the SQL foreign-keys that are owned by the "scores"
-// table and are not defined as standalone fields in the schema.
-var ForeignKeys = []string{
-	"user_scores",
+	FieldIsMaxKeystrokes,
+	FieldIsMaxAccuracy,
+	FieldCreatedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -49,15 +58,12 @@ func ValidColumn(column string) bool {
 			return true
 		}
 	}
-	for i := range ForeignKeys {
-		if column == ForeignKeys[i] {
-			return true
-		}
-	}
 	return false
 }
 
 var (
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() time.Time
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
@@ -70,6 +76,11 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
+// ByUserID orders the results by the user_id field.
+func ByUserID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUserID, opts...).ToFunc()
+}
+
 // ByKeystrokes orders the results by the keystrokes field.
 func ByKeystrokes(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldKeystrokes, opts...).ToFunc()
@@ -80,17 +91,31 @@ func ByAccuracy(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAccuracy, opts...).ToFunc()
 }
 
-// ByScore orders the results by the score field.
-func ByScore(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldScore, opts...).ToFunc()
+// ByIsMaxKeystrokes orders the results by the is_max_keystrokes field.
+func ByIsMaxKeystrokes(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsMaxKeystrokes, opts...).ToFunc()
 }
 
-// ByStartedAt orders the results by the startedAt field.
-func ByStartedAt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldStartedAt, opts...).ToFunc()
+// ByIsMaxAccuracy orders the results by the is_max_accuracy field.
+func ByIsMaxAccuracy(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsMaxAccuracy, opts...).ToFunc()
 }
 
-// ByEndedAt orders the results by the endedAt field.
-func ByEndedAt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldEndedAt, opts...).ToFunc()
+// ByCreatedAt orders the results by the created_at field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByUserField orders the results by user field.
+func ByUserField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newUserStep(), sql.OrderByField(field, opts...))
+	}
+}
+func newUserStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(UserInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
+	)
 }
