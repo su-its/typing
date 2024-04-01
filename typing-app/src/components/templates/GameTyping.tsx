@@ -47,13 +47,13 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
     const typeTimeSeconds = actualTypeTimeSeconds > totalSeconds ? totalSeconds : actualTypeTimeSeconds;
     const totalType = correctType + incorrectType;
     const accuracy = totalType === 0 ? 0 : (correctType / totalType) * 100; // [%]
-    const registeredScore = {
+    const registeredScore: RegisterScore = {
       keystrokes: correctType,
       accuracy: accuracy,
       score: (correctType / typeTimeSeconds) * 60,
       startedAt: startedAt,
       endedAt: endedAt,
-    } as RegisterScore;
+    };
 
     // リザルト画面用のデータ
     setResultScore({
@@ -63,7 +63,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       wpm: (correctType / typeTimeSeconds) * 60,
       accuracy: registeredScore.accuracy,
       score: registeredScore.score,
-    } as ResultScore);
+    });
     fetch(`http://localhost:8080/users/${userId}/scores`, {
       method: `POST`,
       headers: {
@@ -71,8 +71,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
       },
       body: JSON.stringify(registeredScore),
     })
-      .then((res) => res.json())
-      .then(() => {})
       .catch((error) => {
         console.error(error);
       });
