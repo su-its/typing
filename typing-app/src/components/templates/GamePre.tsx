@@ -1,6 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { GamePreProps } from "../pages/Game";
+import styles from "./GamePre.module.css";
 
 const GamePre: React.FC<GamePreProps> = ({ nextPage }) => {
   useEffect(() => {
@@ -22,7 +23,11 @@ const GamePre: React.FC<GamePreProps> = ({ nextPage }) => {
 
   return (
     <Box>
-      <Text>GamePre screen</Text>
+      <div className={styles.box}>
+        <Text fontSize="4xl">
+          ゲーム説明
+        </Text>
+      </div>
     </Box>
   );
 };
