@@ -1,6 +1,8 @@
 services:
   app:
     image: ghcr.io/su-its/typing-app:dev
+    ports:
+      - "3000:3000"
   api:
     image: ghcr.io/su-its/typing-server:dev
     depends_on:
