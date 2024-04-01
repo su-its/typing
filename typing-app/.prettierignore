@@ -6,3 +6,5 @@ bun.lockb
 .eslintrc.json
 eslint.config.js
 package-lock.json
+yarn.lock
+src/libs/api/v1.d.ts
