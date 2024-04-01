@@ -106,7 +106,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
 
   // タイピング速度計算用
   const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
-  const [typingQueueList] = useState([] as number[]);
+  const [typingQueueList] = useState<number[]>([]);
   const [currentTypeSpeed, setCurrentTypeSpeed] = useState(0);
   const [averageTypeSpeed, setAverageTypeSpeed] = useState(0);
   const addTypingQueueList = () => {
