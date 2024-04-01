@@ -6,6 +6,10 @@ import ProgressBar from "../atoms/ProgressBar";
 import { GameTypingProps } from "../pages/Game";
 import styles from "./GameTyping.module.css";
 
+import gaugePositionImg from "../../../public/img/gauge_position.png";
+import gaugeSpeedImg from "../../../public/img/gauge_speed.png";
+import gaugeTimeImg from "../../../public/img/gauge_time.png";
+
 const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultScore }) => {
   // subjectTextの状態を管理するuseStateフック
   const [subjectText, setSubjectText] = useState("");
@@ -191,7 +195,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
         <Image
           className={styles.gauge_time}
           id="gauge_time"
-          src="/img/gauge_time.png"
+          src={gaugeTimeImg}
           alt={""}
           width={281}
           height={22}
@@ -199,7 +203,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
         <Image
           className={styles.gauge_position}
           id="gauge_position"
-          src="/img/gauge_position.png"
+          src={gaugePositionImg}
           alt={""}
           width={330}
           height={24}
@@ -207,7 +211,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
         <Image
           className={styles.gauge_speed}
           id="gauge_speed"
-          src="/img/gauge_speed.png"
+          src={gaugeSpeedImg}
           alt={""}
           width={330}
           height={24}
