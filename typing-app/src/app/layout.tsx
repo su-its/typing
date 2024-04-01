@@ -9,7 +9,7 @@ import { LoginProvider } from "@/state";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "TypeMaster",
+  title: "TYPE MASTER",
 };
 
 export default async function RootLayout({
@@ -19,7 +19,7 @@ export default async function RootLayout({
 }>) {
   // TODO: 正しくユーザをセットする処理などで置き換える。
   // cookie を使えばログイン中は判断できるがログイン/ログアウト時はどうするんだ?
-  const user = await Promise.resolve({ student_number: "user1", handle_name: "handle1"});
+  const user = await Promise.resolve({ student_number: "user1", handle_name: "handle1" });
 
   return (
     <html lang="en">
