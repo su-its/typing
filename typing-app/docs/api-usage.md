@@ -6,8 +6,22 @@
 
 例えば、
 
-```ts
-// WIP
+```tsx
+import { client } from "@/libs/api";
+
+async function SomePageToGetRanking() {
+  const { data, error } = await client.GET("/scores/ranking");
+
+  if (error) {
+    return <div>Error</div>;
+  }
+
+  return (
+    <div>
+      ranking data: {JSON.stringify(data)}
+    </div>
+  );
+}
 ```
 
 のようにします。
