@@ -46,28 +46,26 @@ func GetScoresRanking(w http.ResponseWriter, r *http.Request) {
 func PostScore(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	userIDStr := r.URL.Query().Get("user_id")
-	userID, err := uuid.Parse(userIDStr)
+	// リクエストボディから値を取得
+	var requestBody struct {
+		UserID     string  `json:"user_id"`
+		Keystrokes int     `json:"keystrokes"`
+		Accuracy   float64 `json:"accuracy"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// user_idをUUIDに変換
+	userID, err := uuid.Parse(requestBody.UserID)
 	if err != nil {
 		http.Error(w, "Invalid user_id", http.StatusBadRequest)
 		return
 	}
 
-	keystrokesStr := r.URL.Query().Get("keystrokes")
-	keystrokes, err := strconv.Atoi(keystrokesStr)
-	if err != nil {
-		http.Error(w, "Invalid keystrokes", http.StatusBadRequest)
-		return
-	}
-
-	accuracyStr := r.URL.Query().Get("accuracy")
-	accuracy, err := strconv.ParseFloat(accuracyStr, 64)
-	if err != nil {
-		http.Error(w, "Invalid accuracy", http.StatusBadRequest)
-		return
-	}
-
-	if err := service.CreateScore(ctx, entClient, userID, keystrokes, accuracy); err != nil {
+	// スコアを作成
+	if err := service.CreateScore(ctx, entClient, userID, requestBody.Keystrokes, requestBody.Accuracy); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
