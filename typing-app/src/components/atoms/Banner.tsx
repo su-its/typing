@@ -5,7 +5,7 @@ import bannerImage from "@/assets/images/banner.png";
 const Banner: React.FC = () => {
   return (
     <Box>
-      <Image src={bannerImage.src} alt="Logo" maxH={100} />
+      <Image src={bannerImage.src} alt="Logo" maxH={54} ml={2} />
     </Box>
   );
 };
