@@ -74,10 +74,9 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
         "Content-Type": "application/json",
       },
       body: JSON.stringify(registeredScore),
-    })
-      .catch((error) => {
-        console.error(error);
-      });
+    }).catch((error) => {
+      console.error(error);
+    });
     nextPage();
   }, [startedAt, totalSeconds, correctType, incorrectType, setResultScore, userId, nextPage]);
 
@@ -192,14 +191,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
           <ProgressBar maxWidth={330} height={10} maxValue={1000} value={currentTypeSpeed} />
           <ProgressBar maxWidth={330} height={10} maxValue={1000} value={averageTypeSpeed} />
         </div>
-        <Image
-          className={styles.gauge_time}
-          id="gauge_time"
-          src={gaugeTimeImg}
-          alt={""}
-          width={281}
-          height={22}
-        />
+        <Image className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg} alt={""} width={281} height={22} />
         <Image
           className={styles.gauge_position}
           id="gauge_position"
@@ -208,14 +200,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, filenames, setResultS
           width={330}
           height={24}
         />
-        <Image
-          className={styles.gauge_speed}
-          id="gauge_speed"
-          src={gaugeSpeedImg}
-          alt={""}
-          width={330}
-          height={24}
-        />
+        <Image className={styles.gauge_speed} id="gauge_speed" src={gaugeSpeedImg} alt={""} width={330} height={24} />
         <div className={styles.title}>Lorem Ipsum</div>
         <div className={styles.text}>
           <div>
