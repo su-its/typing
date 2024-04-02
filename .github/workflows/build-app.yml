@@ -43,5 +43,8 @@ jobs:
       - name: Install Dependencies
         run: yarn
 
+      - name: Check Code Style (Prettier)
+        run: yarn run format:ci
+
       - name: Build Next.js Project
         run: yarn build
