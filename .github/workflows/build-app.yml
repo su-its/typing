@@ -8,6 +8,8 @@ on:
     paths:
       - .github/workflows/build-app.yml
       - "typing-app/**"
+      - "!typing-app/docs/**"
+      - "!typing-app/README.md"
   workflow_dispatch:
 
 concurrency:
