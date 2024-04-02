@@ -52,7 +52,7 @@ jobs:
             ${{ steps.get-yarn-cache-folder.outputs.folder }}
             ./typing-app/.next
           key: yarn-cache-${{ runner.os }}-${{ hashFiles('typing-app/yarn.lock') }}
-          restore-key: |
+          restore-keys: |
             yarn-cache-${{ runner.os }}-${{ hashFiles('typing-app/yarn.lock') }}
             yarn-cache-${{ runner.os }}-
 
