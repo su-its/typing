@@ -1,9 +1,10 @@
 "use client";
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex, Center } from "@chakra-ui/react";
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex, Center, Box, Grid } from "@chakra-ui/react";
 import RankingTable from "../organism/RankingTable";
 import { Pagination } from "../molecules/Pagination";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
+// import { client } from "@/libs/api";
 
 const RankingTabs = () => {
   const [scoreRankings, setScoreRankings] = useState<ScoreRanking[]>(demoAccuracyRankings);
@@ -48,17 +49,18 @@ const RankingTabs = () => {
 
   return (
     <Tabs onChange={handleTabChange}>
-      <Flex justifyContent="right">
-        <CustomButton onClick={() => fetchData()} isDisabled={false}>
-          再読み込み
-        </CustomButton>
-      </Flex>
-      <Center>
+      <Flex justifyContent={"center"}>
+      <Grid templateColumns={"repeat(3, 1fr)"} gap={"300px"}>
+        <Box opacity={"0"}>{/* 幅を揃えるためだけの要素，視覚的な意味はなし */}</Box>      
         <TabList color={"white"}>
           <Tab _selected={{ color: "#00ace6" }}>正打率</Tab>
           <Tab _selected={{ color: "#00ace6" }}>入力文字数</Tab>
         </TabList>
-      </Center>
+        <CustomButton onClick={() => fetchData()} isDisabled={false}>
+          再読み込み
+        </CustomButton>
+        </Grid>
+      </Flex>
 
       <TabPanels>
         <TabPanel>
