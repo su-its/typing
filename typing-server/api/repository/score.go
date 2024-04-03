@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -97,8 +98,15 @@ func CreateScore(ctx context.Context, client *ent.Client, userID uuid.UUID, keys
 		return err
 	}
 	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
+		// txがコミット済みの場合はロールバックしない
+		if tx == nil {
+			return
+		}
+		if err := tx.Rollback(); err != nil {
+			if err != sql.ErrTxDone {
+				return
+			}
+			return
 		}
 	}()
 
