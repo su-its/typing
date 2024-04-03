@@ -1,17 +1,11 @@
 import React from "react";
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
+import brandImage from "@/assets/images/brand.png";
 
 const BrandText: React.FC = () => {
   return (
     <Box>
-      <HStack>
-        <Text fontSize="50px" color={"white"}>
-          ITS
-        </Text>
-        <Text fontSize="20px" color={"white"}>
-          静岡大学ITソルーション室
-        </Text>
-      </HStack>
+      <Image src={brandImage.src} alt="Brand" ml={2} />
     </Box>
   );
 };

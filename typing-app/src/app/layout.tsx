@@ -9,7 +9,7 @@ import { LoginProvider } from "@/state";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "TypeMaster",
+  title: "TYPE MASTER",
 };
 
 export default async function RootLayout({
