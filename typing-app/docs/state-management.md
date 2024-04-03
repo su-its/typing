@@ -7,8 +7,8 @@
   ```tsx
   import { getCurrentUser } from "@/app/actions";
 
-  export function LoginStatus() {
-    const user = getCurrentUser();
+  export async function LoginStatus() {
+    const user = await getCurrentUser();
 
     return <div>User is{user ? " " : " not "}logged in!</div>
   }
