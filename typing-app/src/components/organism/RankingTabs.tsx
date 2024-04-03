@@ -112,35 +112,50 @@ const demoUsers: User[] = [
     studentNumber: "70310000",
     handleName: "Z",
   },
+  {
+    id: "4",
+    studentNumber: "70310000",
+    handleName: "A",
+  },
+  {
+    id: "5",
+    studentNumber: "70310000",
+    handleName: "B",
+  },
 ];
 
 const demoKeyStrokeRankings: ScoreRanking[] = [
   {
     rank: 1,
-    user: demoUsers[0],
+    user: {
+      id: "1",
+      studentNumber: "70310000",
+      handleName: "X",
+    },
     keystrokes: 100,
     accuracy: 100,
     createdAt: new Date(),
   },
   {
     rank: 2,
-    user: demoUsers[1],
+    user: {
+      id: "2",
+      studentNumber: "70310000",
+      handleName: "Y",
+    },
     keystrokes: 90,
     accuracy: 90,
     createdAt: new Date(),
   },
   {
     rank: 3,
-    user: demoUsers[2],
+    user: {
+      id: "3",
+      studentNumber: "70310000",
+      handleName: "Z",
+    },
     keystrokes: 80,
     accuracy: 80,
-    createdAt: new Date(),
-  },
-  {
-    rank: 4,
-    user: demoUsers[2],
-    keystrokes: 70,
-    accuracy: 70,
     createdAt: new Date(),
   },
 ];
@@ -148,35 +163,55 @@ const demoKeyStrokeRankings: ScoreRanking[] = [
 const demoAccuracyRankings: ScoreRanking[] = [
   {
     rank: 1,
-    user: demoUsers[0],
+    user: {
+      id: "1",
+      studentNumber: "70310000",
+      handleName: "X",
+    },
     keystrokes: 100,
     accuracy: 100,
     createdAt: new Date(),
   },
   {
     rank: 2,
-    user: demoUsers[1],
+    user: {
+      id: "2",
+      studentNumber: "70310000",
+      handleName: "Y",
+    },
     keystrokes: 90,
     accuracy: 90,
     createdAt: new Date(),
   },
   {
     rank: 3,
-    user: demoUsers[2],
+    user: {
+      id: "3",
+      studentNumber: "70310000",
+      handleName: "Z",
+    },
     keystrokes: 80,
     accuracy: 80,
     createdAt: new Date(),
   },
   {
     rank: 4,
-    user: demoUsers[2],
+    user: {
+      id: "4",
+      studentNumber: "70310000",
+      handleName: "A",
+    },
     keystrokes: 70,
     accuracy: 70,
     createdAt: new Date(),
   },
   {
     rank: 5,
-    user: demoUsers[2],
+    user: {
+      id: "5",
+      studentNumber: "70310000",
+      handleName: "B",
+    },
     keystrokes: 60,
     accuracy: 60,
     createdAt: new Date(),
