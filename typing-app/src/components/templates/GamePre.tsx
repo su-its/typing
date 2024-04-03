@@ -2,6 +2,7 @@ import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { GamePreProps } from "../pages/Game";
 import styles from "./GamePre.module.css";
+import keyboardImage from "@/assets/images/LetsNote_Keyboard.png"
 
 const GamePre: React.FC<GamePreProps> = ({ nextPage }) => {
   useEffect(() => {
