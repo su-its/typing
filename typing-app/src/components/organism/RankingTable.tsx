@@ -5,8 +5,8 @@ import RankingTableBody, { RankingTableBodyProps } from "../molecules/RankingTab
 const RankingTable: React.FC<RankingTableBodyProps> = ({ scoreRankings }) => {
   return (
     <TableContainer>
-      <Container maxW={'container.xl'}>
-        <Table rounded='base' shadow='md'>
+      <Container maxW={"container.xl"}>
+        <Table rounded="base" shadow="md">
           <RankingTableHead />
           <RankingTableBody scoreRankings={scoreRankings} />
         </Table>

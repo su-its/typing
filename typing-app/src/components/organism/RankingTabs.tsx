@@ -2,7 +2,7 @@
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex, Center, Box, Grid } from "@chakra-ui/react";
 import RankingTable from "../organism/RankingTable";
 import { Pagination } from "../molecules/Pagination";
-import { CustomButton } from "../atoms/CustomButton";
+//import { CustomButton } from "../atoms/CustomButton";
 import RefreshButton from "../atoms/RefreshButton";
 import { useEffect, useState } from "react";
 // import { client } from "@/libs/api";
@@ -57,7 +57,7 @@ const RankingTabs = () => {
             <Tab _selected={{ color: "#00ace6" }}>正打率</Tab>
             <Tab _selected={{ color: "#00ace6" }}>入力文字数</Tab>
           </TabList>
-          <RefreshButton onClick={() => fetchData()} isDisabled={false}/>
+          <RefreshButton onClick={() => fetchData()} isDisabled={false} />
         </Grid>
       </Flex>
 
