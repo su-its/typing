@@ -24,9 +24,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
       <ModalOverlay />
       <ModalContent>
         <form
-          action={async (formData) => {
-            dispatchAction(formData);
-          }}
+          action={dispatchAction}
         >
           <ModalHeader>続けるにはログインが必要です</ModalHeader>
           <ModalBody>
