@@ -2,7 +2,6 @@ import React from "react";
 import { Avatar, Box, Text, HStack, VStack } from "@chakra-ui/react";
 
 const UserCard: React.FC = () => {
-
   // モックのユーザー情報
   const user = {
     name: "テストユーザー",
@@ -12,7 +11,7 @@ const UserCard: React.FC = () => {
 
   return (
     user && (
-      <Box bg={ "blue.600" } p={5} >
+      <Box bg={"blue.600"} p={5}>
         <HStack spacing={4}>
           <Avatar src={user.avatarUrl} maxW="100px" borderRadius="9" />
           <VStack align="start">

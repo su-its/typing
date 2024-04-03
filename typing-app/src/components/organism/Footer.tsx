@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
   return (
     <>
       <Separator />
-      <Flex alignItems="center" justifyContent="space-between" bg={ "blue.600" }>
+      <Flex alignItems="center" justifyContent="space-between" bg={"blue.600"}>
         <BrandText />
       </Flex>
     </>

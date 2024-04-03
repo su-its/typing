@@ -8,6 +8,8 @@ on:
     paths:
       - .github/workflows/build-app.yml
       - "typing-app/**"
+      - "!typing-app/docs/**"
+      - "!typing-app/README.md"
   workflow_dispatch:
 
 concurrency:
@@ -37,11 +39,28 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "yarn"
-          cache-dependency-path: typing-app/yarn.lock
+
+      - name: Get yarn cache folder
+        id: get-yarn-cache-folder
+        shell: bash
+        # will fail if yarn version is 1
+        run: echo "folder=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ${{ steps.get-yarn-cache-folder.outputs.folder }}
+            ./typing-app/.next
+          key: yarn-cache-${{ runner.os }}-${{ hashFiles('typing-app/yarn.lock') }}
+          restore-keys: |
+            yarn-cache-${{ runner.os }}-${{ hashFiles('typing-app/yarn.lock') }}
+            yarn-cache-${{ runner.os }}-
 
       - name: Install Dependencies
         run: yarn
+
+      - name: Check Code Style (Prettier)
+        run: yarn run format:ci
 
       - name: Build Next.js Project
         run: yarn build
