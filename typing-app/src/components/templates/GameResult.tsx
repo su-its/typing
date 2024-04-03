@@ -52,7 +52,7 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
         </GridItem>
         <GridItem colSpan={3} colStart={3} rowStart={8} className={styles.centerText}>
           <Text fontSize="2xl" textAlign="center">
-            正解率
+            正打率
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={3} className={styles.centerText}>
