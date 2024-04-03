@@ -18,14 +18,12 @@ interface LoginModalProps {
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
-  const [error, dispatchAction, pending] = useFormState<any, FormData>(login, undefined);
+  const [state, dispatchAction, pending] = useFormState(login, {});
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <form
-          action={dispatchAction}
-        >
+        <form action={dispatchAction}>
           <ModalHeader>続けるにはログインが必要です</ModalHeader>
           <ModalBody>
             <Input
@@ -36,10 +34,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               pattern="[0-9A-Z]{8}"
               title="学籍番号"
             />
+            {state.error ? `エラー: ${state.error}` : null}
           </ModalBody>
 
           <ModalFooter>
-            {error && "error: " + String(error)}
             <Button type="submit" colorScheme="blue" mr={3} isLoading={pending}>
               ログインして続行
             </Button>

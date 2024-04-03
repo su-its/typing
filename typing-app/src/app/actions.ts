@@ -4,9 +4,11 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { User } from "@/types/user";
 
-type LoginActionState = any;
+type LoginActionState = {
+  error?: string;
+};
 
-export async function login(_prevState: LoginActionState, formData: FormData) {
+export async function login(_: LoginActionState, formData: FormData): Promise<LoginActionState> {
   const studentNumber = formData.get("student-number")!.toString();
 
   const { data, error } = await client.GET("/users", {
@@ -18,7 +20,11 @@ export async function login(_prevState: LoginActionState, formData: FormData) {
   });
 
   if (error) {
-    return error;
+    console.log(error);
+    if (/not found/.test(`${error}`.toLowerCase())) {
+      return { error: "見つかりませんでした" };
+    }
+    return { error: "もう一度お試しください" };
   }
 
   const expires = new Date(Date.now() + 3 * 60 * 60 * 1000);
