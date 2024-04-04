@@ -11,14 +11,14 @@ describe("UserCard", () => {
   };
 
   it("renders UserCard", () => {
-    const userCard = render(UserCardPresenter(mockUser));
+    const userCard = render(<UserCardPresenter user={mockUser} />);
 
     const avatar = screen.getByRole("img");
     expect(avatar).toBeInTheDocument();
   });
 
   it("renders UserCard with user data", () => {
-    const userCard = render(UserCardPresenter(mockUser));
+    const userCard = render(<UserCardPresenter user={mockUser} />);
 
     const name = screen.getByText(/名前:/);
     const studentNumber = screen.getByText(/学籍番号:/);
@@ -27,7 +27,7 @@ describe("UserCard", () => {
   });
 
   it("renders UserCard with default data", () => {
-    const userCard = render(UserCardPresenter(null));
+    const userCard = render(<UserCardPresenter user={ null as any } />);
 
     const name = screen.getByText(/名前:/);
     const studentNumber = screen.getByText(/学籍番号:/);

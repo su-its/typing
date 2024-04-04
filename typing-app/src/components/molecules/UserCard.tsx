@@ -1,9 +1,13 @@
 import React from "react";
 import { Avatar, Box, Text, HStack, VStack } from "@chakra-ui/react";
 import { getCurrentUser } from "@/app/actions";
-import { User } from "@/types/user";
+import type { User } from "@/types/user";
 
-export async function UserCardPresenter(user: User | null) {
+interface UserCardPresenterProps {
+  user?: User;
+}
+
+export const UserCardPresenter = ({ user }:UserCardPresenterProps) => {
   return (
     <Box bg="blue.600" p={5}>
       <HStack spacing={4}>
@@ -21,7 +25,7 @@ export async function UserCardPresenter(user: User | null) {
 
 const UserCard = async () => {
   const user = await getCurrentUser();
-  return UserCardPresenter(user);
+  return <UserCardPresenter user={user}/>;
 };
 
 export default UserCard;
