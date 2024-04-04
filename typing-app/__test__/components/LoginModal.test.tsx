@@ -37,7 +37,7 @@ describe("LoginModal", () => {
     expect(submitButton).toBeInTheDocument();
   });
 
-  it("Do not calls dispatchAction when submit button is clicked", () => {
+  it("DO NOT calls dispatchAction when user input is empty", () => {
     const loginModal = render(
       <LoginModalPresenter
         isOpen={true}
@@ -53,7 +53,7 @@ describe("LoginModal", () => {
     expect(mockDispatchAction).not.toHaveBeenCalled();
   });
 
-  it("Do not calls dispatchAction when user input is not valid", () => {
+  it("DO NOT calls dispatchAction when user input is less than 8 characters", () => {
     const loginModal = render(
       <LoginModalPresenter
         isOpen={true}
@@ -65,8 +65,10 @@ describe("LoginModal", () => {
     );
 
     const textbox = screen.getByRole("textbox");
-    fireEvent.change(textbox, { target: { value: "1" } });
+    fireEvent.change(textbox, { target: { value: "1111" } });
     fireEvent.click(screen.getByRole("submit"));
     expect(mockDispatchAction).not.toHaveBeenCalled();
   });
+
+  //NOTE: 本来ならば、ここで正常系のテストを書きたいが、正常系はAPIリクエストを行うため、テストが困難である。
 });
