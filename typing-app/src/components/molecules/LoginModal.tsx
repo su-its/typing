@@ -27,7 +27,7 @@ const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <form action={dispatchAction}>
+        <form action={dispatchAction} >
           <ModalHeader>続けるにはログインが必要です</ModalHeader>
           <ModalBody>
             <Input
