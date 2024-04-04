@@ -1,5 +1,5 @@
 import { LoginModalPresenter } from "@/components/molecules/LoginModal";
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it, jest } from "@jest/globals";
 import { render, screen, fireEvent } from "@testing-library/react";
 
 describe("LoginModal", () => {
