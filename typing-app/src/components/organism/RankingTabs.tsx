@@ -5,48 +5,76 @@ import { Pagination } from "../molecules/Pagination";
 //import { CustomButton } from "../atoms/CustomButton";
 import RefreshButton from "../atoms/RefreshButton";
 import { useEffect, useState } from "react";
-// import { client } from "@/libs/api";
+import { client } from "@/libs/api";
+//import { error } from "console";
+
+export interface User {
+  id: string;
+  studentNumber: string;
+  handleName: string;
+}
+
+export interface ScoreRanking {
+  rank: number;
+  user: User;
+  keystrokes: number;
+  accuracy: number;
+  createdAt: Date;
+}
 
 const RankingTabs = () => {
-  const [scoreRankings, setScoreRankings] = useState<ScoreRanking[]>(demoAccuracyRankings);
+  const [scoreRankings, setScoreRankings] = useState<ScoreRanking[]>([]);
   const [rankingStartFrom, setRankingStartFrom] = useState(0);
   const [sortBy, setSortBy] = useState<"accuracy" | "keystrokes">("accuracy");
+  const [isLoading, setIsLoading] = useState(false); 
+  const [error, setError] = useState<string | null>(null);
   const LIMIT = 10;
-
   const MAXIMUM = 100; // TODO: MAXIMUMをAPIから取得する
 
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      // APIからデータを取得するためのパラメータを含むGETリクエスト
+      const { data, error } = await client.GET("/scores/ranking", {
+        params: {
+          sort_by: sortBy,
+          start: rankingStartFrom,
+          limit: LIMIT,
+        },
+      });
+      if (error) {
+        setError("データの取得中にエラーが発生しました。");
+      } else {
+        setScoreRankings(data.rankings);
+      }
+    } catch (err) {
+      setError("データの取得中に予期せぬエラーが発生しました。");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
     // ページが読み込まれたときにデータを取得
     fetchData();
-  });
+  }, [sortBy, rankingStartFrom]);
 
   const handleTabChange = (index: number) => {
-    if (index === 0) {
-      setSortBy("accuracy");
-    } else if (index === 1) {
-      setSortBy("keystrokes");
-    }
-
-    fetchData;
+    const sortOption = index === 0 ? "accuracy" : "keystrokes";
+    setSortBy(sortOption);
+    fetchData();
   };
 
   // 演算子を引数にとる、ボタンを押したときのハンドラ関数
   const handlePaginationClick = (direction: "next" | "prev") => {
-    const newStartFrom =
-      direction === "prev" ? Math.max(rankingStartFrom - LIMIT, 0) : Math.min(rankingStartFrom + LIMIT, MAXIMUM);
+    const newStartFrom = direction === "prev" ? Math.max(rankingStartFrom - LIMIT, 0) : Math.min(rankingStartFrom - LIMIT, 0);
     setRankingStartFrom(newStartFrom);
-
-    fetchData;
+    fetchData();
   };
 
-  const fetchData = async () => {
-    // TODO: APIを使ってデータをフェッチ
-    if (sortBy == "accuracy") {
-      setScoreRankings(demoAccuracyRankings);
-    } else if (sortBy == "keystrokes") {
-      setScoreRankings(demoKeyStrokeRankings);
-    }
-  };
+  if(error) {
+    return<div>Error loading rankings</div>;
+  }
 
   return (
     <Tabs onChange={handleTabChange}>
@@ -60,7 +88,10 @@ const RankingTabs = () => {
           <RefreshButton onClick={() => fetchData()} isDisabled={false} />
         </Grid>
       </Flex>
-
+      {error && <Center><Box>Error: {error}</Box></Center>}
+      {isLoading ? (
+        <Center><Box>Loading...</Box></Center>
+      ) : (
       <TabPanels>
         <TabPanel>
           <RankingTable scoreRankings={scoreRankings} />
@@ -69,6 +100,7 @@ const RankingTabs = () => {
           <RankingTable scoreRankings={scoreRankings} />
         </TabPanel>
       </TabPanels>
+      )}
       <Center>
         <Pagination
           onPrev={() => handlePaginationClick("prev")}
@@ -82,21 +114,7 @@ const RankingTabs = () => {
 };
 export default RankingTabs;
 
-export interface User {
-  id: string;
-  studentNumber: string;
-  handleName: string;
-}
-
-export interface ScoreRanking {
-  rank: Number;
-  user: User;
-  keystrokes: Number;
-  accuracy: Number;
-  createdAt: Date;
-}
-
-const demoUsers: User[] = [
+/*const demoUsers: User[] = [
   {
     id: "1",
     studentNumber: "70310000",
@@ -216,4 +234,4 @@ const demoAccuracyRankings: ScoreRanking[] = [
     accuracy: 60,
     createdAt: new Date(),
   },
-];
+]; */
