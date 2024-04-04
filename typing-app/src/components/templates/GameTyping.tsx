@@ -1,25 +1,37 @@
-import RegisterScore, { ResultScore } from "@/types/RegisterScore";
+import RegisterScore from "@/types/RegisterScore";
 import { Box } from "@chakra-ui/react";
 import Image from "next/image";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ProgressBar from "../atoms/ProgressBar";
 import { GameTypingProps } from "../pages/Game";
 import styles from "./GameTyping.module.css";
+import { getCurrentUser } from "@/app/actions";
 
 import gaugePositionImg from "../../../public/img/gauge_position.png";
 import gaugeSpeedImg from "../../../public/img/gauge_speed.png";
 import gaugeTimeImg from "../../../public/img/gauge_time.png";
+import { User } from "@/types/user";
 
 const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResultScore }) => {
   const [startedAt, setStartedAt] = useState(new Date());
 
   const totalSeconds = 60;
   const [count, setCount] = useState(totalSeconds);
-  const damyUserId = "damyId";
 
-  const userId = damyUserId; // ToDo: 要変更
   const [correctType, setCorrectType] = useState(0); // 正打数
   const [incorrectType, setIncorrectType] = useState(0); // 誤打数
+  const [userId, setUserId] = useState<User>();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const currentUser = await getCurrentUser();
+      if (currentUser !== null) {
+        setUserId(currentUser);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   // スコアデータを送信する
   const sendResultData = useCallback(() => {
@@ -46,15 +58,17 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
       accuracy: registeredScore.accuracy,
       score: registeredScore.score,
     });
-    fetch(`http://localhost:8080/users/${userId}/scores`, {
-      method: `POST`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(registeredScore),
-    }).catch((error) => {
-      console.error(error);
-    });
+    if (userId !== undefined) {
+      fetch(`http://localhost:8080/users/${userId}/scores`, {
+        method: `POST`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(registeredScore),
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
     nextPage();
   }, [startedAt, totalSeconds, correctType, incorrectType, setResultScore, userId, nextPage]);
 
