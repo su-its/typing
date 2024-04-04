@@ -1,7 +1,7 @@
 import { UserCardPresenter } from "@/components/molecules/UserCard";
 import { describe, expect, it } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
-import { User } from "@/types/user";
+import type { User } from "@/types/user";
 
 describe("UserCard", () => {
   const mockUser: User = {
