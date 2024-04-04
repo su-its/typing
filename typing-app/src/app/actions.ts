@@ -20,7 +20,6 @@ export async function login(_: LoginActionState, formData: FormData): Promise<Lo
   });
 
   if (error) {
-    console.log(error);
     if (/not found/.test(`${error}`.toLowerCase())) {
       return { error: "見つかりませんでした" };
     }

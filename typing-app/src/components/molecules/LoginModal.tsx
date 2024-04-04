@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Modal,
@@ -15,10 +17,12 @@ import { useFormState } from "react-dom";
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
+  state: any;
+  dispatchAction: (payload: FormData) => void;
+  pending: boolean;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
-  const [state, dispatchAction, pending] = useFormState(login, {});
+const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state, dispatchAction, pending }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -33,12 +37,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               placeholder="学籍番号を入力してください"
               pattern="[0-9A-Z]{8}"
               title="学籍番号"
+              role="textbox"
             />
             {state.error ? `エラー: ${state.error}` : null}
           </ModalBody>
 
           <ModalFooter>
-            <Button type="submit" colorScheme="blue" mr={3} isLoading={pending}>
+            <Button type="submit" colorScheme="blue" mr={3} isLoading={pending} role="submit">
               ログインして続行
             </Button>
             <Button variant="ghost" onClick={onClose}>
@@ -51,4 +56,25 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default LoginModal;
+export { LoginModalPresenter };
+
+interface LoginModalContainerProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const LoginModalContainer: React.FC<LoginModalContainerProps> = ({ isOpen, onClose }) => {
+  const [state, dispatchAction, pending] = useFormState(login, {});
+
+  return (
+    <LoginModalPresenter
+      isOpen={isOpen}
+      onClose={onClose}
+      state={state}
+      dispatchAction={dispatchAction}
+      pending={pending}
+    />
+  );
+};
+
+export default LoginModalContainer;
