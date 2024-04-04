@@ -3,7 +3,7 @@ import { describe, expect, it } from "@jest/globals";
 import { render, screen, fireEvent } from "@testing-library/react";
 
 describe("LoginModal", () => {
-  const mockDispatchAction = jest.fn();;
+  const mockDispatchAction = jest.fn();
   const mockState = {};
   const mockPending = false;
 
