@@ -1,29 +1,30 @@
 import React from "react";
 import { Avatar, Box, Text, HStack, VStack } from "@chakra-ui/react";
+import { getCurrentUser } from "@/app/actions";
 
-const UserCard: React.FC = () => {
-  // モックのユーザー情報
-  const user = {
-    name: "テストユーザー",
-    studentId: "24AB1234",
-    avatarUrl: "https://avatars.githubusercontent.com/u/12345678?v=4",
-  };
+type UserCardProps = {
+  user: Awaited<ReturnType<typeof getCurrentUser>>;
+};
 
+export const UserCardPresenter: React.FC<UserCardProps> = ({ user }) => {
   return (
-    user && (
-      <Box bg={"blue.600"} p={5}>
+      <Box bg="blue.600" p={5}>
         <HStack spacing={4}>
-          <Avatar src={user.avatarUrl} maxW="100px" borderRadius="9" />
+          <Avatar /*src={ TODO: しずっぴーを表示 }*/ maxW="100px" borderRadius="9" />
           <VStack align="start">
-            <Text fontSize="lg" fontWeight="bold" color={"white"}>
-              名前: {user.name}
+            <Text fontSize="lg" fontWeight="bold" color="white">
+              名前: {user ? user.handleName : "ログインしていません"}
             </Text>
-            <Text color={"white"}>学籍番号: {user.studentId}</Text>
+            <Text color="white">学籍番号: {user ? user.studentNumber : "未ログイン"}</Text>
           </VStack>
         </HStack>
       </Box>
-    )
   );
+};
+
+const UserCard = async () => {
+  const user = await getCurrentUser();
+  return <UserCardPresenter user={user} />;
 };
 
 export default UserCard;
