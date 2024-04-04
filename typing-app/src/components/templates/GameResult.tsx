@@ -87,7 +87,7 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
           </Text>
         </GridItem>
         <GridItem colSpan={4} rowSpan={2} colStart={2} rowStart={9} className={styles.centerText}>
-          <Button onClick={nextPage} colorScheme="red" size="lg" w="80%" h="90%">
+          <Button onClick={() => window.location.href = '/'} colorScheme="red" size="lg" w="80%" h="90%">
             ゲームを終了する
           </Button>
         </GridItem>
