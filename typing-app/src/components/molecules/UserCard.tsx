@@ -8,17 +8,17 @@ type UserCardProps = {
 
 export const UserCardPresenter: React.FC<UserCardProps> = ({ user }) => {
   return (
-      <Box bg="blue.600" p={5}>
-        <HStack spacing={4}>
-          <Avatar /*src={ TODO: しずっぴーを表示 }*/ maxW="100px" borderRadius="9" />
-          <VStack align="start">
-            <Text fontSize="lg" fontWeight="bold" color="white">
-              名前: {user ? user.handleName : "ログインしていません"}
-            </Text>
-            <Text color="white">学籍番号: {user ? user.studentNumber : "未ログイン"}</Text>
-          </VStack>
-        </HStack>
-      </Box>
+    <Box bg="blue.600" p={5}>
+      <HStack spacing={4}>
+        <Avatar /*src={ TODO: しずっぴーを表示 }*/ maxW="100px" borderRadius="9" />
+        <VStack align="start">
+          <Text fontSize="lg" fontWeight="bold" color="white">
+            名前: {user ? user.handleName : "ログインしていません"}
+          </Text>
+          <Text color="white">学籍番号: {user ? user.studentNumber : "未ログイン"}</Text>
+        </VStack>
+      </HStack>
+    </Box>
   );
 };
 
