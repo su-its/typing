@@ -27,7 +27,7 @@ describe("UserCard", () => {
   });
 
   it("renders UserCard with default data", () => {
-    const userCard = render(<UserCardPresenter user={ null as any } />);
+    const userCard = render(<UserCardPresenter user={null as any} />);
 
     const name = screen.getByText(/名前:/);
     const studentNumber = screen.getByText(/学籍番号:/);
