@@ -6,7 +6,7 @@ import { Pagination } from "../molecules/Pagination";
 import RefreshButton from "../atoms/RefreshButton";
 import { useEffect, useState } from "react";
 import { client } from "@/libs/api";
-import {paths} from "@/libs/api/v1";
+import { paths } from "@/libs/api/v1";
 //import { error } from "console";
 
 export interface User {
@@ -27,11 +27,10 @@ const RankingTabs = () => {
   const [scoreRankings, setScoreRankings] = useState<ScoreRanking[]>([]);
   const [rankingStartFrom, setRankingStartFrom] = useState(0);
   const [sortBy, setSortBy] = useState<"accuracy" | "keystrokes">("accuracy");
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const LIMIT = 10;
   const MAXIMUM = 100; // TODO: MAXIMUMをAPIから取得する
-
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -68,13 +67,14 @@ const RankingTabs = () => {
 
   // 演算子を引数にとる、ボタンを押したときのハンドラ関数
   const handlePaginationClick = (direction: "next" | "prev") => {
-    const newStartFrom = direction === "prev" ? Math.max(rankingStartFrom - LIMIT, 0) : Math.min(rankingStartFrom - LIMIT, 0);
+    const newStartFrom =
+      direction === "prev" ? Math.max(rankingStartFrom - LIMIT, 0) : Math.min(rankingStartFrom - LIMIT, 0);
     setRankingStartFrom(newStartFrom);
     fetchData();
   };
 
-  if(error) {
-    return<div>Error loading rankings</div>;
+  if (error) {
+    return <div>Error loading rankings</div>;
   }
 
   return (
@@ -89,18 +89,24 @@ const RankingTabs = () => {
           <RefreshButton onClick={() => fetchData()} isDisabled={false} />
         </Grid>
       </Flex>
-      {error && <Center><Box>Error: {error}</Box></Center>}
+      {error && (
+        <Center>
+          <Box>Error: {error}</Box>
+        </Center>
+      )}
       {isLoading ? (
-        <Center><Box>Loading...</Box></Center>
+        <Center>
+          <Box>Loading...</Box>
+        </Center>
       ) : (
-      <TabPanels>
-        <TabPanel>
-          <RankingTable scoreRankings={scoreRankings} />
-        </TabPanel>
-        <TabPanel>
-          <RankingTable scoreRankings={scoreRankings} />
-        </TabPanel>
-      </TabPanels>
+        <TabPanels>
+          <TabPanel>
+            <RankingTable scoreRankings={scoreRankings} />
+          </TabPanel>
+          <TabPanel>
+            <RankingTable scoreRankings={scoreRankings} />
+          </TabPanel>
+        </TabPanels>
       )}
       <Center>
         <Pagination
