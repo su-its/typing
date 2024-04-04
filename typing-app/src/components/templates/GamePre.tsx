@@ -51,7 +51,7 @@ const GamePre: React.FC<GamePreProps> = ({ nextPage }) => {
               <Text as="b">【ランキング掲載条件】</Text>
               <Text>WPM(Words per Minutes): 120字以上</Text>
               <Text mb="4">正打率: 95%以上</Text>
-              <Text as="b">【カーソルが消えてしまった場合】</Text>
+              <Text as="b">【入力しても反応しなくなった場合】</Text>
               <Text>テキストが表示されているボックスをクリックすると元に戻れます。</Text>
             </Box>
           </GridItem>
