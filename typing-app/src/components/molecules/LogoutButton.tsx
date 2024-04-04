@@ -1,16 +1,15 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 import { Button, useDisclosure } from "@chakra-ui/react";
-import LogoutModal from "./LogoutModal"; // 正しいパスに変更してください
+import LogoutModal from "./LogoutModal"; 
+import { logout } from "@/app/actions";
 
 const LogoutButton: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const router = useRouter();
 
   const handleLogout = async () => {
-    // TODO:ログアウト処理を実装
+    await logout();
     onOpen();
   };
 
