@@ -5,11 +5,10 @@
 - ログインしているかどうか判断したいとき
 
   ```tsx
-  "use client";
-  import { useUser } from "@/state";
+  import { getCurrentUser } from "@/app/actions";
 
-  export function LoginStatus() {
-    const user = useUser()
+  export async function LoginStatus() {
+    const user = await getCurrentUser();
 
     return <div>User is{user ? " " : " not "}logged in!</div>
   }
