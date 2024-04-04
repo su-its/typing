@@ -86,9 +86,14 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
             {resultScore.accuracy.toFixed(1)}%
           </Text>
         </GridItem>
-        <GridItem colSpan={4} rowSpan={2} colStart={4} rowStart={9} className={styles.centerText}>
-          <Button onClick={nextPage} colorScheme="blue" size="lg" w="100%" h="90%">
-            次へ
+        <GridItem colSpan={4} rowSpan={2} colStart={2} rowStart={9} className={styles.centerText}>
+          <Button onClick={nextPage} colorScheme="red" size="lg" w="80%" h="90%">
+            ゲームを終了する
+          </Button>
+        </GridItem>
+        <GridItem colSpan={4} rowSpan={2} colStart={6} rowStart={9} className={styles.centerText}>
+          <Button onClick={nextPage} colorScheme="blue" size="lg" w="80%" h="90%">
+            もう一度プレイする
           </Button>
         </GridItem>
       </Grid>
