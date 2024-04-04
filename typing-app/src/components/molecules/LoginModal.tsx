@@ -17,14 +17,14 @@ import { useFormState } from "react-dom";
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  state: any; 
-  dispatchAction: (payload: FormData) => void; 
+  state: any;
+  dispatchAction: (payload: FormData) => void;
   pending: boolean;
 }
 
 const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state, dispatchAction, pending }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} >
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <form action={dispatchAction}>
