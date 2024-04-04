@@ -27,12 +27,12 @@ jobs:
       - name: podman-compose pull
         run: podman-compose -f compose.yaml pull
 
-      - name: podman-compose stop
+      - name: Down and Up (app)
         run: |
           podman-compose -f compose.yaml down app
-          podman-compose -f compose.yaml down api
-
-      - name: podman-compose up
-        run: |
-          podman-compose -f compose.yaml up -d api
           podman-compose -f compose.yaml up -d app
+
+      - name: Down and Up (api)
+        run: |
+          podman-compose -f compose.yaml down api
+          podman-compose -f compose.yaml up -d api
