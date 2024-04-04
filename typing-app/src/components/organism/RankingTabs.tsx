@@ -6,6 +6,7 @@ import { Pagination } from "../molecules/Pagination";
 import RefreshButton from "../atoms/RefreshButton";
 import { useEffect, useState } from "react";
 import { client } from "@/libs/api";
+import {paths} from "@/libs/api/v1";
 //import { error } from "console";
 
 export interface User {
@@ -36,7 +37,7 @@ const RankingTabs = () => {
     setIsLoading(true);
     try {
       // APIからデータを取得するためのパラメータを含むGETリクエスト
-      const { data, error } = await client.GET("/scores/ranking", {
+      const { data, error } = await client.GET<paths["/scores/ranking"]["get"]>("/scores/ranking", {
         params: {
           sort_by: sortBy,
           start: rankingStartFrom,
