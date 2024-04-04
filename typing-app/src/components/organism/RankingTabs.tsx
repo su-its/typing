@@ -24,6 +24,7 @@ export interface ScoreRanking {
 }
 
 const RankingTabs = () => {
+  const [rankings, setRankings] = useState<ScoreRanking[]>([]);
   const [scoreRankings, setScoreRankings] = useState<ScoreRanking[]>([]);
   const [rankingStartFrom, setRankingStartFrom] = useState(0);
   const [sortBy, setSortBy] = useState<"accuracy" | "keystrokes">("accuracy");
@@ -36,28 +37,34 @@ const RankingTabs = () => {
     setIsLoading(true);
     try {
       // APIからデータを取得するためのパラメータを含むGETリクエスト
-      const { data, error } = await client.GET<paths["/scores/ranking"]["get"]>("/scores/ranking", {
+      const { data, error } = await client.GET("/scores/ranking", {
         params: {
-          sort_by: sortBy,
-          start: rankingStartFrom,
-          limit: LIMIT,
+          query: {
+            startFrom: rankingStartFrom,
+            limit: LIMIT,
+            sortBy: sortBy,
+          },
         },
       });
-      if (error) {
-        setError("データの取得中にエラーが発生しました。");
+      if (error && data) {
+        setRankings(data);
       } else {
-        setScoreRankings(data.rankings);
+        setError("データの取得中にエラーが発生しました。");
       }
     } catch (err) {
+      console.log("APIリクエストエラー:", err);
       setError("データの取得中に予期せぬエラーが発生しました。");
     } finally {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
     // ページが読み込まれたときにデータを取得
     fetchData();
-  }, [sortBy, rankingStartFrom]);
+  }, []);
+  if (isLoading) return <Center>Loading...</Center>;
+  if (error) return <Center>Error: {error}</Center>;
 
   const handleTabChange = (index: number) => {
     const sortOption = index === 0 ? "accuracy" : "keystrokes";
