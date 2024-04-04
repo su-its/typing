@@ -29,7 +29,7 @@ const GamePre: React.FC<GamePreProps> = ({ nextPage }) => {
           templateAreas={`"header header"
                           "main nav"
                           "footer footer"`}
-          gridTemplateRows={"100px 1fr 50px"}
+          gridTemplateRows={"80px 1fr 50px"}
           gridTemplateColumns={"1fr 1fr"}
           h="100%"
           gap={0}
@@ -38,18 +38,21 @@ const GamePre: React.FC<GamePreProps> = ({ nextPage }) => {
           alignItems="center"
           overflow="auto"
         >
-          <GridItem pl="2" mt="100px" area={"header"} className={styles.centerText}>
+          <GridItem pl="2" mt="60px" area={"header"} className={styles.centerText}>
             <Text color="white" fontSize="4xl" as="b">
               ゲーム説明
             </Text>
           </GridItem>
           <GridItem pl="10" color="white" area={"main"} fontSize="2xl">
             <Box height="100%">
+              <Text as="b">【基本ルール】</Text>
               <Text>制限時間は1分間!</Text>
               <Text mb="4">英文を速く・正確に入力して高スコアを目指そう!</Text>
               <Text as="b">【ランキング掲載条件】</Text>
               <Text>WPM(Words per Minutes): 120字以上</Text>
-              <Text>正打率: 95%以上</Text>
+              <Text mb="4">正打率: 95%以上</Text>
+              <Text as="b">【カーソルが消えてしまった場合】</Text>
+              <Text>テキストが表示されているボックスをクリックすると元に戻れます。</Text>
             </Box>
           </GridItem>
           <GridItem
