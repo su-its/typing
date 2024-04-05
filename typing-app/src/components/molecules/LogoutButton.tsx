@@ -16,7 +16,7 @@ const LogoutButton: React.FC = () => {
   };
 
   //Note: ログアウト時にページをリレンダリングするためにリダイレクトする
-  const pushToRoot = () => {
+  const reLoad = () => {
     onClose();
     router.push("/");
   };
@@ -27,7 +27,7 @@ const LogoutButton: React.FC = () => {
         Logout
       </Button>
 
-      <LogoutModal isOpen={isOpen} onClose={pushToRoot} />
+      <LogoutModal isOpen={isOpen} onClose={reLoad} />
     </>
   );
 };
