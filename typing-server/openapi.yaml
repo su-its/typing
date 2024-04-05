@@ -89,8 +89,8 @@ paths:
                     type: integer
                     description: ランキングの全件数
                 required: 
-                - rankings
-                - total_count
+                  - rankings
+                  - total_count
         "400":
           description: 不正なリクエストです。
 
