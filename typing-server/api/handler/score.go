@@ -29,14 +29,18 @@ func GetScoresRanking(w http.ResponseWriter, r *http.Request) {
 		limit = 10
 	}
 
-	rankings, err := service.GetScoresRanking(ctx, entClient, sortBy, start, limit)
+	rankings, totalCount, err := service.GetScoresRanking(ctx, entClient, sortBy, start, limit)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(rankings)
+	err = json.NewEncoder(w).Encode(map[string]interface{}{
+		"rankings": rankings,
+		"total_count": totalCount,
+	})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

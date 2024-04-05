@@ -12,7 +12,7 @@ import (
 	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
-func GetScoresRanking(ctx context.Context, client *ent.Client, sortBy string, start, limit int) ([]*model.ScoreRanking, error) {
+func GetScoresRanking(ctx context.Context, client *ent.Client, sortBy string, start, limit int) ([]*model.ScoreRanking, int, error) {
 	var scores []*ent.Score
 
 	// entのクエリを使用してスコアを取得
@@ -32,8 +32,11 @@ func GetScoresRanking(ctx context.Context, client *ent.Client, sortBy string, st
 	case "keystrokes":
 		query = query.Where(score.IsMaxKeystrokes(true))
 	default:
-		return nil, fmt.Errorf("invalid sort by parameter: %s", sortBy)
+		return nil, 0, fmt.Errorf("invalid sort by parameter: %s", sortBy)
 	}
+
+	//全件数の取得
+	count := query.CountX(ctx)
 
 	// フラグでフィルタリングされたスコアを取得
 	scores, err := query.
@@ -42,7 +45,7 @@ func GetScoresRanking(ctx context.Context, client *ent.Client, sortBy string, st
 		All(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	var rankings []*model.ScoreRanking
@@ -89,7 +92,7 @@ func GetScoresRanking(ctx context.Context, client *ent.Client, sortBy string, st
 		rankings = append(rankings, ranking)
 	}
 
-	return rankings, nil
+	return rankings, count, nil
 }
 func CreateScore(ctx context.Context, client *ent.Client, userID uuid.UUID, keystrokes int, accuracy float64) error {
 	// トランザクションを開始
