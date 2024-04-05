@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/api/service"
+	"github.com/su-its/typing/typing-server/domain/model"
 )
 
 func GetScoresRanking(w http.ResponseWriter, r *http.Request) {
@@ -29,14 +30,20 @@ func GetScoresRanking(w http.ResponseWriter, r *http.Request) {
 		limit = 10
 	}
 
-	rankings, err := service.GetScoresRanking(ctx, entClient, sortBy, start, limit)
+	request := model.GetScoresRankingRequest{
+		SortBy: sortBy,
+		Start:  start,
+		Limit:  limit,
+	}
+
+	response, err := service.GetScoresRanking(ctx, entClient, &request)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(rankings)
+	err = json.NewEncoder(w).Encode(response)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

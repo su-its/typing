@@ -23,3 +23,14 @@ type Score struct {
 	CreatedAt  time.Time `json:"created_at"`
 	User       User      `json:"user"`
 }
+
+type GetScoresRankingRequest struct {
+	SortBy string `json:"sort_by"`
+	Start  int    `json:"start"`
+	Limit  int    `json:"limit"`
+}
+
+type GetScoresRankingResponse struct {
+	Rankings   []*ScoreRanking `json:"rankings"`
+	TotalCount int             `json:"total_count"`
+}
