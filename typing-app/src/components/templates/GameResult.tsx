@@ -14,7 +14,7 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
 
   const pushToRoot = () => {
     router.push("/");
-  }
+  };
 
   return (
     <div className={styles.box}>
