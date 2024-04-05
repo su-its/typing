@@ -45,12 +45,12 @@ export async function logout() {
 
 export async function getCurrentUser() {
   const userStr = cookies().get("user")?.value;
-  if (!userStr) return null;
+  if (!userStr) return undefined;
 
   function isValidUser(o: any): o is User {
     return o && typeof o.id === "string" && typeof o.studentNumber === "string" && typeof o.handleName == "string";
   }
 
   const user = JSON.parse(userStr) as User;
-  return isValidUser(user) ? user : null;
+  return isValidUser(user) ? user : undefined;
 }
