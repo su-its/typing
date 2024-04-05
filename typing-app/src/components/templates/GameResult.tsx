@@ -2,6 +2,7 @@ import { ResultScore } from "@/types/RegisterScore";
 import { Button, Grid, GridItem, Text } from "@chakra-ui/react";
 import React from "react";
 import styles from "./GameResult.module.css";
+import { useRouter } from "next/navigation";
 
 interface GameResultProps {
   nextPage: () => void;
@@ -9,6 +10,12 @@ interface GameResultProps {
 }
 
 const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
+  const router = useRouter();
+
+  const pushToRoot = () => {
+    router.push("/");
+  }
+
   return (
     <div className={styles.box}>
       <Grid h="100%" w="100%" templateRows="repeat(10, 1fr)" templateColumns="repeat(10, 1fr)" gap={6} bg="white">
@@ -87,7 +94,7 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
           </Text>
         </GridItem>
         <GridItem colSpan={4} rowSpan={2} colStart={2} rowStart={9} className={styles.centerText}>
-          <Button onClick={() => window.location.href = '/'} colorScheme="red" size="lg" w="80%" h="90%">
+          <Button onClick={pushToRoot} colorScheme="red" size="lg" w="80%" h="90%">
             ゲームを終了する
           </Button>
         </GridItem>
