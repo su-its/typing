@@ -127,7 +127,7 @@ func main() {
 
 func seedData(ctx context.Context, client *ent.Client, logger *slog.Logger) error {
 	// シードデータの作成
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 1000; i++ {
 		studentNumber := fmt.Sprintf("user%d", i+1)
 		handleName := fmt.Sprintf("handle%d", i+1)
 
@@ -152,7 +152,7 @@ func seedData(ctx context.Context, client *ent.Client, logger *slog.Logger) erro
 
 		var maxKeystrokesScore, maxAccuracyScore *ent.Score
 
-		for j := 0; j < 5; j++ {
+		for j := 0; j < 10; j++ {
 			keystrokes := rand.Intn(200) + 100
 			accuracy := rand.Float64()
 
