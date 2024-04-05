@@ -79,9 +79,15 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ScoreRanking"
+                type: object 
+                properties:
+                  rankings:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ScoreRanking"
+                  total_count:
+                    type: integer
+                    description: ランキングの全件数
         "400":
           description: 不正なリクエストです。
 
