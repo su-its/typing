@@ -119,6 +119,36 @@ paths:
         "400":
           description: 不正なリクエストです。
 
+  /scores/{user-id}/current-rank:
+    get:
+      tags:
+        - user
+      operationId: getMyscoreRanking
+      summary: ユーザーの現在の順位を取得
+      parameters:
+        - in: path
+          name: user-id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ユーザーID
+      responses:
+        "200":
+          description: ユーザーの現在の順位を返します。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  current-rank:
+                    type: integer
+                    description: ユーザーの現在の順位
+        "404":
+          description: ユーザーが見つかりません。
+        "500":
+          description: サーバーエラーが発生しました。
+
 components:
   schemas:
     User:
