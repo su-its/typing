@@ -88,6 +88,9 @@ paths:
                   total_count:
                     type: integer
                     description: ランキングの全件数
+                required: 
+                - rankings
+                - total_count
         "400":
           description: 不正なリクエストです。
 
@@ -150,6 +153,8 @@ paths:
                   current-rank:
                     type: integer
                     description: ユーザーの現在の順位
+                required:  
+                  - current-rank
         "404":
           description: ユーザーが見つかりません。
         "500":
