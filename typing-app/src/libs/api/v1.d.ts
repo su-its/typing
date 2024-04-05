@@ -114,9 +114,9 @@ export interface operations {
       200: {
         content: {
           "application/json": {
-            rankings?: components["schemas"]["ScoreRanking"][];
+            rankings: components["schemas"]["ScoreRanking"][];
             /** @description ランキングの全件数 */
-            total_count?: number;
+            total_count: number;
           };
         };
       };
@@ -171,7 +171,7 @@ export interface operations {
         content: {
           "application/json": {
             /** @description ユーザーの現在の順位 */
-            "current-rank"?: number;
+            "current-rank": number;
           };
         };
       };
