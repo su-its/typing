@@ -21,6 +21,10 @@ export interface paths {
     /** スコアを登録 */
     post: operations["registerScore"];
   };
+  "/scores/{user-id}/current-rank": {
+    /** ユーザーの現在の順位を取得 */
+    get: operations["getMyscoreRanking"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -109,7 +113,11 @@ export interface operations {
       /** @description スコアランキングを返します。 */
       200: {
         content: {
-          "application/json": components["schemas"]["ScoreRanking"][];
+          "application/json": {
+            rankings?: components["schemas"]["ScoreRanking"][];
+            /** @description ランキングの全件数 */
+            total_count?: number;
+          };
         };
       };
       /** @description 不正なリクエストです。 */
@@ -145,6 +153,34 @@ export interface operations {
       };
       /** @description 不正なリクエストです。 */
       400: {
+        content: never;
+      };
+    };
+  };
+  /** ユーザーの現在の順位を取得 */
+  getMyscoreRanking: {
+    parameters: {
+      path: {
+        /** @description ユーザーID */
+        "user-id": string;
+      };
+    };
+    responses: {
+      /** @description ユーザーの現在の順位を返します。 */
+      200: {
+        content: {
+          "application/json": {
+            /** @description ユーザーの現在の順位 */
+            "current-rank"?: number;
+          };
+        };
+      };
+      /** @description ユーザーが見つかりません。 */
+      404: {
+        content: never;
+      };
+      /** @description サーバーエラーが発生しました。 */
+      500: {
         content: never;
       };
     };
