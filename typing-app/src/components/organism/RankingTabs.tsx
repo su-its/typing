@@ -18,23 +18,19 @@ const RankingTabs = () => {
   const MAXIMUM = 100; // TODO: MAXIMUMをAPIから取得する
 
   const fetchData = async () => {
-    try {
-      const { data, error } = await client.GET("/scores/ranking", {
-        params: {
-          query: {
-            sort_by: sortBy,
-            start: rankingStartFrom,
-            limit: LIMIT,
-          },
+    const { data, error } = await client.GET("/scores/ranking", {
+      params: {
+        query: {
+          sort_by: sortBy,
+          start: rankingStartFrom,
+          limit: LIMIT,
         },
-      });
-      if (data) {
-        setScoreRankings(data);
-      } else {
-        setError("データの取得中にエラーが発生しました。");
-      }
-    } catch (err) {
-      setError("データの取得中に予期せぬエラーが発生しました。");
+      },
+    });
+    if (data) {
+      setScoreRankings(data);
+    } else {
+      setError("データの取得中にエラーが発生しました。");
     }
   };
   useEffect(() => {
