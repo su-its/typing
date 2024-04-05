@@ -17,33 +17,27 @@ const RankingTabs = () => {
   const LIMIT = 10;
   const MAXIMUM = 100; // TODO: MAXIMUMをAPIから取得する
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        console.log(sortBy);
-        console.log(rankingStartFrom);
-        const { data, error } = await client.GET("/scores/ranking", {
-          params: {
-            query: {
-              sort_by: sortBy,
-              start: rankingStartFrom,
-              limit: LIMIT,
-            },
+  const fetchData = async () => {
+    try {
+      const { data, error } = await client.GET("/scores/ranking", {
+        params: {
+          query: {
+            sort_by: sortBy,
+            start: rankingStartFrom,
+            limit: LIMIT,
           },
-        });
-        console.log(data);
-        console.log(error);
-        if (data) {
-          setScoreRankings(data);
-        } else {
-          setError("データの取得中にエラーが発生しました。");
-        }
-      } catch (err) {
-        console.log("APIリクエストエラー:", err);
-        setError("データの取得中に予期せぬエラーが発生しました。");
-      } finally {
+        },
+      });
+      if (data) {
+        setScoreRankings(data);
+      } else {
+        setError("データの取得中にエラーが発生しました。");
       }
-    };
+    } catch (err) {
+      setError("データの取得中に予期せぬエラーが発生しました。");
+    }
+  };
+  useEffect(() => {
     fetchData();
   }, [sortBy, rankingStartFrom]);
 
@@ -55,7 +49,7 @@ const RankingTabs = () => {
   const handlePaginationClick = (direction: "next" | "prev") => {
     const newStartFrom =
       direction === "prev"
-        ? Math.max(rankingStartFrom - LIMIT, 0)
+        ? Math.max(rankingStartFrom - LIMIT, 1)
         : Math.min(rankingStartFrom + LIMIT, MAXIMUM - LIMIT);
     setRankingStartFrom(newStartFrom);
   };
@@ -69,7 +63,13 @@ const RankingTabs = () => {
             <Tab _selected={{ color: "#00ace6" }}>正打率</Tab>
             <Tab _selected={{ color: "#00ace6" }}>入力文字数</Tab>
           </TabList>
-          <RefreshButton onClick={() => {}} isDisabled={false} />
+          <RefreshButton
+            onClick={() => {
+              setRankingStartFrom(1);
+              fetchData();
+            }}
+            isDisabled={false}
+          />
         </Grid>
       </Flex>
       {error && (
