@@ -10,7 +10,11 @@ interface UserCardPresenterProps {
 export const UserCardPresenter = ({ user }: UserCardPresenterProps) => {
   return (
     <HStack spacing={4} bg="blue.600">
-      <Avatar src={"https://www.shizuoka.ac.jp/cms/files/shizudai/MASTER/0100/uISrbYCb_VL033_r03.png"} boxSize="100px" borderRadius="0" />
+      <Avatar
+        src={"https://www.shizuoka.ac.jp/cms/files/shizudai/MASTER/0100/uISrbYCb_VL033_r03.png"}
+        boxSize="100px"
+        borderRadius="0"
+      />
       <VStack align="start" paddingRight="8px">
         <Text fontSize="lg" fontWeight="bold" color="white">
           名前: {user ? user.handleName : "ログインしていません"}
