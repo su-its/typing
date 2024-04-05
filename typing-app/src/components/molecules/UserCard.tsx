@@ -11,7 +11,7 @@ export const UserCardPresenter = ({ user }: UserCardPresenterProps) => {
   return (
     <Box bg="blue.600" p={5}>
       <HStack spacing={4}>
-        <Avatar /*src={ TODO: しずっぴーを表示 }*/ maxW="100px" borderRadius="9" />
+        <Avatar src={ "https://www.shizuoka.ac.jp/cms/files/shizudai/MASTER/0100/uISrbYCb_VL033_r03.png" } maxW="100px" borderRadius="0" />
         <VStack align="start">
           <Text fontSize="lg" fontWeight="bold" color="white">
             名前: {user ? user.handleName : "ログインしていません"}
