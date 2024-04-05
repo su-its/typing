@@ -3,7 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Button, useDisclosure } from "@chakra-ui/react";
-import LogoutModal from "./LogoutModal"; 
+import LogoutModal from "./LogoutModal";
 import { logout } from "@/app/actions";
 
 const LogoutButton: React.FC = () => {
@@ -16,10 +16,10 @@ const LogoutButton: React.FC = () => {
   };
 
   //Note: ログアウト時にページをリレンダリングするためにリダイレクトする
-  const handleRedirect = () => {
+  const pushToRoot = () => {
     onClose();
     router.push("/");
-  }
+  };
 
   return (
     <>
@@ -27,7 +27,7 @@ const LogoutButton: React.FC = () => {
         Logout
       </Button>
 
-      <LogoutModal isOpen={isOpen} onClose={handleRedirect} />
+      <LogoutModal isOpen={isOpen} onClose={pushToRoot} />
     </>
   );
 };
