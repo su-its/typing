@@ -25,6 +25,10 @@ jobs:
           registry: ghcr.io
           username: su-its
           password: ${{ secrets.GITHUB_TOKEN }}
+      # FIXME: できることなら NEXT_PUBLIC_ は使いたくない
+      - name: Prepare environment variable file
+        working-directory: typing-app
+        run: echo 'NEXT_PUBLIC_API_URL=http://api:8080' >> .env.production
       - name: Docker Buildx Bake
         uses: docker/bake-action@v4
         with:
