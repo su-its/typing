@@ -13,12 +13,13 @@ const RankingTabs = () => {
   const [rankingStartFrom, setRankingStartFrom] = useState(1);
   const [sortBy, setSortBy] = useState<"accuracy" | "keystrokes">("accuracy");
   const [error, setError] = useState<string | undefined>(undefined);
+  const [totalRankingCount, setTotalRankingCount] = useState<number>(0);
 
   const LIMIT = 10;
-  const MAXIMUM = 100; // TODO: MAXIMUMをAPIから取得する
+  const MAXIMUM = totalRankingCount;
 
   const fetchData = async () => {
-    const { data, error } = await client.GET("/scores/ranking", {
+    const { data } = await client.GET("/scores/ranking", {
       params: {
         query: {
           sort_by: sortBy,
@@ -28,7 +29,8 @@ const RankingTabs = () => {
       },
     });
     if (data) {
-      setScoreRankings(data);
+      setScoreRankings(data.rankings);
+      setTotalRankingCount(data.total_count);
     } else {
       setError("データの取得中にエラーが発生しました。");
     }
@@ -40,6 +42,7 @@ const RankingTabs = () => {
   const handleTabChange = (index: number) => {
     const sortOption = index === 0 ? "accuracy" : "keystrokes";
     setSortBy(sortOption);
+    setRankingStartFrom(1);
   };
 
   const handlePaginationClick = (direction: "next" | "prev") => {
