@@ -45,7 +45,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
     }
 
     const { data, error } = await client.POST("/scores", {
-      body: { user_id: user?.id, keystrokes: registeredScore.keystrokes, accuracy: registeredScore.accuracy },
+      body: { user_id: user.id, keystrokes: registeredScore.keystrokes, accuracy: registeredScore.accuracy },
     });
     if (!error) {
       // リザルト画面用のデータ
