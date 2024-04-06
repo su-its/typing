@@ -2,9 +2,10 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Button, useDisclosure } from "@chakra-ui/react";
+import { Image, useDisclosure } from "@chakra-ui/react";
 import LogoutModal from "./LogoutModal";
 import { logout } from "@/app/actions";
+import logoutButton from "@/assets/images/home/logout.png";
 
 const LogoutButton: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -23,10 +24,7 @@ const LogoutButton: React.FC = () => {
 
   return (
     <>
-      <Button colorScheme="blue" size="lg" onClick={handleLogout}>
-        Logout
-      </Button>
-
+      <Image src={logoutButton.src} onClick={handleLogout} cursor="pointer" />
       <LogoutModal isOpen={isOpen} onClose={reLoad} />
     </>
   );
