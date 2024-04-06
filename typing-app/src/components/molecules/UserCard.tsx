@@ -20,7 +20,9 @@ export const UserCardPresenter = ({ user }: UserCardPresenterProps) => {
         <Text fontSize="lg" fontWeight="bold" color="white" isTruncated width="90%">
           名前: {user ? user.handleName : "ログインしていませんaaaaaaaaa"}
         </Text>
-        <Text color="white" width="90%" isTruncated>学籍番号: {user ? user.studentNumber : "未ログイン"}</Text>
+        <Text color="white" width="90%" isTruncated>
+          学籍番号: {user ? user.studentNumber : "未ログイン"}
+        </Text>
       </VStack>
     </HStack>
   );
