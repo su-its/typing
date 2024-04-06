@@ -199,3 +199,32 @@ func updateMaxScoreFlags(ctx context.Context, maxKeystrokeScore, maxAccuracyScor
 
 	return nil
 }
+
+func GetMaxScoreByUserID(ctx context.Context, client *ent.Client, userID uuid.UUID, sortBy string) (*ent.Score, error) {
+	query := client.Score.Query().
+		WithUser().
+		Where(
+			score.And(
+				score.UserID(userID),
+				score.KeystrokesGTE(120),
+				score.AccuracyGTE(0.95),
+			),
+		).
+		Order(ent.Desc(sortBy))
+
+	switch sortBy {
+	case "accuracy":
+		query = query.Where(score.IsMaxAccuracy(true))
+	case "keystrokes":
+		query = query.Where(score.IsMaxKeystrokes(true))
+	default:
+		return nil, fmt.Errorf("invalid sort by parameter: %s", sortBy)
+	}
+
+	maxScore, err := query.First(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return maxScore, nil
+}
