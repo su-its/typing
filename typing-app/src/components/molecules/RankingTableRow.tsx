@@ -6,6 +6,9 @@ const RankingTableRow: React.FC<components["schemas"]["ScoreRanking"]> = (scoreR
   const formattedAccuracy = new Intl.NumberFormat("en-US", { style: "percent", maximumFractionDigits: 2 }).format(
     accuracy
   );
+  const formattedCreatedAt = scoreRanking.score?.created_at
+    ? new Date(scoreRanking.score.created_at).toISOString().split("T")[0]
+    : "";
   return (
     <Tr
       key={String(scoreRanking.score?.user?.student_number)}
@@ -26,7 +29,7 @@ const RankingTableRow: React.FC<components["schemas"]["ScoreRanking"]> = (scoreR
         {formattedAccuracy}
       </Td>
       <Td width={"320px"} textAlign={"center"}>
-        {scoreRanking.score?.created_at}
+        {formattedCreatedAt}
       </Td>
     </Tr>
   );
