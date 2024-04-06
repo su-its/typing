@@ -83,7 +83,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
     if (typeIndex === subjectText.length - 1) {
       sendResultData();
     }
-  }, [nextPage, sendResultData, subjectText.length, typeIndex]); // ビルド時の警告防止のためにuserIdも依存リストに追加
+  }, [nextPage, sendResultData, subjectText.length, typeIndex]); 
 
   // タイピング速度計算用
   const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
