@@ -2,6 +2,7 @@ import { ResultScore } from "@/types/RegisterScore";
 import { Button, Grid, GridItem, Text } from "@chakra-ui/react";
 import React from "react";
 import styles from "./GameResult.module.css";
+import { useRouter } from "next/navigation";
 
 interface GameResultProps {
   nextPage: () => void;
@@ -9,6 +10,12 @@ interface GameResultProps {
 }
 
 const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
+  const router = useRouter();
+
+  const pushToRoot = () => {
+    router.push("/");
+  };
+
   return (
     <div className={styles.box}>
       <Grid h="100%" w="100%" templateRows="repeat(10, 1fr)" templateColumns="repeat(10, 1fr)" gap={6} bg="white">
@@ -52,7 +59,7 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
         </GridItem>
         <GridItem colSpan={3} colStart={3} rowStart={8} className={styles.centerText}>
           <Text fontSize="2xl" textAlign="center">
-            正解率
+            正打率
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={3} className={styles.centerText}>
@@ -86,9 +93,14 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
             {resultScore.accuracy.toFixed(1)}%
           </Text>
         </GridItem>
-        <GridItem colSpan={4} rowSpan={2} colStart={4} rowStart={9} className={styles.centerText}>
-          <Button onClick={nextPage} colorScheme="blue" size="lg" w="100%" h="90%">
-            次へ
+        <GridItem colSpan={4} rowSpan={2} colStart={2} rowStart={9} className={styles.centerText}>
+          <Button onClick={pushToRoot} colorScheme="red" size="lg" w="80%" h="90%">
+            ゲームを終了する
+          </Button>
+        </GridItem>
+        <GridItem colSpan={4} rowSpan={2} colStart={6} rowStart={9} className={styles.centerText}>
+          <Button onClick={nextPage} colorScheme="blue" size="lg" w="80%" h="90%">
+            もう一度プレイする
           </Button>
         </GridItem>
       </Grid>

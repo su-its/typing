@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Button, useDisclosure } from "@chakra-ui/react";
-import LoginModal from "./LoginModal"; // LoginModalコンポーネントをインポート
+import LoginModal from "./LoginModal";
 
 const GameStartButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
