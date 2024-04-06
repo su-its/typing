@@ -12,7 +12,7 @@ import (
 	"github.com/su-its/typing/typing-server/domain/repository/ent/user"
 )
 
-func GetScoresRanking(ctx context.Context, client *ent.Client, sortBy string, start, limit int) ([]*model.ScoreRanking, int, error) {
+func GetScoresRanking(ctx context.Context, client *ent.Client, request *model.GetScoresRankingRequest) (*model.GetScoresRankingResponse, error) {
 	var scores []*ent.Score
 
 	// entのクエリを使用してスコアを取得
@@ -24,15 +24,15 @@ func GetScoresRanking(ctx context.Context, client *ent.Client, sortBy string, st
 				score.AccuracyGTE(0.95),
 			),
 		).
-		Order(ent.Desc(sortBy))
+		Order(ent.Desc(request.SortBy))
 
-	switch sortBy {
+	switch request.SortBy {
 	case "accuracy":
 		query = query.Where(score.IsMaxAccuracy(true))
 	case "keystrokes":
 		query = query.Where(score.IsMaxKeystrokes(true))
 	default:
-		return nil, 0, fmt.Errorf("invalid sort by parameter: %s", sortBy)
+		return nil, fmt.Errorf("invalid sort by parameter: %s", request.SortBy)
 	}
 
 	//全件数の取得
@@ -40,12 +40,12 @@ func GetScoresRanking(ctx context.Context, client *ent.Client, sortBy string, st
 
 	// フラグでフィルタリングされたスコアを取得
 	scores, err := query.
-		Limit(limit).
-		Offset(start - 1).
+		Limit(request.Limit).
+		Offset(request.Start - 1).
 		All(ctx)
 
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 
 	var rankings []*model.ScoreRanking
@@ -71,7 +71,7 @@ func GetScoresRanking(ctx context.Context, client *ent.Client, sortBy string, st
 		}
 
 		var currentScore float64
-		switch sortBy {
+		switch request.SortBy {
 		case "accuracy":
 			currentScore = s.Accuracy
 		case "keystrokes":
@@ -79,7 +79,7 @@ func GetScoresRanking(ctx context.Context, client *ent.Client, sortBy string, st
 		}
 
 		if i == 0 || currentScore != prevScore {
-			rank = start + i
+			rank = request.Start + i
 		}
 
 		prevScore = currentScore
@@ -92,7 +92,10 @@ func GetScoresRanking(ctx context.Context, client *ent.Client, sortBy string, st
 		rankings = append(rankings, ranking)
 	}
 
-	return rankings, count, nil
+	return &model.GetScoresRankingResponse{
+		Rankings:   rankings,
+		TotalCount: count,
+	}, nil
 }
 func CreateScore(ctx context.Context, client *ent.Client, userID uuid.UUID, keystrokes int, accuracy float64) error {
 	// トランザクションを開始
