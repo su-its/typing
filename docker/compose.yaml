@@ -3,6 +3,10 @@ services:
     image: ghcr.io/su-its/typing-app:dev
     ports:
       - "3000:3000"
+    # TODO: NEXT_PUBLIC_ を使わなくなるならこのコメントアウトを外して
+    # イメージビルド時ではなくコンテナ起動時に環境変数をセットするように
+    #  environment:
+    #    API_URL: http://api:8080
   api:
     image: ghcr.io/su-its/typing-server:dev
     depends_on:
