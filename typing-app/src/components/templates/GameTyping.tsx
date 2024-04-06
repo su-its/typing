@@ -10,15 +10,15 @@ import styles from "./GameTyping.module.css";
 import gaugePositionImg from "../../../public/img/gauge_position.png";
 import gaugeSpeedImg from "../../../public/img/gauge_speed.png";
 import gaugeTimeImg from "../../../public/img/gauge_time.png";
+import { User } from "@/types/user";
+import { getCurrentUser } from "@/app/actions";
 
 const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResultScore }) => {
   const [startedAt, setStartedAt] = useState(new Date());
 
-  const totalSeconds = 3;
+  const totalSeconds = 60;
   const [count, setCount] = useState(totalSeconds);
-  const damyUserId = "damyId";
 
-  const userId = damyUserId; // ToDo: 要変更
   const [correctType, setCorrectType] = useState(0); // 正打数
   const [incorrectType, setIncorrectType] = useState(0); // 誤打数
 
@@ -38,8 +38,13 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
       endedAt: endedAt,
     };
 
+    const user: User | undefined = await getCurrentUser();
+    //TODO:Userが取得できなかった場合のエラーハンドリングを追加
+    if (!user) {
+      return;
+    }
 
-    const { data, error } = await client.POST("/scores", { body: { user_id: "ea450409-14de-463a-847e-bd3e8a6313c8", keystrokes: registeredScore.keystrokes, accuracy: registeredScore.accuracy}});
+    const { data, error } = await client.POST("/scores", { body: { user_id: user?.id, keystrokes: registeredScore.keystrokes, accuracy: registeredScore.accuracy}});
     if(!error){
       // リザルト画面用のデータ
       setResultScore({
@@ -51,8 +56,9 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
         score: registeredScore.score,
       });
     }
+
     nextPage();
-  }, [startedAt, totalSeconds, correctType, incorrectType, setResultScore, userId, nextPage]);
+  }, [startedAt, totalSeconds, correctType, incorrectType, setResultScore, nextPage]);
 
   const [typeIndex, setTypeIndex] = useState(0);
   // 残り時間のカウントダウン
@@ -68,14 +74,14 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
       }, updateFrequency);
       return () => clearInterval(timer);
     }
-  }, [count, nextPage, sendResultData, startedAt, userId]); // ビルド時の警告防止のためにuserIdも依存リストに追加
+  }, [count, nextPage, sendResultData, startedAt]); 
 
   // 打ち終わった時にスコアを送信する
   useEffect(() => {
     if (typeIndex === subjectText.length - 1) {
       sendResultData();
     }
-  }, [nextPage, userId, sendResultData, subjectText.length, typeIndex]); // ビルド時の警告防止のためにuserIdも依存リストに追加
+  }, [nextPage, sendResultData, subjectText.length, typeIndex]); // ビルド時の警告防止のためにuserIdも依存リストに追加
 
   // タイピング速度計算用
   const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
