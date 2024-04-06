@@ -1,6 +1,7 @@
 import RegisterScore, { ResultScore } from "@/types/RegisterScore";
 import { Box } from "@chakra-ui/react";
 import Image from "next/image";
+import { client } from "@/libs/api";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ProgressBar from "../atoms/ProgressBar";
 import { GameTypingProps } from "../pages/Game";
@@ -13,7 +14,7 @@ import gaugeTimeImg from "../../../public/img/gauge_time.png";
 const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResultScore }) => {
   const [startedAt, setStartedAt] = useState(new Date());
 
-  const totalSeconds = 60;
+  const totalSeconds = 3;
   const [count, setCount] = useState(totalSeconds);
   const damyUserId = "damyId";
 
@@ -22,7 +23,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   const [incorrectType, setIncorrectType] = useState(0); // 誤打数
 
   // スコアデータを送信する
-  const sendResultData = useCallback(() => {
+  const sendResultData = useCallback(async () => {
     // サーバに送信されるデータ
     const endedAt = new Date();
     const actualTypeTimeSeconds = (endedAt.valueOf() - startedAt.valueOf()) / 1000;
@@ -37,24 +38,19 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
       endedAt: endedAt,
     };
 
-    // リザルト画面用のデータ
-    setResultScore({
-      keystrokes: registeredScore.keystrokes,
-      miss: incorrectType,
-      time: new Date(typeTimeSeconds * 1000),
-      wpm: (correctType / typeTimeSeconds) * 60,
-      accuracy: registeredScore.accuracy,
-      score: registeredScore.score,
-    });
-    fetch(`http://localhost:8080/users/${userId}/scores`, {
-      method: `POST`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(registeredScore),
-    }).catch((error) => {
-      console.error(error);
-    });
+
+    const { data, error } = await client.POST("/scores", { body: { user_id: "ea450409-14de-463a-847e-bd3e8a6313c8", keystrokes: registeredScore.keystrokes, accuracy: registeredScore.accuracy}});
+    if(!error){
+      // リザルト画面用のデータ
+      setResultScore({
+        keystrokes: registeredScore.keystrokes,
+        miss: incorrectType,
+        time: new Date(typeTimeSeconds * 1000),
+        wpm: (correctType / typeTimeSeconds) * 60,
+        accuracy: registeredScore.accuracy,
+        score: registeredScore.score,
+      });
+    }
     nextPage();
   }, [startedAt, totalSeconds, correctType, incorrectType, setResultScore, userId, nextPage]);
 
