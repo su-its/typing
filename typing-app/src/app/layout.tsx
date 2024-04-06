@@ -20,7 +20,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ChakraProvider>
-          <Box minH="100vh" display="flex" flexDirection="column" bg="black">
+          <Box minH="100vh" display="flex" flexDirection="column" backgroundImage="url('/img/background.png');">
             <Header />
             <Box flex="1" py={2}>
               {children}

@@ -8,7 +8,7 @@ import Separator from "@/components/atoms/Separater";
 const Header: React.FC = () => {
   return (
     <>
-      <Flex alignItems="center" justifyContent="space-between">
+      <Flex alignItems="center" justifyContent="space-between" bg="gray.800">
         <Banner />
         <UserCard />
       </Flex>
