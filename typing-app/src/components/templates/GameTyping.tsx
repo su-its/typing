@@ -44,8 +44,10 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
       return;
     }
 
-    const { data, error } = await client.POST("/scores", { body: { user_id: user?.id, keystrokes: registeredScore.keystrokes, accuracy: registeredScore.accuracy}});
-    if(!error){
+    const { data, error } = await client.POST("/scores", {
+      body: { user_id: user?.id, keystrokes: registeredScore.keystrokes, accuracy: registeredScore.accuracy },
+    });
+    if (!error) {
       // リザルト画面用のデータ
       setResultScore({
         keystrokes: registeredScore.keystrokes,
@@ -74,7 +76,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
       }, updateFrequency);
       return () => clearInterval(timer);
     }
-  }, [count, nextPage, sendResultData, startedAt]); 
+  }, [count, nextPage, sendResultData, startedAt]);
 
   // 打ち終わった時にスコアを送信する
   useEffect(() => {
