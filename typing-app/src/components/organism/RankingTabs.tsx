@@ -49,7 +49,7 @@ const RankingTabs = () => {
   };
 
   return (
-    <Tabs onChange={handleTabChange}>
+    <Tabs onChange={handleTabChange} mt={6}>
       <Flex justifyContent={"center"}>
         <Grid templateColumns={"repeat(3, 1fr)"} gap={"300px"}>
           <Box opacity={"0"}>{/* 幅を揃えるためだけの要素，視覚的な意味はなし */}</Box>
