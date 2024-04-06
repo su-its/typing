@@ -2,6 +2,10 @@ import { Td, Tr } from "@chakra-ui/react";
 import { components } from "@/libs/api/v1";
 
 const RankingTableRow: React.FC<components["schemas"]["ScoreRanking"]> = (scoreRanking) => {
+  const accuracy = scoreRanking.score?.accuracy ?? 0;
+  const formattedAccuracy = new Intl.NumberFormat("en-US", { style: "percent", maximumFractionDigits: 2 }).format(
+    accuracy
+  );
   return (
     <Tr
       key={String(scoreRanking.score?.user?.student_number)}
@@ -19,7 +23,7 @@ const RankingTableRow: React.FC<components["schemas"]["ScoreRanking"]> = (scoreR
         {String(scoreRanking.score?.keystrokes)}
       </Td>
       <Td width={"256px"} textAlign={"center"}>
-        {String(scoreRanking.score?.accuracy)}
+        {formattedAccuracy}
       </Td>
       <Td width={"320px"} textAlign={"center"}>
         {scoreRanking.score?.created_at}
