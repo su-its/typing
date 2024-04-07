@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { login } from "@/app/actions";
 import { useFormState } from "react-dom";
+import { showWarningToast } from "@/utils/toast";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -27,7 +28,12 @@ const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <form action={dispatchAction}>
+        <form
+          action={async (formData: FormData) => {
+            await dispatchAction(formData);
+            state.error && showWarningToast(state.error);
+          }}
+        >
           <ModalHeader>続けるにはログインが必要です</ModalHeader>
           <ModalBody>
             <Input
@@ -39,7 +45,6 @@ const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state
               title="学籍番号"
               role="textbox"
             />
-            {state.error ? `エラー: ${state.error}` : null}
           </ModalBody>
 
           <ModalFooter>
