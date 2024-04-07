@@ -170,8 +170,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
           <ProgressBar maxWidth={330} height={20} maxValue={subjectText.length - 1} value={typeIndex} />
         </div>
         <div className={`${styles.progress} ${styles.progress_speed}`}>
-          <ProgressBar maxWidth={330} height={10} maxValue={1000} value={currentTypeSpeed} />
-          <ProgressBar maxWidth={330} height={10} maxValue={1000} value={averageTypeSpeed} />
+          <ProgressBar maxWidth={330} height={20} maxValue={1000} value={averageTypeSpeed} />
         </div>
         <Image className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg} alt={""} width={281} height={22} />
         <Image
@@ -183,7 +182,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
           height={24}
         />
         <Image className={styles.gauge_speed} id="gauge_speed" src={gaugeSpeedImg} alt={""} width={330} height={24} />
-        <div className={styles.title}>Lorem Ipsum</div>
+        <div className={styles.title}>-</div>
         <div className={styles.text}>
           <div>
             <span className={styles.span_typed_text}>{subjectText.slice(0, typeIndex)}</span>
@@ -195,7 +194,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
           残り <span className={styles.info_time_span}>{count.toFixed(1)}</span> 秒
         </div>
         <div className={styles.info_text}>
-          {correctType} 語 / {subjectText.length} 字
+          {correctType} 字 / {subjectText.length} 字
         </div>
       </div>
     </Box>
