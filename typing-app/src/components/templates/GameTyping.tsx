@@ -1,6 +1,7 @@
 import RegisterScore, { ResultScore } from "@/types/RegisterScore";
 import { Box } from "@chakra-ui/react";
 import Image from "next/image";
+import { client } from "@/libs/api";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ProgressBar from "../atoms/ProgressBar";
 import { GameTypingProps } from "../pages/Game";
@@ -9,20 +10,20 @@ import styles from "./GameTyping.module.css";
 import gaugePositionImg from "../../../public/img/gauge_position.png";
 import gaugeSpeedImg from "../../../public/img/gauge_speed.png";
 import gaugeTimeImg from "../../../public/img/gauge_time.png";
+import { User } from "@/types/user";
+import { getCurrentUser } from "@/app/actions";
 
 const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResultScore }) => {
   const [startedAt, setStartedAt] = useState(new Date());
 
   const totalSeconds = 60;
   const [count, setCount] = useState(totalSeconds);
-  const damyUserId = "damyId";
 
-  const userId = damyUserId; // ToDo: 要変更
   const [correctType, setCorrectType] = useState(0); // 正打数
   const [incorrectType, setIncorrectType] = useState(0); // 誤打数
 
   // スコアデータを送信する
-  const sendResultData = useCallback(() => {
+  const sendResultData = useCallback(async () => {
     // サーバに送信されるデータ
     const endedAt = new Date();
     const actualTypeTimeSeconds = (endedAt.valueOf() - startedAt.valueOf()) / 1000;
@@ -37,26 +38,29 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
       endedAt: endedAt,
     };
 
-    // リザルト画面用のデータ
-    setResultScore({
-      keystrokes: registeredScore.keystrokes,
-      miss: incorrectType,
-      time: new Date(typeTimeSeconds * 1000),
-      wpm: (correctType / typeTimeSeconds) * 60,
-      accuracy: registeredScore.accuracy,
-      score: registeredScore.score,
+    const user: User | undefined = await getCurrentUser();
+    //TODO:Userが取得できなかった場合のエラーハンドリングを追加
+    if (!user) {
+      return;
+    }
+
+    const { data, error } = await client.POST("/scores", {
+      body: { user_id: user.id, keystrokes: registeredScore.keystrokes, accuracy: registeredScore.accuracy },
     });
-    fetch(`http://localhost:8080/users/${userId}/scores`, {
-      method: `POST`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(registeredScore),
-    }).catch((error) => {
-      console.error(error);
-    });
+    if (!error) {
+      // リザルト画面用のデータ
+      setResultScore({
+        keystrokes: registeredScore.keystrokes,
+        miss: incorrectType,
+        time: new Date(typeTimeSeconds * 1000),
+        wpm: (correctType / typeTimeSeconds) * 60,
+        accuracy: registeredScore.accuracy,
+        score: registeredScore.score,
+      });
+    }
+
     nextPage();
-  }, [startedAt, totalSeconds, correctType, incorrectType, setResultScore, userId, nextPage]);
+  }, [startedAt, totalSeconds, correctType, incorrectType, setResultScore, nextPage]);
 
   const [typeIndex, setTypeIndex] = useState(0);
   // 残り時間のカウントダウン
@@ -72,14 +76,14 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
       }, updateFrequency);
       return () => clearInterval(timer);
     }
-  }, [count, nextPage, sendResultData, startedAt, userId]); // ビルド時の警告防止のためにuserIdも依存リストに追加
+  }, [count, nextPage, sendResultData, startedAt]);
 
   // 打ち終わった時にスコアを送信する
   useEffect(() => {
     if (typeIndex === subjectText.length - 1) {
       sendResultData();
     }
-  }, [nextPage, userId, sendResultData, subjectText.length, typeIndex]); // ビルド時の警告防止のためにuserIdも依存リストに追加
+  }, [nextPage, sendResultData, subjectText.length, typeIndex]);
 
   // タイピング速度計算用
   const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
