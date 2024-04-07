@@ -9,28 +9,16 @@ const showToast = (title: string, description?: string, status?: "info" | "warni
     status,
     position: "top",
   });
-}
+};
 
 export const showSuccessToast = (title: string, description?: string) => {
-  showToast(
-    title,
-    description,
-    "success",
-  );
+  showToast(title, description, "success");
 };
 
 export const showWarningToast = (title: string, description?: string) => {
-  showToast(
-    title,
-    description,
-    "warning",
-  );
+  showToast(title, description, "warning");
 };
 
 export const showErrorToast = (title: string, description?: string) => {
-  showToast(
-    title,
-    description,
-    "error",
-  );
+  showToast(title, description, "error");
 };

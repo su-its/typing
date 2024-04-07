@@ -28,10 +28,12 @@ const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <form action={ async (formData: FormData) => {
-          await dispatchAction(formData);
-          state.error && showWarningToast(state.error);
-        }}>
+        <form
+          action={async (formData: FormData) => {
+            await dispatchAction(formData);
+            state.error && showWarningToast(state.error);
+          }}
+        >
           <ModalHeader>続けるにはログインが必要です</ModalHeader>
           <ModalBody>
             <Input
