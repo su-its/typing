@@ -1,6 +1,4 @@
-import { createStandaloneToast } from "@chakra-ui/react";
-
-const { toast: toastChakra } = createStandaloneToast();
+import { useToast } from "@chakra-ui/react";
 
 const toast = ({
   status,
@@ -11,7 +9,8 @@ const toast = ({
   title?: string;
   description?: string;
 }) => {
-  toastChakra({
+  const toastInstance = useToast();
+  toastInstance({
     title,
     description,
     status,
