@@ -20,7 +20,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
 
   const [startedAt, setStartedAt] = useState(new Date());
 
-  const totalSeconds = 60;// TODO: Configファイルから取得
+  const totalSeconds = 60; // TODO: Configファイルから取得
   const [count, setCount] = useState(totalSeconds);
 
   const [correctType, setCorrectType] = useState(0); // 正打数
@@ -46,8 +46,8 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
     //TODO:Userが取得できなかった場合のエラーハンドリングを追加
     if (!user) {
       showErrorToast("ユーザー情報が取得できませんでした");
-      router.push("/")
-      return
+      router.push("/");
+      return;
     }
 
     const { error } = await client.POST("/scores", {
@@ -56,12 +56,12 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
     if (error) {
       showErrorToast("スコアの登録に失敗しました");
       return;
-    } else{
+    } else {
       // リザルト画面用のデータ
       setResultScore({
         keystrokes: registeredScore.keystrokes,
         miss: incorrectType,
-        time: new Date(typeTimeSeconds * 1000),// TODO: マジックナンバー確認
+        time: new Date(typeTimeSeconds * 1000), // TODO: マジックナンバー確認
         wpm: (correctType / typeTimeSeconds) * 60, // TODO: マジックナンバー確認
         accuracy: registeredScore.accuracy,
         score: registeredScore.score,
@@ -131,7 +131,8 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
     return toLogarithmWpm(averageTypingSpeed);
   };
 
-  const toLogarithmWpm = (wpm: number) => { // TODO: マジックナンバー確認
+  const toLogarithmWpm = (wpm: number) => {
+    // TODO: マジックナンバー確認
     const wpmForProgressBar = (1000 / 3) * Math.log10((999 / 1000) * wpm + 1);
     if (wpmForProgressBar > 1000) {
       return 1000;
@@ -167,7 +168,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   return (
     <Box onKeyDown={handleOnKeyDown} tabIndex={0} ref={boxRef}>
       <div className={styles.box}>
-        { /* TODO: Article Nameって消すんじゃなかったっけ */}
+        {/* TODO: Article Nameって消すんじゃなかったっけ */}
         <div className={`${styles.heading} ${styles.heading_name}`}>Article Name</div>
         <div className={`${styles.heading} ${styles.heading_time}`}>Time Remain</div>
         <div className={`${styles.heading} ${styles.heading_position}`}>Progress</div>
@@ -192,7 +193,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
           height={24}
         />
         <Image className={styles.gauge_speed} id="gauge_speed" src={gaugeSpeedImg} alt={""} width={330} height={24} />
-        { /* TODO: Lpre, Ipusumって消すんじゃなかったっけ */}
+        {/* TODO: Lpre, Ipusumって消すんじゃなかったっけ */}
         <div className={styles.title}>Lorem Ipsum</div>
         <div className={styles.text}>
           <div>
