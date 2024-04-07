@@ -3,6 +3,7 @@ import { client } from "@/libs/api";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { User } from "@/types/user";
+import { showWarningToast } from "@/utils/toast";
 
 type LoginActionState = {
   error?: string;
@@ -21,9 +22,11 @@ export async function login(_: LoginActionState, formData: FormData): Promise<Lo
 
   if (error) {
     if (/not found/.test(`${error}`.toLowerCase())) {
-      return { error: "見つかりませんでした" };
+      showWarningToast("ユーザーが見つかりませんでした");
+      return { error: "見つかりませんでした" }; //返す?
     }
-    return { error: "もう一度お試しください" };
+    showWarningToast("もう一度お試しください");
+    return { error: "もう一度お試しください" }; // 返す?
   }
 
   const expires = new Date(Date.now() + 3 * 60 * 60 * 1000);

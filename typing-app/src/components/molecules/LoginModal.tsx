@@ -39,7 +39,7 @@ const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state
               title="学籍番号"
               role="textbox"
             />
-            {state.error ? `エラー: ${state.error}` : null}
+            {state.error ? `エラー: ${state.error}` : null} // TODO: ここ変更
           </ModalBody>
 
           <ModalFooter>
