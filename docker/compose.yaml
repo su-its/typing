@@ -3,8 +3,8 @@ services:
     image: ghcr.io/su-its/typing-app:dev
     ports:
       - "3000:3000"
-    # TODO: NEXT_PUBLIC_ を使わなくなるならこのコメントアウトを外して
-    # イメージビルド時ではなくコンテナ起動時に環境変数をセットするように
+    # TODO: イメージビルド時ではなくコンテナ起動時に環境変数をセットする方が便利なのでそうしたい
+    # NEXT_PUBLIC_ を使わなくなればそれができる。そのときはこのコメントアウトを外す
     #  environment:
     #    API_URL: http://api:8080
   api:
