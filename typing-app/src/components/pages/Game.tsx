@@ -31,7 +31,7 @@ const GamePage: React.FC<GamePageProps> = ({ subjectText }) => {
   const isUserLoggedIn = async () => {
     const user: User | undefined = await getCurrentUser();
     return user;
-  }  
+  };
 
   useEffect(() => {
     isUserLoggedIn().then((user) => {
@@ -40,7 +40,7 @@ const GamePage: React.FC<GamePageProps> = ({ subjectText }) => {
         router.push("/");
       }
     });
-  }, []);  
+  }, []);
 
   const ScreenIndex = {
     IDX_PRE: 0,
