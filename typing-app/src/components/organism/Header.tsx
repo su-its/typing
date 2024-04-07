@@ -10,7 +10,7 @@ const Header: React.FC = () => {
     <>
       <Flex alignItems="center" justifyContent="space-between">
         <Banner />
-        <UserCard />
+        <UserCard width="300px" />
       </Flex>
       <Separator />
     </>
