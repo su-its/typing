@@ -1,23 +1,35 @@
 import { Td, Tr } from "@chakra-ui/react";
-import { ScoreRanking } from "../organism/RankingTabs";
+import { components } from "@/libs/api/v1";
 
-const RankingTableRow: React.FC<ScoreRanking> = (scoreRanking) => {
+const RankingTableRow: React.FC<components["schemas"]["ScoreRanking"]> = (scoreRanking) => {
+  const accuracy = scoreRanking.score?.accuracy ?? 0;
+  const formattedAccuracy = new Intl.NumberFormat("en-US", { style: "percent", maximumFractionDigits: 2 }).format(
+    accuracy
+  );
+  const formattedCreatedAt = scoreRanking.score?.created_at
+    ? new Date(scoreRanking.score.created_at).toISOString().split("T")[0]
+    : "";
   return (
-    <Tr key={String(scoreRanking.rank)} _even={{ bg: "midnightblue" }} _odd={{ bg: "#192f70" }} color={"silver"}>
+    <Tr
+      key={String(scoreRanking.score?.user?.student_number)}
+      _even={{ bg: "midnightblue" }}
+      _odd={{ bg: "#192f70" }}
+      color={"silver"}
+    >
       <Td width={"128px"} textAlign={"center"}>
         {String(scoreRanking.rank)}
       </Td>
       <Td width={"256px"} textAlign={"center"}>
-        {scoreRanking.user.studentNumber}
+        {scoreRanking.score?.user?.student_number}
       </Td>
       <Td width={"320px"} textAlign={"center"}>
-        {String(scoreRanking.keystrokes)}
+        {String(scoreRanking.score?.keystrokes)}
       </Td>
       <Td width={"256px"} textAlign={"center"}>
-        {String(scoreRanking.accuracy)}
+        {formattedAccuracy}
       </Td>
       <Td width={"320px"} textAlign={"center"}>
-        {scoreRanking.createdAt.toLocaleDateString("ja-JP")}
+        {formattedCreatedAt}
       </Td>
     </Tr>
   );
