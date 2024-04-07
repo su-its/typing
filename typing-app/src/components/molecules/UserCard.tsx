@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Box, Text, HStack, VStack, Spacer } from "@chakra-ui/react";
+import { Avatar, Text, HStack, VStack, Spacer } from "@chakra-ui/react";
 import { getCurrentUser } from "@/app/actions";
 import type { User } from "@/types/user";
 
@@ -16,9 +16,9 @@ export const UserCardPresenter = ({ user }: UserCardPresenterProps) => {
         borderRadius="0"
       />
       <Spacer />
-      <VStack align="start" width="full" justifyContent="center">
+      <VStack align="start" overflow="hidden">
         <Text fontSize="lg" fontWeight="bold" color="white" isTruncated width="90%">
-          名前: {user ? user.handleName : "ログインしていませんaaaaaaaaa"}
+          名前: {user ? user.handleName : "ログインしていません"}
         </Text>
         <Text color="white" width="90%" isTruncated>
           学籍番号: {user ? user.studentNumber : "未ログイン"}
