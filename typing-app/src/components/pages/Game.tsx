@@ -1,10 +1,14 @@
 "use client";
 import { ResultScore } from "@/types/RegisterScore";
 import { VStack } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GamePre from "../templates/GamePre";
 import GameResult from "../templates/GameResult";
 import GameTyping from "../templates/GameTyping";
+import { useRouter } from "next/navigation";
+import { showWarningToast } from "@/utils/toast";
+import { User } from "@/types/user";
+import { getCurrentUser } from "@/app/actions";
 
 export interface GamePreProps {
   nextPage: () => void;
@@ -22,6 +26,22 @@ interface GamePageProps {
 }
 
 const GamePage: React.FC<GamePageProps> = ({ subjectText }) => {
+  //ログインしていなければ、トップページにリダイレクト
+  const router = useRouter();
+  const isUserLoggedIn = async () => {
+    const user: User | undefined = await getCurrentUser();
+    return user;
+  }  
+
+  useEffect(() => {
+    isUserLoggedIn().then((user) => {
+      if (!user) {
+        showWarningToast("ログインしてください");
+        router.push("/");
+      }
+    });
+  }, []);  
+
   const ScreenIndex = {
     IDX_PRE: 0,
     IDX_TYPING: 1,
