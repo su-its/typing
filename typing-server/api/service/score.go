@@ -3,13 +3,10 @@ package service
 import (
 	"context"
 
-	"fmt"
-
 	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/api/repository"
 	"github.com/su-its/typing/typing-server/domain/model"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
-	"github.com/su-its/typing/typing-server/domain/repository/ent/score"
 )
 
 func GetScoresRanking(ctx context.Context, client *ent.Client, request *model.GetScoresRankingRequest) (*model.GetScoresRankingResponse, error) {
@@ -40,45 +37,7 @@ func GetMyScoreRanking(ctx context.Context, client *ent.Client, userID uuid.UUID
 	}
 
 	// ユーザーの最大スコアより上位のスコアをカウント
-	var rank int
-
-	switch sortBy {
-	case "accuracy":
-		rank, err = client.Score.Query().
-			Where(
-				score.And(
-					score.KeystrokesGTE(120),
-					score.AccuracyGTE(0.95),
-					score.Or(
-						score.AccuracyGT(userMaxScore.Accuracy),
-						score.And(
-							score.AccuracyEQ(userMaxScore.Accuracy),
-							score.KeystrokesGT(userMaxScore.Keystrokes),
-						),
-					),
-				),
-			).
-			Count(ctx)
-	case "keystrokes":
-		rank, err = client.Score.Query().
-			Where(
-				score.And(
-					score.KeystrokesGTE(120),
-					score.AccuracyGTE(0.95),
-					score.Or(
-						score.KeystrokesGT(userMaxScore.Keystrokes),
-						score.And(
-							score.KeystrokesEQ(userMaxScore.Keystrokes),
-							score.AccuracyGT(userMaxScore.Accuracy),
-						),
-					),
-				),
-			).
-			Count(ctx)
-	default:
-		return 0, fmt.Errorf("invalid sort by parameter: %s", sortBy)
-	}
-
+	rank, err := repository.CountHigherScores(ctx, client, userMaxScore, sortBy)
 	if err != nil {
 		return 0, err
 	}

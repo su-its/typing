@@ -228,3 +228,51 @@ func GetMaxScoreByUserID(ctx context.Context, client *ent.Client, userID uuid.UU
 
 	return maxScore, nil
 }
+
+func CountHigherScores(ctx context.Context, client *ent.Client, userMaxScore *ent.Score, sortBy string) (int, error) {
+	var rank int
+	var err error
+
+	switch sortBy {
+	case "accuracy":
+		rank, err = client.Score.Query().
+			Where(
+				score.And(
+					score.KeystrokesGTE(120),
+					score.AccuracyGTE(0.95),
+					score.Or(
+						score.AccuracyGT(userMaxScore.Accuracy),
+						score.And(
+							score.AccuracyEQ(userMaxScore.Accuracy),
+							score.KeystrokesGT(userMaxScore.Keystrokes),
+						),
+					),
+				),
+			).
+			Count(ctx)
+	case "keystrokes":
+		rank, err = client.Score.Query().
+			Where(
+				score.And(
+					score.KeystrokesGTE(120),
+					score.AccuracyGTE(0.95),
+					score.Or(
+						score.KeystrokesGT(userMaxScore.Keystrokes),
+						score.And(
+							score.KeystrokesEQ(userMaxScore.Keystrokes),
+							score.AccuracyGT(userMaxScore.Accuracy),
+						),
+					),
+				),
+			).
+			Count(ctx)
+	default:
+		return 0, fmt.Errorf("invalid sort by parameter: %s", sortBy)
+	}
+
+	if err != nil {
+		return 0, err
+	}
+
+	return rank, nil
+}
