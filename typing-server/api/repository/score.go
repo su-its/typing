@@ -221,7 +221,7 @@ func GetMaxScoreByUserID(ctx context.Context, client *ent.Client, userID uuid.UU
 		return nil, fmt.Errorf("invalid sort by parameter: %s", sortBy)
 	}
 
-	maxScore, err := query.First(ctx)
+	maxScore, err := query.Only(ctx)
 	if err != nil {
 		return nil, err
 	}
