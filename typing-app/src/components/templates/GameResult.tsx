@@ -70,28 +70,28 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={4} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
-            {resultScore.keystrokes}回
+            {resultScore.keystrokes} 回
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={5} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
-            {resultScore.miss}回
+            {resultScore.miss} 回
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={6} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
-            {String(resultScore.time.getMinutes() * 60 + resultScore.time.getSeconds()).padStart(2, "0")}秒
-            {String(Math.floor(resultScore.time.getMilliseconds() / 100))}
+            {String(resultScore.time.getMinutes() * 60 + resultScore.time.getSeconds()).padStart(2, "0")}.
+            {String(Math.floor(resultScore.time.getMilliseconds() / 100))} 秒
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={7} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
-            {Math.floor(resultScore.wpm)}字/分
+            {Math.floor(resultScore.wpm)} 字/分
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={8} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
-            {resultScore.accuracy.toFixed(1)}%
+            {resultScore.accuracy.toFixed(1)} %
           </Text>
         </GridItem>
         <GridItem colSpan={4} rowSpan={2} colStart={2} rowStart={9} className={styles.centerText}>
