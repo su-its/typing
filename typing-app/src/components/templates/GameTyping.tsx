@@ -153,7 +153,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
         return; // アルファベット等以外のキーは無視 shiftなどがここに入る
       }
       const currentType = subjectText[typeIndexRef.current];
-      console.log(key, currentType);
       if (key === currentType) {
         setTypeIndex((prev) => prev + 1);
         setCorrectType((prev) => prev + 1);
