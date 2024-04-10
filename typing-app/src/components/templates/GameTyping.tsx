@@ -100,38 +100,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   const [typingQueueList] = useState<number[]>([]);
   const [currentTypeSpeed, setCurrentTypeSpeed] = useState(0);
   const [averageTypeSpeed, setAverageTypeSpeed] = useState(0);
-  const addTypingQueueList = () => {
-    const time = new Date().valueOf();
-    typingQueueList.push(time);
-    if (typingQueueList.length > typingQueueListSize) {
-      typingQueueList.shift();
-    }
-  };
-
-  const getTypingQueueListIndex = (index: number): number => {
-    if (index < 0) {
-      return 0;
-    }
-    if (index >= typingQueueList.length) {
-      return typingQueueList.length - 1;
-    }
-    return 0;
-  };
-
-  const calcCurrentTypingSpeed = (): number => {
-    if (typingQueueList.length <= 1) {
-      return 0;
-    }
-    const typeTime = getTypingQueueListIndex(typingQueueList.length - 1) - getTypingQueueListIndex(0);
-    const currentWpm = (typingQueueList.length / typeTime) * 60000;
-    return toLogarithmWpm(currentWpm);
-  };
-
-  const calcAverageTypingSpeed = (): number => {
-    const timeFromStart: number = new Date().valueOf() - startedAt.valueOf();
-    const averageTypingSpeed: number = (correctType / timeFromStart) * 60000;
-    return toLogarithmWpm(averageTypingSpeed);
-  };
 
   const toLogarithmWpm = (wpm: number): number => {
     const wpmForProgressBar: number = (1000 / 3) * Math.log10((999 / 1000) * wpm + 1);
@@ -146,7 +114,41 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
     // setTypeIndexの結果を反映する
     typeIndexRef.current = typeIndex;
   }, [typeIndex]);
+
   useEffect(() => {
+    const calcCurrentTypingSpeed = (): number => {
+      if (typingQueueList.length <= 1) {
+        return 0;
+      }
+      const typeTime = getTypingQueueListIndex(typingQueueList.length - 1) - getTypingQueueListIndex(0);
+      const currentWpm = (typingQueueList.length / typeTime) * 60000;
+      return toLogarithmWpm(currentWpm);
+    };
+
+    const calcAverageTypingSpeed = (): number => {
+      const timeFromStart: number = new Date().valueOf() - startedAt.valueOf();
+      const averageTypingSpeed: number = (correctType / timeFromStart) * 60000;
+      return toLogarithmWpm(averageTypingSpeed);
+    };
+
+    const addTypingQueueList = () => {
+      const time = new Date().valueOf();
+      typingQueueList.push(time);
+      if (typingQueueList.length > typingQueueListSize) {
+        typingQueueList.shift();
+      }
+    };
+
+    const getTypingQueueListIndex = (index: number): number => {
+      if (index < 0) {
+        return 0;
+      }
+      if (index >= typingQueueList.length) {
+        return typingQueueList.length - 1;
+      }
+      return 0;
+    };
+
     const handleOnKeyDown = (e: KeyboardEvent) => {
       const key = e.key;
       if (key.length !== 1) {
@@ -168,7 +170,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
     return () => {
       window.removeEventListener("keydown", handleOnKeyDown);
     };
-  }, []);
+  }, [correctType, startedAt, typingQueueList, subjectText]);
 
   // ゲーム開始直後にフォーカスする
   const boxRef = useRef<HTMLDivElement>(null);
