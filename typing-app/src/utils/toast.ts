@@ -1,48 +1,30 @@
 import { createStandaloneToast } from "@chakra-ui/react";
 
-const { toast: toastChakra } = createStandaloneToast();
+const { toast } = createStandaloneToast();
 
-const toast = ({
-  status,
-  title = "",
-  description = "",
-}: {
-  status: "success" | "error" | "warning" | "info";
-  title?: string;
+interface showToastProps {
+  title: string;
   description?: string;
-}) => {
-  toastChakra({
+  status?: "info" | "warning" | "success" | "error";
+}
+
+const showToast = ({ title, description = "", status }: showToastProps) => {
+  toast({
+    position: "top",
     title,
     description,
     status,
-    duration: 3000,
-    isClosable: true,
-    position: "top",
   });
 };
 
 export const showSuccessToast = (title: string, description?: string) => {
-  toast({
-    title,
-    description,
-    status: "success",
-  });
+  showToast({ title, description, status: "success" });
 };
 
 export const showWarningToast = (title: string, description?: string) => {
-  toast({
-    title,
-    description,
-    status: "warning",
-  });
+  showToast({ title, description, status: "warning" });
 };
 
 export const showErrorToast = (title: string, description?: string) => {
-  toast({
-    title,
-    description,
-    status: "error",
-  });
+  showToast({ title, description, status: "error" });
 };
-
-export default toast;

@@ -11,32 +11,35 @@ type LoginActionState = {
 export async function login(_: LoginActionState, formData: FormData): Promise<LoginActionState> {
   const studentNumber = formData.get("student-number")!.toString();
 
-  const { data, error } = await client.GET("/users", {
-    params: {
-      query: {
-        student_number: studentNumber,
+  try {
+    const { data, error } = await client.GET("/users", {
+      params: {
+        query: {
+          student_number: studentNumber,
+        },
       },
-    },
-  });
-
-  if (error) {
-    if (/not found/.test(`${error}`.toLowerCase())) {
-      return { error: "見つかりませんでした" };
+    });
+    if (error) {
+      if (/not found/.test(`${error}`.toLowerCase())) {
+        return { error: "見つかりませんでした" };
+      }
+      return { error: "もう一度お試しください" };
     }
-    return { error: "もう一度お試しください" };
+
+    const expires = new Date(Date.now() + 3 * 60 * 60 * 1000);
+
+    const user: User = {
+      id: data.id!,
+      handleName: data.handle_name!,
+      studentNumber: data.student_number!,
+    };
+
+    cookies().set("user", JSON.stringify(user), { expires, httpOnly: true });
+
+    redirect("/game");
+  } catch (error) {
+    return { error: "通信に失敗しました" };
   }
-
-  const expires = new Date(Date.now() + 3 * 60 * 60 * 1000);
-
-  const user: User = {
-    id: data.id!,
-    handleName: data.handle_name!,
-    studentNumber: data.student_number!,
-  };
-
-  cookies().set("user", JSON.stringify(user), { expires, httpOnly: true });
-
-  redirect("/game");
 }
 
 export async function logout() {

@@ -7,19 +7,19 @@ import RefreshButton from "../atoms/RefreshButton";
 import { useEffect, useState } from "react";
 import { client } from "@/libs/api";
 import { components } from "@/libs/api/v1";
+import { showErrorToast } from "@/utils/toast";
 
 const RankingTabs = () => {
   const [scoreRankings, setScoreRankings] = useState<components["schemas"]["ScoreRanking"][]>([]);
   const [rankingStartFrom, setRankingStartFrom] = useState(1);
   const [sortBy, setSortBy] = useState<"accuracy" | "keystrokes">("accuracy");
-  const [error, setError] = useState<string | undefined>(undefined);
   const [totalRankingCount, setTotalRankingCount] = useState<number>(0);
 
-  const LIMIT = 10;
+  const LIMIT = 10; //TODO: Configファイルから取得
   const MAXIMUM = totalRankingCount;
 
   const fetchData = async () => {
-    const { data } = await client.GET("/scores/ranking", {
+    const { data, error } = await client.GET("/scores/ranking", {
       params: {
         query: {
           sort_by: sortBy,
@@ -32,7 +32,7 @@ const RankingTabs = () => {
       setScoreRankings(data.rankings);
       setTotalRankingCount(data.total_count);
     } else {
-      setError("データの取得中にエラーが発生しました。");
+      showErrorToast(error);
     }
   };
   useEffect(() => {
@@ -71,12 +71,6 @@ const RankingTabs = () => {
           />
         </Grid>
       </Flex>
-      {error && (
-        <Center>
-          <Box>Error: {error}</Box>
-        </Center>
-      )}
-      (
       <TabPanels>
         <TabPanel>
           <RankingTable scoreRankings={scoreRankings} />
@@ -85,7 +79,6 @@ const RankingTabs = () => {
           <RankingTable scoreRankings={scoreRankings} />
         </TabPanel>
       </TabPanels>
-      )
       <Center>
         <Pagination
           onPrev={() => handlePaginationClick("prev")}

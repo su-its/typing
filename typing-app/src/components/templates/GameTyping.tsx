@@ -12,11 +12,15 @@ import gaugeSpeedImg from "../../../public/img/gauge_speed.png";
 import gaugeTimeImg from "../../../public/img/gauge_time.png";
 import { User } from "@/types/user";
 import { getCurrentUser } from "@/app/actions";
+import { showErrorToast } from "@/utils/toast";
+import { useRouter } from "next/navigation";
 
 const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResultScore }) => {
+  const router = useRouter();
+
   const [startedAt, setStartedAt] = useState(new Date());
 
-  const totalSeconds = 60;
+  const totalSeconds = 60; // TODO: Configファイルから取得
   const [count, setCount] = useState(totalSeconds);
 
   const [correctType, setCorrectType] = useState(0); // 正打数
@@ -26,14 +30,14 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   const sendResultData = useCallback(async () => {
     // サーバに送信されるデータ
     const endedAt = new Date();
-    const actualTypeTimeSeconds = (endedAt.valueOf() - startedAt.valueOf()) / 1000;
+    const actualTypeTimeSeconds = (endedAt.valueOf() - startedAt.valueOf()) / 1000; //TODO: マジックナンバー確認
     const typeTimeSeconds = actualTypeTimeSeconds > totalSeconds ? totalSeconds : actualTypeTimeSeconds;
     const totalType = correctType + incorrectType;
     const accuracy = totalType === 0 ? 0 : (correctType / totalType) * 100; // [%]
     const registeredScore: RegisterScore = {
       keystrokes: correctType,
       accuracy: accuracy,
-      score: (correctType / typeTimeSeconds) * 60,
+      score: (correctType / typeTimeSeconds) * 60, // TODO: マジックナンバー確認
       startedAt: startedAt,
       endedAt: endedAt,
     };
@@ -41,30 +45,34 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
     const user: User | undefined = await getCurrentUser();
     //TODO:Userが取得できなかった場合のエラーハンドリングを追加
     if (!user) {
+      showErrorToast("ユーザー情報が取得できませんでした");
+      router.push("/");
       return;
     }
 
-    const { data, error } = await client.POST("/scores", {
+    const { error } = await client.POST("/scores", {
       body: { user_id: user.id, keystrokes: registeredScore.keystrokes, accuracy: registeredScore.accuracy },
     });
-    if (!error) {
+    if (error) {
+      showErrorToast("スコアの登録に失敗しました");
+      return;
+    } else {
       // リザルト画面用のデータ
       setResultScore({
         keystrokes: registeredScore.keystrokes,
         miss: incorrectType,
-        time: new Date(typeTimeSeconds * 1000),
-        wpm: (correctType / typeTimeSeconds) * 60,
+        time: new Date(typeTimeSeconds * 1000), // TODO: マジックナンバー確認
+        wpm: (correctType / typeTimeSeconds) * 60, // TODO: マジックナンバー確認
         accuracy: registeredScore.accuracy,
         score: registeredScore.score,
       });
     }
-
     nextPage();
   }, [startedAt, totalSeconds, correctType, incorrectType, setResultScore, nextPage]);
 
   const [typeIndex, setTypeIndex] = useState(0);
   // 残り時間のカウントダウン
-  const updateFrequency = 100; // 100msごとにカウントダウン
+  const updateFrequency = 100; // TODO: 1000msに変更、これもConfigファイル可rあ取得
   useEffect(() => {
     if (count <= 0) {
       sendResultData();
@@ -113,17 +121,18 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
       return 0;
     }
     const typeTime = getTypingQueueListIndex(typingQueueList.length - 1) - getTypingQueueListIndex(0);
-    const currentWpm = (typingQueueList.length / typeTime) * 60000;
+    const currentWpm = (typingQueueList.length / typeTime) * 60000; // TODO:マジックナンバー確認
     return toLogarithmWpm(currentWpm);
   };
 
   const calcAverageTypingSpeed = (): number => {
     const timeFromStart = new Date().valueOf() - startedAt.valueOf();
-    const averageTypingSpeed = (correctType / timeFromStart) * 60000;
+    const averageTypingSpeed = (correctType / timeFromStart) * 60000; // TODO: マジックナンバー確認
     return toLogarithmWpm(averageTypingSpeed);
   };
 
   const toLogarithmWpm = (wpm: number) => {
+    // TODO: マジックナンバー確認
     const wpmForProgressBar = (1000 / 3) * Math.log10((999 / 1000) * wpm + 1);
     if (wpmForProgressBar > 1000) {
       return 1000;
@@ -159,6 +168,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   return (
     <Box onKeyDown={handleOnKeyDown} tabIndex={0} ref={boxRef}>
       <div className={styles.box}>
+        {/* TODO: Article Nameって消すんじゃなかったっけ */}
         <div className={`${styles.heading} ${styles.heading_name}`}>Article Name</div>
         <div className={`${styles.heading} ${styles.heading_time}`}>Time Remain</div>
         <div className={`${styles.heading} ${styles.heading_position}`}>Progress</div>
