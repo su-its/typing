@@ -128,35 +128,48 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   };
 
   const calcAverageTypingSpeed = (): number => {
-    const timeFromStart = new Date().valueOf() - startedAt.valueOf();
-    const averageTypingSpeed = (correctType / timeFromStart) * 60000;
+    const timeFromStart: number = new Date().valueOf() - startedAt.valueOf();
+    const averageTypingSpeed: number = (correctType / timeFromStart) * 60000;
     return toLogarithmWpm(averageTypingSpeed);
   };
 
-  const toLogarithmWpm = (wpm: number) => {
-    const wpmForProgressBar = (1000 / 3) * Math.log10((999 / 1000) * wpm + 1);
+  const toLogarithmWpm = (wpm: number): number => {
+    const wpmForProgressBar: number = (1000 / 3) * Math.log10((999 / 1000) * wpm + 1);
     if (wpmForProgressBar > 1000) {
       return 1000;
     }
     return wpmForProgressBar;
   };
 
-  const handleOnKeyDown = (e: React.KeyboardEvent) => {
-    const key = e.key;
-    if (key.length !== 1) {
-      return; // アルファベット等以外のキーは無視 shiftなどがここに入る
-    }
-    const currentType = subjectText[typeIndex];
-    if (key === currentType) {
-      setTypeIndex(typeIndex + 1);
-      setCorrectType(correctType + 1);
-      addTypingQueueList();
-      setCurrentTypeSpeed(calcCurrentTypingSpeed());
-      setAverageTypeSpeed(calcAverageTypingSpeed());
-    } else {
-      setIncorrectType(incorrectType + 1);
-    }
-  };
+  const typeIndexRef = useRef(typeIndex);
+  useEffect(() => {
+    // setTypeIndexの結果を反映する
+    typeIndexRef.current = typeIndex;
+  }, [typeIndex]);
+  useEffect(() => {
+    const handleOnKeyDown = (e: KeyboardEvent) => {
+      const key = e.key;
+      if (key.length !== 1) {
+        return; // アルファベット等以外のキーは無視 shiftなどがここに入る
+      }
+      const currentType = subjectText[typeIndexRef.current];
+      console.log(key, currentType);
+      if (key === currentType) {
+        setTypeIndex((prev) => prev + 1);
+        setCorrectType((prev) => prev + 1);
+        addTypingQueueList();
+        setCurrentTypeSpeed(calcCurrentTypingSpeed());
+        setAverageTypeSpeed(calcAverageTypingSpeed());
+      } else {
+        setIncorrectType((prev) => prev + 1);
+      }
+    };
+
+    window.addEventListener("keydown", handleOnKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleOnKeyDown);
+    };
+  }, []);
 
   // ゲーム開始直後にフォーカスする
   const boxRef = useRef<HTMLDivElement>(null);
@@ -167,7 +180,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   }, []);
 
   return (
-    <Box onKeyDown={handleOnKeyDown} tabIndex={0} ref={boxRef}>
+    <Box tabIndex={0} ref={boxRef}>
       <div className={styles.box}>
         <div className={`${styles.heading} ${styles.heading_name}`}>Article Name</div>
         <div className={`${styles.heading} ${styles.heading_time}`}>Time Remain</div>
