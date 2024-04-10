@@ -22,16 +22,16 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   const [incorrectType, setIncorrectType] = useState(0); // 誤打数
   const [userId, setUserId] = useState<User>();
 
-  //useEffect(() => {
-  //  const fetchUser = async () => {
-  //    const currentUser = await getCurrentUser();
-  //    if (currentUser !== null) {
-  //      setUserId(currentUser);
-  //    }
-  //  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      const currentUser = await getCurrentUser();
+      if (currentUser !== null) {
+        setUserId(currentUser);
+      }
+    };
 
-  //  fetchUser();
-  //}, []);
+    fetchUser();
+  }, []);
 
   // スコアデータを送信する
   const sendResultData = useCallback(() => {
