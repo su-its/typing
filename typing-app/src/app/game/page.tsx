@@ -7,6 +7,7 @@ export default function Typing() {
     `src/assets/texts/${filenames[Math.floor(Math.random() * filenames.length)]}`,
     "utf-8"
   );
+  const subjectTextOneLine = subjectText.replace(/\n/gm, " ");
 
-  return <GamePage subjectText={subjectText} />;
+  return <GamePage subjectText={subjectTextOneLine} />;
 }
