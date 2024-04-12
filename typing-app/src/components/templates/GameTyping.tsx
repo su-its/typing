@@ -101,14 +101,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   const [currentTypeSpeed, setCurrentTypeSpeed] = useState(0);
   const [averageTypeSpeed, setAverageTypeSpeed] = useState(0);
 
-  const toLogarithmWpm = (wpm: number): number => {
-    const wpmForProgressBar: number = (1000 / 3) * Math.log10((999 / 1000) * wpm + 1);
-    if (wpmForProgressBar > 1000) {
-      return 1000;
-    }
-    return wpmForProgressBar;
-  };
-
   const typeIndexRef = useRef(typeIndex);
   useEffect(() => {
     // setTypeIndexの結果を反映する
@@ -122,13 +114,13 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
       }
       const typeTime = getTypingQueueListIndex(typingQueueList.length - 1) - getTypingQueueListIndex(0);
       const currentWpm = (typingQueueList.length / typeTime) * 60000;
-      return toLogarithmWpm(currentWpm);
+      return currentWpm;
     };
 
     const calcAverageTypingSpeed = (): number => {
       const timeFromStart: number = new Date().valueOf() - startedAt.valueOf();
       const averageTypingSpeed: number = (correctType / timeFromStart) * 60000;
-      return toLogarithmWpm(averageTypingSpeed);
+      return averageTypingSpeed;
     };
 
     const addTypingQueueList = () => {
