@@ -35,11 +35,11 @@ export async function login(_: LoginActionState, formData: FormData): Promise<Lo
     };
 
     cookies().set("user", JSON.stringify(user), { expires, httpOnly: true });
-
-    redirect("/game");
   } catch (error) {
     return { error: "通信に失敗しました" };
   }
+
+  redirect("/game"); // NOTE: try-catch外でリダイレクトする
 }
 
 export async function logout() {
