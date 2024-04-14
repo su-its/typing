@@ -7,12 +7,10 @@ import ProgressBar from "../atoms/ProgressBar";
 import { GameTypingProps } from "../pages/Game";
 import styles from "./GameTyping.module.css";
 import { getCurrentUser } from "@/app/actions";
-
 import gaugePositionImg from "../../../public/img/gauge_position.png";
 import gaugeSpeedImg from "../../../public/img/gauge_speed.png";
 import gaugeTimeImg from "../../../public/img/gauge_time.png";
 import { User } from "@/types/user";
-import { getCurrentUser } from "@/app/actions";
 import { showErrorToast } from "@/utils/toast";
 import { useRouter } from "next/navigation";
 
