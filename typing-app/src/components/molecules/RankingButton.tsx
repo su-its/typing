@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "@chakra-ui/react";
+import { Image } from "@chakra-ui/react";
+import rankingButton from "@/assets/images/home/ranking.png";
 
 const RankingButton = () => {
   const router = useRouter();
@@ -11,11 +12,7 @@ const RankingButton = () => {
     router.push("/ranking");
   };
 
-  return (
-    <Button colorScheme="orange" size="lg" onClick={handleRouteRanking}>
-      Ranking
-    </Button>
-  );
+  return <Image mb={2} src={rankingButton.src} onClick={handleRouteRanking} cursor="pointer" />;
 };
 
 export default RankingButton;

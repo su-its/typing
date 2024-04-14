@@ -4,7 +4,7 @@
   margin: 50px auto 0 auto;
   position: absolute;
   left: 15%;
-  top: 100px;
+  top: 120px;
   background-color: #263238;
   border: solid 4px #fff;
 }
@@ -125,6 +125,8 @@
   font-size: 24px;
   line-height: 48px;
   color: #fff;
+  height: 100%;
+  overflow-y: hidden;
 }
 
 .span_typed_text {
