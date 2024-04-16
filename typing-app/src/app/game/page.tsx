@@ -1,7 +1,6 @@
 import GamePage from "@/components/pages/Game";
 import fs from "fs";
 
-
 const filenames = fs.readdirSync("public/texts/");
 
 export default function Typing() {
