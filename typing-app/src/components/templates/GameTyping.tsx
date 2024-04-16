@@ -1,4 +1,4 @@
-import RegisterScore, { ResultScore } from "@/types/RegisterScore";
+import RegisterScore from "@/types/RegisterScore";
 import { Box } from "@chakra-ui/react";
 import Image from "next/image";
 import { client } from "@/libs/api";
@@ -6,12 +6,11 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import ProgressBar from "../atoms/ProgressBar";
 import { GameTypingProps } from "../pages/Game";
 import styles from "./GameTyping.module.css";
-
+import { getCurrentUser } from "@/app/actions";
 import gaugePositionImg from "../../../public/img/gauge_position.png";
 import gaugeSpeedImg from "../../../public/img/gauge_speed.png";
 import gaugeTimeImg from "../../../public/img/gauge_time.png";
 import { User } from "@/types/user";
-import { getCurrentUser } from "@/app/actions";
 import { showErrorToast } from "@/utils/toast";
 import { useRouter } from "next/navigation";
 
@@ -96,66 +95,50 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   // タイピング速度計算用
   const typingQueueListSize = 5; // ここで瞬間タイピング速度計算の粒度を決める 増やすほど変化が穏やかになる
   const [typingQueueList] = useState<number[]>([]);
-  const [currentTypeSpeed, setCurrentTypeSpeed] = useState(0);
   const [averageTypeSpeed, setAverageTypeSpeed] = useState(0);
-  const addTypingQueueList = () => {
-    const time = new Date().valueOf();
-    typingQueueList.push(time);
-    if (typingQueueList.length > typingQueueListSize) {
-      typingQueueList.shift();
-    }
-  };
 
-  const getTypingQueueListIndex = (index: number): number => {
-    if (index < 0) {
-      return 0;
-    }
-    if (index >= typingQueueList.length) {
-      return typingQueueList.length - 1;
-    }
-    return 0;
-  };
+  const typeIndexRef = useRef(typeIndex);
+  useEffect(() => {
+    // setTypeIndexの結果を反映する
+    typeIndexRef.current = typeIndex;
+  }, [typeIndex]);
 
-  const calcCurrentTypingSpeed = (): number => {
-    if (typingQueueList.length <= 1) {
-      return 0;
-    }
-    const typeTime = getTypingQueueListIndex(typingQueueList.length - 1) - getTypingQueueListIndex(0);
-    const currentWpm = (typingQueueList.length / typeTime) * 60000; // TODO:マジックナンバー確認
-    return toLogarithmWpm(currentWpm);
-  };
+  useEffect(() => {
+    const calcAverageTypingSpeed = (): number => {
+      const timeFromStart: number = new Date().valueOf() - startedAt.valueOf();
+      const averageTypingSpeed: number = (correctType / timeFromStart) * 60000;
+      return averageTypingSpeed;
+    };
 
-  const calcAverageTypingSpeed = (): number => {
-    const timeFromStart = new Date().valueOf() - startedAt.valueOf();
-    const averageTypingSpeed = (correctType / timeFromStart) * 60000; // TODO: マジックナンバー確認
-    return toLogarithmWpm(averageTypingSpeed);
-  };
+    const addTypingQueueList = () => {
+      const time = new Date().valueOf();
+      typingQueueList.push(time);
+      if (typingQueueList.length > typingQueueListSize) {
+        typingQueueList.shift();
+      }
+    };
 
-  const toLogarithmWpm = (wpm: number) => {
-    // TODO: マジックナンバー確認
-    const wpmForProgressBar = (1000 / 3) * Math.log10((999 / 1000) * wpm + 1);
-    if (wpmForProgressBar > 1000) {
-      return 1000;
-    }
-    return wpmForProgressBar;
-  };
+    const handleOnKeyDown = (e: KeyboardEvent) => {
+      const key = e.key;
+      if (key.length !== 1) {
+        return; // アルファベット等以外のキーは無視 shiftなどがここに入る
+      }
+      const currentType = subjectText[typeIndexRef.current];
+      if (key === currentType) {
+        setTypeIndex((prev) => prev + 1);
+        setCorrectType((prev) => prev + 1);
+        addTypingQueueList();
+        setAverageTypeSpeed(calcAverageTypingSpeed());
+      } else {
+        setIncorrectType((prev) => prev + 1);
+      }
+    };
 
-  const handleOnKeyDown = (e: React.KeyboardEvent) => {
-    const key = e.key;
-    if (key.length !== 1) {
-      return; // アルファベット等以外のキーは無視 shiftなどがここに入る
-    }
-    const currentType = subjectText[typeIndex];
-    if (key === currentType) {
-      setTypeIndex(typeIndex + 1);
-      setCorrectType(correctType + 1);
-      addTypingQueueList();
-      setCurrentTypeSpeed(calcCurrentTypingSpeed());
-      setAverageTypeSpeed(calcAverageTypingSpeed());
-    } else {
-      setIncorrectType(incorrectType + 1);
-    }
-  };
+    window.addEventListener("keydown", handleOnKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleOnKeyDown);
+    };
+  }, [correctType, startedAt, typingQueueList, subjectText]);
 
   // ゲーム開始直後にフォーカスする
   const boxRef = useRef<HTMLDivElement>(null);
@@ -166,7 +149,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   }, []);
 
   return (
-    <Box onKeyDown={handleOnKeyDown} tabIndex={0} ref={boxRef}>
+    <Box tabIndex={0} ref={boxRef}>
       <div className={styles.box}>
         {/* TODO: Article Nameって消すんじゃなかったっけ */}
         <div className={`${styles.heading} ${styles.heading_name}`}>Article Name</div>
@@ -182,7 +165,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
         <div className={`${styles.progress} ${styles.progress_speed}`}>
           <ProgressBar maxWidth={330} height={20} maxValue={1000} value={averageTypeSpeed} />
         </div>
-        <Image className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg} alt={""} width={281} height={22} />
+        <Image className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg} alt={""} width={281} height={24} />
         <Image
           className={styles.gauge_position}
           id="gauge_position"
