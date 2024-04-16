@@ -186,7 +186,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
         <div className={`${styles.progress} ${styles.progress_speed}`}>
           <ProgressBar maxWidth={330} height={20} maxValue={1000} value={averageTypeSpeed} />
         </div>
-        <Image className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg} alt={""} width={281} height={22} />
+        <Image className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg} alt={""} width={281} height={24} />
         <Image
           className={styles.gauge_position}
           id="gauge_position"
