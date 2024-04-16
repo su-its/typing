@@ -26,6 +26,22 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   const [correctType, setCorrectType] = useState(0); // 正打数
   const [incorrectType, setIncorrectType] = useState(0); // 誤打数
 
+  let audioContext = new AudioContext();
+  let audioSource = audioContext.createBufferSource();
+  useEffect(() => {
+    let audioRequest = new XMLHttpRequest();
+    audioRequest.open("GET", "/bgm/11.mp3", true);
+    audioRequest.responseType = "arraybuffer";
+    audioRequest.send();
+    audioRequest.onload = function () {
+      audioContext.decodeAudioData(audioRequest.response, function (buf) {
+        audioSource.buffer = buf;
+        audioSource.connect(audioContext.destination);
+        audioSource.start(0);
+      });
+    };
+  }, []);
+
   // スコアデータを送信する
   const sendResultData = useCallback(async () => {
     // サーバに送信されるデータ
