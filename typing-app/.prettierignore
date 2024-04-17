@@ -7,4 +7,6 @@ bun.lockb
 eslint.config.js
 package-lock.json
 yarn.lock
-src/libs/api/v1.d.ts
+
+# 自動生成のファイル
+src/libs/api/*.d.ts
