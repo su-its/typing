@@ -1,0 +1,39 @@
+name: Deploy Containers
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: self-hosted
+    env:
+      # COMPOSE_PROJECT_NAME を指定しないと docker_app_1 のような
+      # 分かりづらい名前のコンテナが作成される.
+      # -p オプションをつければ同じことができる.
+      # -p はコマンドの直後に置くこと. podman-compose -p typing up
+      # SSHで直接実行する際にも忘れず指定すること.
+      COMPOSE_PROJECT_NAME: typing
+    defaults:
+      run:
+        shell: bash
+        working-directory: docker
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: podman-compose pull
+        run: podman-compose -f compose.yaml pull
+
+      - name: Down and Up (app)
+        run: |
+          podman-compose -f compose.yaml down app
+          podman-compose -f compose.yaml up -d app
+
+      - name: Down and Up (api)
+        run: |
+          podman-compose -f compose.yaml down api
+          podman-compose -f compose.yaml up -d api

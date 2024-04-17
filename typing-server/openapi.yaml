@@ -1,0 +1,202 @@
+openapi: 3.0.0
+info:
+  title: Typing API
+  description: >-
+    This is Typing API
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+    description: ローカル開発環境
+  - url: https://example.com
+    description: 本番環境
+tags:
+  - name: other
+    description: いい名前が思いつかない(仮)
+  - name: user
+    description: ユーザー関係(仮)
+  - name: score
+    description: スコア関係(仮)
+paths:
+  /health:
+    get:
+      tags:
+        - other
+      operationId: healthcheck
+      summary: サーバーの状態を取得
+      responses:
+        "200":
+          description: サーバーが正常に稼働しています。
+  /users:
+    get:
+      tags:
+        - user
+      operationId: getUsers
+      summary: ユーザー情報を取得
+      parameters:
+        - in: query
+          name: student_number
+          schema:
+            type: string
+          description: 学生番号
+          required: true
+      responses:
+        "200":
+          description: ユーザー情報を返します。
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: ユーザーが見つかりません。
+
+  /scores/ranking:
+    get:
+      tags:
+        - score
+      operationId: getScoresRanking
+      summary: スコアランキングを取得
+      parameters:
+        - in: query
+          name: sort_by
+          schema:
+            type: string
+            enum: [keystrokes, accuracy]
+          description: ソート対象のカラム
+        - in: query
+          name: start
+          schema:
+            type: integer
+          description: ランキングの開始位置(x位 | x>0)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: ランキングの取得件数
+      responses:
+        "200":
+          description: スコアランキングを返します。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rankings:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ScoreRanking"
+                  total_count:
+                    type: integer
+                    description: ランキングの全件数
+                required:
+                  - rankings
+                  - total_count
+        "400":
+          description: 不正なリクエストです。
+
+  /scores:
+    post:
+      tags:
+        - score
+      operationId: registerScore
+      summary: スコアを登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  format: uuid
+                  description: ユーザーID
+                keystrokes:
+                  type: integer
+                  description: キーストローク数
+                accuracy:
+                  type: number
+                  format: float
+                  description: 正確性(ミスタイプ数/ストローク数)
+              required:
+                - user_id
+                - keystrokes
+                - accuracy
+      responses:
+        "201":
+          description: スコアが正常に登録されました。
+        "400":
+          description: 不正なリクエストです。
+
+  /scores/{user-id}/current-rank:
+    get:
+      tags:
+        - user
+      operationId: getMyscoreRanking
+      summary: ユーザーの現在の順位を取得
+      parameters:
+        - in: path
+          name: user-id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ユーザーID
+      responses:
+        "200":
+          description: ユーザーの現在の順位を返します。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  current-rank:
+                    type: integer
+                    description: ユーザーの現在の順位
+                required:
+                  - current-rank
+        "404":
+          description: ユーザーが見つかりません。
+        "500":
+          description: サーバーエラーが発生しました。
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        student_number:
+          type: string
+        handle_name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Score:
+      type: object
+      properties:
+        id:
+          type: string
+        keystrokes:
+          type: integer
+        accuracy:
+          type: number
+          format: float
+        created_at:
+          type: string
+          format: date-time
+        user:
+          $ref: "#/components/schemas/User"
+
+    ScoreRanking:
+      type: object
+      properties:
+        rank:
+          type: integer
+        score:
+          $ref: "#/components/schemas/Score"

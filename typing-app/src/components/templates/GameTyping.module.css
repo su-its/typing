@@ -1,0 +1,140 @@
+.box {
+  width: 70%;
+  height: calc(100% - 300px);
+  margin: 50px auto 0 auto;
+  position: absolute;
+  left: 15%;
+  top: 120px;
+  background-color: #263238;
+  border: solid 4px #fff;
+}
+
+.heading {
+  height: 40px;
+  position: absolute;
+  background-color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  z-index: 100;
+}
+
+.heading_name {
+  width: 140px;
+  padding: 8px 0;
+  left: -4px;
+  top: -44px;
+}
+
+.heading_time {
+  width: 140px;
+  padding: 8px 0;
+  left: -4px;
+  bottom: -44px;
+}
+
+.heading_position {
+  width: 100px;
+  padding: 8px 0;
+  right: 326px;
+  top: -44px;
+}
+
+.heading_speed {
+  width: 80px;
+  padding: 8px 0;
+  right: 326px;
+  bottom: -44px;
+}
+
+.progress {
+  height: 20px;
+  position: absolute;
+}
+
+.progress_time {
+  width: 250px;
+  left: 136px;
+  bottom: -24px;
+}
+
+.progress_position {
+  width: 250px;
+  left: calc(100% - 326px);
+  top: -24px;
+}
+
+.progress_speed {
+  width: 250px;
+  left: calc(100% - 326px);
+  bottom: -24px;
+}
+
+.gauge_time {
+  position: absolute;
+  left: 136px;
+  bottom: -46px;
+}
+
+.gauge_position {
+  position: absolute;
+  right: -4px;
+  top: -48px;
+}
+
+.gauge_speed {
+  position: absolute;
+  right: -4px;
+  bottom: -46px;
+}
+
+.info_time {
+  position: absolute;
+  left: 434px;
+  bottom: -48px;
+  font-size: 18px;
+  color: #fff;
+}
+
+.info_time_span {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.info_text {
+  width: 330px;
+  position: absolute;
+  right: -4px;
+  top: -52px;
+  font-size: 18px;
+  text-align: center;
+  color: #fff;
+}
+
+.title {
+  position: absolute;
+  left: 146px;
+  top: -36px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.text {
+  padding: 40px;
+  font-size: 24px;
+  line-height: 48px;
+  color: #fff;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.span_typed_text {
+  color: #888;
+}
+
+.span_current_text {
+  color: #000;
+  background-color: #ffff00;
+  white-space: pre-wrap;
+}

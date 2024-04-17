@@ -1,0 +1,49 @@
+name: Generate TypeScript Type Definitions from OpenAPI
+
+on:
+  pull_request:
+    paths:
+      - typing-server/openapi.yaml
+
+jobs:
+  generate-client:
+    name: Generate TypeScript Type Definitions
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enable Corepack
+        run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+          cache-dependency-path: typing-app/yarn.lock
+      - name: Install Dependencies
+        working-directory: typing-app
+        run: yarn
+      - name: Retrieve the Schema version
+        uses: mikefarah/yq@master
+        id: get_schema_version
+        with:
+          cmd: 'yq ".info.version" ./typing-server/openapi.yaml'
+      - name: Generate
+        shell: bash
+        working-directory: typing-app
+        # ${SCHEMA_VERSION%%.*} removes the longest substring starting with a period from $SCHEMA_VERSION
+        run: |
+          SCHEMA_VERSION=${{ steps.get_schema_version.outputs.result }}
+          SCHEMA_MAJOR_VERSION=${SCHEMA_VERSION%%.*}
+          npx openapi-typescript ../typing-server/openapi.yaml --output ./src/libs/api/v${SCHEMA_MAJOR_VERSION}.d.ts
+      # TODO: エラーになるので tsc は一旦やめる
+      # Error: src/components/atoms/Banner.tsx(3,25): error TS2307: Cannot find module '@/assets/images/banner.png' or its corresponding type declarations.
+      #     - name: Validate
+      #       working-directory: typing-app
+      #       run: yarn exec tsc --noEmit
+      - name: Commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: generate TS code from api schema
+        # Do not run on local (see. https://nektosact.com/usage/index.html)
+        if: ${{ !env.ACT }}

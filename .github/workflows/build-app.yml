@@ -1,0 +1,102 @@
+name: build-app
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - .github/workflows/build-app.yml
+      - "typing-app/**"
+      - "!typing-app/docs/**"
+      - "!typing-app/README.md"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: typing-app
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      # Corepack enable をしておけば package.json の packageManager を読んで適切なバージョンの yarn を使ってくれる。
+      # ただし非公式な方法であり、あくまでワークアラウンド。
+      # https://github.com/actions/setup-node/issues/480#issuecomment-1820622085
+      # > enable corepack **before** setup-node.
+      - name: Enable Corepack
+        run: corepack enable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Get yarn cache folder
+        id: get-yarn-cache-folder
+        shell: bash
+        # will fail if yarn version is 1
+        run: echo "folder=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ${{ steps.get-yarn-cache-folder.outputs.folder }}
+            ./typing-app/.next
+          key: yarn-cache-${{ runner.os }}-${{ hashFiles('typing-app/yarn.lock') }}
+          restore-keys: |
+            yarn-cache-${{ runner.os }}-${{ hashFiles('typing-app/yarn.lock') }}
+            yarn-cache-${{ runner.os }}-
+
+      - name: Install Dependencies
+        run: yarn
+
+      - name: Check Code Style (Prettier)
+        run: yarn run format:ci
+
+      - name: Build Next.js Project
+        run: yarn build
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Get yarn cache folder
+        id: get-yarn-cache-folder
+        shell: bash
+        # will fail if yarn version is 1
+        run: echo "folder=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ${{ steps.get-yarn-cache-folder.outputs.folder }}
+            ./typing-app/.next
+          key: yarn-cache-${{ runner.os }}-${{ hashFiles('typing-app/yarn.lock') }}
+          restore-keys: |
+            yarn-cache-${{ runner.os }}-${{ hashFiles('typing-app/yarn.lock') }}
+            yarn-cache-${{ runner.os }}-
+
+      - name: Install Dependencies
+        run: yarn
+
+      - name: Run Tests
+        run: yarn test
