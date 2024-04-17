@@ -106,7 +106,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   useEffect(() => {
     const calcAverageTypingSpeed = (): number => {
       const timeFromStart: number = new Date().valueOf() - startedAt.valueOf();
-      const averageTypingSpeed: number = (correctType / timeFromStart) * 60000;
+      const averageTypingSpeed: number = Math.min((correctType / timeFromStart) * 60000, 300); // 300 で頭打ち
       return averageTypingSpeed;
     };
 
