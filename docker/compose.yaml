@@ -3,10 +3,12 @@ services:
     image: ghcr.io/su-its/typing-app:dev
     ports:
       - "3000:3000"
-    # TODO: イメージビルド時ではなくコンテナ起動時に環境変数をセットする方が便利なのでそうしたい
-    # NEXT_PUBLIC_ を使わなくなればそれができる。そのときはこのコメントアウトを外す
-    #  environment:
-    #    API_URL: http://api:8080
+    # TODO: NEXT_PUBLIC_ を使わなくなればうれしい
+    # NEXT_PUBLIC_API_URL と API_URL が共存しているのは
+    # ブラウザから呼び出したい時とコンテナ内から呼び出したい時を使い分けたいから
+    # 本当は全部 app サーバ(コンテナ)側に寄せたい
+    environment:
+      API_URL: http://api:8080
     restart: always
   api:
     image: ghcr.io/su-its/typing-server:dev
