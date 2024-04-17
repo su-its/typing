@@ -6,7 +6,7 @@ import { Pagination } from "../molecules/Pagination";
 import RefreshButton from "../atoms/RefreshButton";
 import { useEffect, useState } from "react";
 import { client } from "@/libs/api";
-import { components } from "@/libs/api/v1";
+import { components } from "@/libs/api/v0";
 import { showErrorToast } from "@/utils/toast";
 
 const RankingTabs = () => {

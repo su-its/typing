@@ -1,6 +1,6 @@
 import { Tbody } from "@chakra-ui/react";
 import RankingTableRow from "./RankingTableRow";
-import { components } from "@/libs/api/v1";
+import { components } from "@/libs/api/v0";
 
 export type RankingTableBodyProps = {
   scoreRankings: components["schemas"]["ScoreRanking"][];
