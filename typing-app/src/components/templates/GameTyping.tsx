@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResultScore }) => {
   const router = useRouter();
 
-  const [startedAt, setStartedAt] = useState(new Date());
+  const [startedAt, _] = useState(new Date());
 
   const totalSeconds = 60; // TODO: Configファイルから取得
   const [count, setCount] = useState(totalSeconds);
@@ -106,7 +106,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   useEffect(() => {
     const calcAverageTypingSpeed = (): number => {
       const timeFromStart: number = new Date().valueOf() - startedAt.valueOf();
-      const averageTypingSpeed: number = (correctType / timeFromStart) * 60000;
+      const averageTypingSpeed: number = Math.min((correctType / timeFromStart) * 60000, 300); // 300 で頭打ち
       return averageTypingSpeed;
     };
 
