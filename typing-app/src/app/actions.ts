@@ -1,5 +1,5 @@
 "use server";
-import { client } from "@/libs/api";
+import { client } from "@/libs/api/server-side-client";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { User } from "@/types/user";
