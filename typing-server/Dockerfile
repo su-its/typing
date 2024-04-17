@@ -20,6 +20,9 @@ RUN apk --no-cache add ca-certificates
 # tzdataパッケージのインストール
 RUN apk --no-cache add tzdata
 
+# curlのインストール
+RUN apk --no-cache add curl
+
 WORKDIR /root
 
 # ビルドしたバイナリをコピー

@@ -1,6 +1,13 @@
 services:
   app:
     image: ghcr.io/su-its/typing-app:dev
+    ports:
+      - "3000:3000"
+    # TODO: イメージビルド時ではなくコンテナ起動時に環境変数をセットする方が便利なのでそうしたい
+    # NEXT_PUBLIC_ を使わなくなればそれができる。そのときはこのコメントアウトを外す
+    #  environment:
+    #    API_URL: http://api:8080
+    restart: always
   api:
     image: ghcr.io/su-its/typing-server:dev
     depends_on:
@@ -9,10 +16,10 @@ services:
     environment:
       DB_ADDR: ${DB_ADDR:-db:3306}
     healthcheck:
-      test: ["CMD", "curl", "localhost:8080"]
+      test: ["CMD", "curl", "-sS", "localhost:8080/health"]
       interval: 10s
       retries: 10
-      start_period: 30s
+    restart: always
   db:
     image: mysql:8.3.0
     environment:
@@ -26,7 +33,6 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       retries: 10
-      start_period: 30s
 
 volumes:
   db-data:
