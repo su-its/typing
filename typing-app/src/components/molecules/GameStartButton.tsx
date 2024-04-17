@@ -7,7 +7,6 @@ import gameButton from "@/assets/images/home/game.png";
 import { getCurrentUser } from "@/app/actions";
 import { useRouter } from "next/navigation";
 
-
 const GameStartButton = () => {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -18,7 +17,7 @@ const GameStartButton = () => {
     } else {
       onOpen();
     }
-  }
+  };
 
   return (
     <>
