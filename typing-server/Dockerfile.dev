@@ -1,5 +1,5 @@
 # 基本イメージ
-FROM golang:1.22.0 as builder
+FROM golang:1.22.2 as builder
 
 # 作業ディレクトリを設定
 WORKDIR /app
