@@ -7,6 +7,7 @@ services:
     # NEXT_PUBLIC_ を使わなくなればそれができる。そのときはこのコメントアウトを外す
     #  environment:
     #    API_URL: http://api:8080
+    restart: always
   api:
     image: ghcr.io/su-its/typing-server:dev
     depends_on:
@@ -18,6 +19,7 @@ services:
       test: ["CMD", "curl", "-sS", "localhost:8080/health"]
       interval: 10s
       retries: 10
+    restart: always
   db:
     image: mysql:8.3.0
     environment:
