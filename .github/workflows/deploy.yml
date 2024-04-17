@@ -18,8 +18,9 @@ jobs:
       # SSHで直接実行する際にも忘れず指定すること.
       COMPOSE_PROJECT_NAME: typing
     defaults:
-      shell: bash
-      working-directory: docker
+      run:
+        shell: bash
+        working-directory: docker
 
     steps:
       - uses: actions/checkout@v4
