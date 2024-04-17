@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier . --write",
-    "format:ci": "prettier . --check"
+    "format:ci": "prettier . --check",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
@@ -25,10 +27,14 @@
     "prettier": "^3.2.5",
     "react": "^18",
     "react-dom": "^18",
+    "sharp": "^0.33.3",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -36,6 +42,8 @@
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "eslint-config-prettier": "^9.1.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "openapi-typescript": "6.7.5",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
