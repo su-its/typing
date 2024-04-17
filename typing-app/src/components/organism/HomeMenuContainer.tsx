@@ -5,8 +5,8 @@ import LogoutButton from "../molecules/LogoutButton";
 
 const HomeMenuContainer = () => {
   return (
-    <Flex justify="center" align="center" h="65vh">
-      <VStack spacing={8} align="stretch" width="50%" maxWidth="md" mx="auto">
+    <Flex justify="center" align="center" h="80vh">
+      <VStack>
         {/* TODO: ログイン状況に応じて表示を切り替え */}
         <GameStartButton />
         <RankingButton />

@@ -9,13 +9,12 @@ import (
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
 )
 
-func GetScoresRanking(ctx context.Context, client *ent.Client, sortBy string, start, limit int) ([]*model.ScoreRanking, error) {
-	rankings, err := repository.GetScoresRanking(ctx, client, sortBy, start, limit)
+func GetScoresRanking(ctx context.Context, client *ent.Client, request *model.GetScoresRankingRequest) (*model.GetScoresRankingResponse, error) {
+	response, err := repository.GetScoresRanking(ctx, client, request)
 	if err != nil {
 		return nil, err
 	}
-
-	return rankings, nil
+	return response, nil
 }
 
 func CreateScore(ctx context.Context, client *ent.Client, userID uuid.UUID, keystrokes int, accuracy float64) error {

@@ -1,18 +1,29 @@
 services:
   app:
     image: ghcr.io/su-its/typing-app:dev
+    ports:
+      - "3000:3000"
+    # TODO: NEXT_PUBLIC_ を使わなくなればうれしい
+    # NEXT_PUBLIC_API_URL と API_URL が共存しているのは
+    # ブラウザから呼び出したい時とコンテナ内から呼び出したい時を使い分けたいから
+    # 本当は全部 app サーバ(コンテナ)側に寄せたい
+    environment:
+      API_URL: http://api:8080
+    restart: always
   api:
     image: ghcr.io/su-its/typing-server:dev
+    ports:
+      - "8080:8080"
     depends_on:
       db:
         condition: service_healthy
     environment:
       DB_ADDR: ${DB_ADDR:-db:3306}
     healthcheck:
-      test: ["CMD", "curl", "localhost:8080"]
+      test: ["CMD", "curl", "-sS", "localhost:8080/health"]
       interval: 10s
       retries: 10
-      start_period: 30s
+    restart: always
   db:
     image: mysql:8.3.0
     environment:
@@ -26,7 +37,6 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       retries: 10
-      start_period: 30s
 
 volumes:
   db-data:
