@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResultScore }) => {
   const router = useRouter();
 
-  const [startedAt, setStartedAt] = useState(new Date());
+  const [startedAt, _] = useState(new Date());
 
   const totalSeconds = 60; // TODO: Configファイルから取得
   const [count, setCount] = useState(totalSeconds);
