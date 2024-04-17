@@ -8222,6 +8222,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"server-only@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "server-only@npm:0.0.1"
+  checksum: 10c0/4704f0ef85da0be981af6d4ed8e739d39bcfd265b9c246a684060acda5642d0fdc6daffc2308e71e2682c5f508090978802eae0a77623c9b90a49f9ae68048d6
+  languageName: node
+  linkType: hard
+
 "set-function-length@npm:^1.2.1":
   version: 1.2.2
   resolution: "set-function-length@npm:1.2.2"
@@ -9061,6 +9068,7 @@ __metadata:
     prettier: "npm:^3.2.5"
     react: "npm:^18"
     react-dom: "npm:^18"
+    server-only: "npm:^0.0.1"
     sharp: "npm:^0.33.3"
     tailwind-merge: "npm:^2.2.1"
     tailwindcss: "npm:^3.3.0"
@@ -9089,11 +9097,11 @@ __metadata:
   linkType: hard
 
 "undici@npm:^5.28.2":
-  version: 5.28.3
-  resolution: "undici@npm:5.28.3"
+  version: 5.28.4
+  resolution: "undici@npm:5.28.4"
   dependencies:
     "@fastify/busboy": "npm:^2.0.0"
-  checksum: 10c0/3c559ae50ef3104b7085251445dda6f4de871553b9e290845649d2f80b06c0c9cfcdf741b0029c6b20d36c82e6a74dc815b139fa9a26757d70728074ca6d6f5c
+  checksum: 10c0/08d0f2596553aa0a54ca6e8e9c7f45aef7d042c60918564e3a142d449eda165a80196f6ef19ea2ef2e6446959e293095d8e40af1236f0d67223b06afac5ecad7
   languageName: node
   linkType: hard
 

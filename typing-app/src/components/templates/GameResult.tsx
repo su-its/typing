@@ -91,7 +91,9 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={8} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
-            {resultScore.accuracy.toFixed(1)} %
+            {new Intl.NumberFormat("en-US", { style: "percent", maximumFractionDigits: 2 }).format(
+              resultScore.accuracy
+            )}
           </Text>
         </GridItem>
         <GridItem colSpan={4} rowSpan={2} colStart={2} rowStart={9} className={styles.centerText}>

@@ -3,7 +3,7 @@ info:
   title: Typing API
   description: >-
     This is Typing API
-  version: 1.0.0
+  version: 0.0.1
 servers:
   - url: http://localhost:8080
     description: ローカル開発環境
@@ -16,7 +16,6 @@ tags:
     description: ユーザー関係(仮)
   - name: score
     description: スコア関係(仮)
-    title: Sample Pet Store App
 paths:
   /health:
     get:
@@ -79,7 +78,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object 
+                type: object
                 properties:
                   rankings:
                     type: array
@@ -88,7 +87,7 @@ paths:
                   total_count:
                     type: integer
                     description: ランキングの全件数
-                required: 
+                required:
                   - rankings
                   - total_count
         "400":
@@ -153,7 +152,7 @@ paths:
                   current-rank:
                     type: integer
                     description: ユーザーの現在の順位
-                required:  
+                required:
                   - current-rank
         "404":
           description: ユーザーが見つかりません。

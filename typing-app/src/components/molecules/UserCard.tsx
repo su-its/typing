@@ -18,11 +18,10 @@ export const UserCardPresenter = ({ user, ...rest }: UserCardPresenterProps) => 
     <HStack spacing={4} bg="blue.600" {...props}>
       <Avatar
         src={"https://www.shizuoka.ac.jp/cms/files/shizudai/MASTER/0100/uISrbYCb_VL033_r03.png"}
-        boxSize="100px"
+        boxSize="70px"
         borderRadius="0"
       />
-      <Spacer />
-      <VStack align="start" overflow="hidden">
+      <VStack align="start" overflow="hidden" flexGrow={1} gap={0}>
         <Text fontSize="lg" fontWeight="bold" color="white" isTruncated width="90%">
           名前: {user ? user.handleName : "ログインしていません"}
         </Text>

@@ -45,10 +45,12 @@ func GetScoresRanking(ctx context.Context, client *ent.Client, request *model.Ge
 		All(ctx)
 
 	if err != nil {
-		return nil, err
+		if !ent.IsNotFound(err) {
+			return nil, err
+		}
 	}
 
-	var rankings []*model.ScoreRanking
+	rankings := make([]*model.ScoreRanking, 0, len(scores))
 	var prevScore float64
 	var rank int
 
@@ -81,7 +83,6 @@ func GetScoresRanking(ctx context.Context, client *ent.Client, request *model.Ge
 		if i == 0 || currentScore != prevScore {
 			rank = request.Start + i
 		}
-
 		prevScore = currentScore
 
 		ranking := &model.ScoreRanking{
@@ -97,6 +98,7 @@ func GetScoresRanking(ctx context.Context, client *ent.Client, request *model.Ge
 		TotalCount: count,
 	}, nil
 }
+
 func CreateScore(ctx context.Context, client *ent.Client, userID uuid.UUID, keystrokes int, accuracy float64) error {
 	// トランザクションを開始
 	tx, err := client.Tx(ctx)

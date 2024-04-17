@@ -1,6 +1,6 @@
 module github.com/su-its/typing/typing-server
 
-go 1.22.0
+go 1.22.2
 
 require (
 	entgo.io/ent v0.13.1

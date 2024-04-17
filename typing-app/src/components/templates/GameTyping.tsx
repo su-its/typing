@@ -17,7 +17,8 @@ import { useRouter } from "next/navigation";
 const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResultScore }) => {
   const router = useRouter();
 
-  const [startedAt, setStartedAt] = useState(new Date());
+  const [isSent, setIsSent] = useState(false); // スコアデータを送信したかどうか
+  const [startedAt, _] = useState(new Date());
 
   const totalSeconds = 60; // TODO: Configファイルから取得
   const [count, setCount] = useState(totalSeconds);
@@ -32,7 +33,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
     const actualTypeTimeSeconds = (endedAt.valueOf() - startedAt.valueOf()) / 1000; //TODO: マジックナンバー確認
     const typeTimeSeconds = actualTypeTimeSeconds > totalSeconds ? totalSeconds : actualTypeTimeSeconds;
     const totalType = correctType + incorrectType;
-    const accuracy = totalType === 0 ? 0 : (correctType / totalType) * 100; // [%]
+    const accuracy = totalType === 0 ? 0 : correctType / totalType;
     const registeredScore: RegisterScore = {
       keystrokes: correctType,
       accuracy: accuracy,
@@ -49,22 +50,25 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
       return;
     }
 
-    const { error } = await client.POST("/scores", {
-      body: { user_id: user.id, keystrokes: registeredScore.keystrokes, accuracy: registeredScore.accuracy },
-    });
-    if (error) {
-      showErrorToast("スコアの登録に失敗しました");
-      return;
-    } else {
-      // リザルト画面用のデータ
-      setResultScore({
-        keystrokes: registeredScore.keystrokes,
-        miss: incorrectType,
-        time: new Date(typeTimeSeconds * 1000), // TODO: マジックナンバー確認
-        wpm: (correctType / typeTimeSeconds) * 60, // TODO: マジックナンバー確認
-        accuracy: registeredScore.accuracy,
-        score: registeredScore.score,
+    if (!isSent) {
+      setIsSent(true);
+      const { error } = await client.POST("/scores", {
+        body: { user_id: user.id, keystrokes: registeredScore.keystrokes, accuracy: registeredScore.accuracy },
       });
+      if (error) {
+        showErrorToast("スコアの登録に失敗しました");
+        return;
+      } else {
+        // リザルト画面用のデータ
+        setResultScore({
+          keystrokes: registeredScore.keystrokes,
+          miss: incorrectType,
+          time: new Date(typeTimeSeconds * 1000), // TODO: マジックナンバー確認
+          wpm: (correctType / typeTimeSeconds) * 60, // TODO: マジックナンバー確認
+          accuracy: registeredScore.accuracy,
+          score: registeredScore.score,
+        });
+      }
     }
     nextPage();
   }, [startedAt, totalSeconds, correctType, incorrectType, setResultScore, nextPage]);
@@ -106,7 +110,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   useEffect(() => {
     const calcAverageTypingSpeed = (): number => {
       const timeFromStart: number = new Date().valueOf() - startedAt.valueOf();
-      const averageTypingSpeed: number = (correctType / timeFromStart) * 60000;
+      const averageTypingSpeed: number = Math.min((correctType / timeFromStart) * 60000, 300); // 300 で頭打ち
       return averageTypingSpeed;
     };
 

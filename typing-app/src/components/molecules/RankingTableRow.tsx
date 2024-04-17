@@ -1,5 +1,5 @@
 import { Td, Tr } from "@chakra-ui/react";
-import { components } from "@/libs/api/v1";
+import { components } from "@/libs/api/v0";
 
 const RankingTableRow: React.FC<components["schemas"]["ScoreRanking"]> = (scoreRanking) => {
   const accuracy = scoreRanking.score?.accuracy ?? 0;
