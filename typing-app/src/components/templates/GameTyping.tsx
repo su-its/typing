@@ -26,24 +26,15 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   const [correctType, setCorrectType] = useState(0); // 正打数
   const [incorrectType, setIncorrectType] = useState(0); // 誤打数
 
-  let audioContext = new AudioContext();
-  let audioSource = audioContext.createBufferSource();
+  const [wavFile, setWavFile] = useState("/bgm/11.mp3");
+  const audioRef = useRef(null);
   useEffect(() => {
-    let audioRequest = new XMLHttpRequest();
-    audioRequest.open("GET", "/bgm/11.mp3", true);
-    audioRequest.responseType = "arraybuffer";
-    audioRequest.send();
-    audioRequest.onload = function () {
-      audioContext.decodeAudioData(audioRequest.response, function (buf) {
-        audioSource.buffer = buf;
-        audioSource.connect(audioContext.destination);
-        audioSource.start(0);
-      });
-    };
+    audioRef.current.play();
   }, []);
 
   // スコアデータを送信する
   const sendResultData = useCallback(async () => {
+    audioRef.current.pause();
     // サーバに送信されるデータ
     const endedAt = new Date();
     const actualTypeTimeSeconds = (endedAt.valueOf() - startedAt.valueOf()) / 1000; //TODO: マジックナンバー確認
@@ -183,6 +174,9 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
 
   return (
     <Box onKeyDown={handleOnKeyDown} tabIndex={0} ref={boxRef}>
+      <audio ref={audioRef} loop>
+        <source src={wavFile} type="audio/mpeg" />
+      </audio>
       <div className={styles.box}>
         {/* TODO: Article Nameって消すんじゃなかったっけ */}
         <div className={`${styles.heading} ${styles.heading_name}`}>Article Name</div>
