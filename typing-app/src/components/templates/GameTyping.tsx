@@ -26,11 +26,21 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   const [correctType, setCorrectType] = useState(0); // 正打数
   const [incorrectType, setIncorrectType] = useState(0); // 誤打数
 
-  const [wavFile, setWavFile] = useState("/bgm/11.mp3");
+  const [audioFile, setAudioFile] = useState("");
   const audioRef = useRef(null);
   useEffect(() => {
-    audioRef.current.play();
-  }, []);
+    const random = Math.random();
+    if (random <= 0.5) {
+      setAudioFile("/bgm/10.mp3");
+    } else {
+      setAudioFile("/bgm/11.mp3");
+    }
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.load();
+      audioRef.current.play();
+    }
+  }, [audioFile]);
 
   // スコアデータを送信する
   const sendResultData = useCallback(async () => {
@@ -175,7 +185,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   return (
     <Box onKeyDown={handleOnKeyDown} tabIndex={0} ref={boxRef}>
       <audio ref={audioRef} loop>
-        <source src={wavFile} type="audio/mpeg" />
+        <source src={audioFile} type="audio/mpeg" />
       </audio>
       <div className={styles.box}>
         {/* TODO: Article Nameって消すんじゃなかったっけ */}
