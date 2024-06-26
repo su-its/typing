@@ -8,8 +8,7 @@
 
 1. リポジトリの Actions タブへ移動する
 2. 左のメニューから Deploy Containers というワークフローを選択、main ブランチで実行(Run Workflow)する
-
-<!-- put image here -->
+  ![image](https://github.com/su-its/typing/assets/61489178/5fd3fc03-b477-4183-a849-1e0ee65e9d5b)
 
 ## SSH でサーバにログインして行うデプロイ
 
@@ -32,7 +31,7 @@ git fetch origin main
 git reset --hard origin/main
 ```
 
-[`COMPOSE_PROJECT_NAME`](https://docs.docker.com/reference/cli/docker/compose/#use--p-to-specify-a-project-name) を `typing` に設定
+[`COMPOSE_PROJECT_NAME`](https://docs.docker.com/reference/cli/docker/compose/#use--p-to-specify-a-project-name) を `typing` に設定。これを設定してないとディレクトリ名 `docker_` で始まるコンテナになり、既存のボリュームとの整合性が取れない可能性があります
 
 ```bash
 export COMPOSE_PROJECT_NAME=typing
