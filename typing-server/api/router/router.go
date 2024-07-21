@@ -27,6 +27,6 @@ func SetupRouter() http.Handler {
 
 	r.Get("/scores/ranking", handler.GetScoresRanking)
 	r.Post("/scores", handler.PostScore)
-
+	r.Get("/scores/{user-id}/current-rank", handler.GetMyScoreRanking)
 	return r
 }

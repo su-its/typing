@@ -24,3 +24,24 @@ func CreateScore(ctx context.Context, client *ent.Client, userID uuid.UUID, keys
 
 	return nil
 }
+
+func GetMyScoreRanking(ctx context.Context, client *ent.Client, userID uuid.UUID, sortBy string) (int, error) {
+	// ユーザーの最大スコアを取得
+	userMaxScore, err := repository.GetMaxScoreByUserID(ctx, client, userID, sortBy)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			// ユーザーのスコアが存在しない場合は、ランキング外として0を返す
+			return 0, nil
+		}
+		return 0, err
+	}
+
+	// ユーザーの最大スコアより上位のスコアをカウント
+	rank, err := repository.CountHigherScores(ctx, client, userMaxScore, sortBy)
+	if err != nil {
+		return 0, err
+	}
+
+	// ランキングを返す
+	return rank + 1, nil
+}
