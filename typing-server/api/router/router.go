@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/cors"
@@ -11,9 +12,8 @@ import (
 func SetupRouter() http.Handler {
 	r := chi.NewRouter()
 
-	// CORSの設定
 	cors := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"}, // 許可するオリジンを指定
+		AllowedOrigins: getAllowedOrigins(),
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders: []string{"Link"},
@@ -29,4 +29,11 @@ func SetupRouter() http.Handler {
 	r.Post("/scores", handler.PostScore)
 
 	return r
+}
+
+func getAllowedOrigins() []string {
+	if os.Getenv("DEV_MODE") == "true" {
+		return []string{"http://localhost:*", "http://ty.inf.in.shizuoka.ac.jp"}
+	}
+	return []string{"http://ty.inf.in.shizuoka.ac.jp"}
 }
