@@ -34,7 +34,7 @@ export async function login(_: LoginActionState, formData: FormData): Promise<Lo
       studentNumber: data.student_number!,
     };
 
-    cookies().set("user", JSON.stringify(user), { expires, httpOnly: true });
+    (await cookies()).set("user", JSON.stringify(user), { expires, httpOnly: true });
   } catch (error) {
     return { error: "通信に失敗しました" };
   }
@@ -43,11 +43,11 @@ export async function login(_: LoginActionState, formData: FormData): Promise<Lo
 }
 
 export async function logout() {
-  cookies().set("user", "", { expires: 0 });
+  (await cookies()).set("user", "", { expires: 0 });
 }
 
 export async function getCurrentUser() {
-  const userStr = cookies().get("user")?.value;
+  const userStr = (await cookies()).get("user")?.value;
   if (!userStr) return undefined;
 
   function isValidUser(o: any): o is User {
