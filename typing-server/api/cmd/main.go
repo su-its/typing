@@ -84,7 +84,7 @@ func main() {
 		defer wg.Done() // 関数終了時にWaitGroupをデクリメント
 
 		// ルーティングの設定
-		r := router.SetupRouter()
+		r := router.SetupRouter(log)
 
 		// サーバーの設定
 		server := &http.Server{

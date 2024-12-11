@@ -1,32 +1,45 @@
 package router
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/rs/cors"
 	"github.com/su-its/typing/typing-server/api/handler"
+	"github.com/su-its/typing/typing-server/api/middleware"
 )
 
-func SetupRouter() http.Handler {
+func SetupRouter(log *slog.Logger) http.Handler {
 	r := chi.NewRouter()
 
-	// CORSの設定
-	cors := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"}, // 許可するオリジンを指定
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		ExposedHeaders: []string{"Link"},
-		MaxAge:         300, // Preflightリクエストの結果をキャッシュする時間（秒）
-	})
-	r.Use(cors.Handler)
+	// ミドルウェアの設定
+	r.Use(middleware.Trace)
+	r.Use(middleware.CORS(log))
 
-	r.Get("/health", handler.HealthCheck)
+	// ルートの設定
+	routes := []struct {
+		method  string
+		path    string
+		handler http.HandlerFunc
+	}{
+		{"GET", "/health", handler.HealthCheck},
+		{"GET", "/users", handler.GetUser},
+		{"GET", "/scores/ranking", handler.GetScoresRanking},
+		{"POST", "/scores", handler.PostScore},
+	}
 
-	r.Get("/users", handler.GetUser)
-
-	r.Get("/scores/ranking", handler.GetScoresRanking)
-	r.Post("/scores", handler.PostScore)
+	for _, route := range routes {
+		switch route.method {
+		case "GET":
+			r.Get(route.path, route.handler)
+		case "POST":
+			r.Post(route.path, route.handler)
+		}
+		log.Debug("route configured",
+			"method", route.method,
+			"path", route.path)
+	}
+	log.Info("routes configured")
 
 	return r
 }
