@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -14,58 +13,67 @@ import (
 	"github.com/su-its/typing/typing-server/api/handler"
 	"github.com/su-its/typing/typing-server/api/router"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
+	"github.com/su-its/typing/typing-server/pkg/logger"
 )
 
 func main() {
 	// ロガーの初期化
-	logger := slog.Default()
+	log := logger.New()
 
 	// タイムゾーンの設定
 	jst, err := time.LoadLocation("Asia/Tokyo")
 	if err != nil {
-		logger.Error("failed to load location: %v", err)
+		log.Error("failed to load timezone",
+			"error", err,
+			"timezone", "Asia/Tokyo")
 		return
 	}
 
-	var addr = os.Getenv("DB_ADDR")
+	// データベース接続設定の取得
+	addr := os.Getenv("DB_ADDR") // TODO: configから取得する
 	if addr == "" {
 		addr = "db:3306" // アドレス（Docker Compose内でのサービス名とポート）
+		log.Info("using default database address",
+			"addr", addr)
 	}
 
 	// MySQLの接続設定
 	mysqlConfig := &mysql.Config{
-		DBName:    "typing-db", // データベース名
-		User:      "user",      // ユーザー名
-		Passwd:    "password",  // パスワード
-		Net:       "tcp",       // ネットワークタイプ
+		DBName:    "typing-db",
+		User:      "user",
+		Passwd:    "password",
+		Net:       "tcp",
 		Addr:      addr,
-		ParseTime: true, // 時刻をtime.Timeで解析する
-		Loc:       jst,  // タイムゾーン
+		ParseTime: true,
+		Loc:       jst,
 	}
 
 	// entクライアントの初期化
 	entClient, err := ent.Open("mysql", mysqlConfig.FormatDSN())
 	if err != nil {
-		logger.Error("failed to open ent client: %v", err)
+		log.Error("failed to open database connection",
+			"error", err,
+			"config", mysqlConfig.FormatDSN())
 		return
 	}
 	defer entClient.Close()
+
 	handler.SetEntClient(entClient)
-	logger.Info("ent client is opened")
+	log.Info("database connection established")
 
 	// スキーマの作成
-	if err := entClient.Schema.Create(context.Background()); err != nil {
-		logger.Error("failed to create schema: %v", err)
+	ctx := context.Background()
+	if err := entClient.Schema.Create(ctx); err != nil {
+		log.Error("failed to create database schema",
+			"error", err)
 		return
 	}
-	logger.Info("schema is created")
+	log.Info("database schema created successfully")
 
-	// WaitGroupの宣言
+	// WaitGroupとチャネルの初期化
 	var wg sync.WaitGroup
-
 	// エラーを通知するためのチャネル
 	errChan := make(chan error, 1)
-
 	// シグナルハンドリングの準備
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
@@ -75,7 +83,6 @@ func main() {
 	go func() {
 		defer wg.Done() // 関数終了時にWaitGroupをデクリメント
 
-		// サーバーの設定
 		// ルーティングの設定
 		r := router.SetupRouter()
 
@@ -85,11 +92,13 @@ func main() {
 			Handler: r,
 		}
 
-		// 非同期でサーバーを開始
+		// 非同期でサーバーを起動
 		go func() {
-			logger.Info("server is running at Addr :8080")
+			log.Info("starting HTTP server",
+				"addr", server.Addr)
 			if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-				logger.Error("failed to listen and serve: %v", err)
+				log.Error("server failed to start",
+					"error", err)
 				errChan <- err // エラーをチャネルに送信
 			}
 		}()
@@ -97,14 +106,19 @@ func main() {
 		// エラーまたはシグナルを待機
 		select {
 		case err := <-errChan:
-			logger.Error("server stopped due to an error: %v", err)
+			log.Error("server stopped due to error",
+				"error", err)
 		case sig := <-sigChan:
-			logger.Info("received signal: %v", sig)
+			log.Info("received shutdown signal",
+				"signal", sig)
+
 			// グレースフルシャットダウン
-			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			defer cancel()
-			if err := server.Shutdown(ctx); err != nil {
-				logger.Error("error during server shutdown: %v", err)
+
+			if err := server.Shutdown(shutdownCtx); err != nil {
+				log.Error("error during server shutdown",
+					"error", err)
 				errChan <- err // エラーをチャネルに送信
 			}
 		}
@@ -112,5 +126,5 @@ func main() {
 
 	wg.Wait() // HTTPサーバーの終了を待機
 	close(errChan)
-	logger.Info("server exited")
+	log.Info("server shutdown completed")
 }
