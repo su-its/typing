@@ -428,7 +428,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/react@npm:^2.8.2":
+"@chakra-ui/react@npm:^2.10.4":
   version: 2.10.4
   resolution: "@chakra-ui/react@npm:2.10.4"
   dependencies:
@@ -564,7 +564,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/react@npm:^11.11.4":
+"@emotion/react@npm:^11.14.0":
   version: 11.14.0
   resolution: "@emotion/react@npm:11.14.0"
   dependencies:
@@ -605,7 +605,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/styled@npm:^11.11.0":
+"@emotion/styled@npm:^11.14.0":
   version: 11.14.0
   resolution: "@emotion/styled@npm:11.14.0"
   dependencies:
@@ -1511,7 +1511,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-slot@npm:1.1.0, @radix-ui/react-slot@npm:^1.0.2":
+"@radix-ui/react-slot@npm:1.1.0, @radix-ui/react-slot@npm:^1.1.0":
   version: 1.1.0
   resolution: "@radix-ui/react-slot@npm:1.1.0"
   dependencies:
@@ -1526,7 +1526,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-toast@npm:^1.1.5":
+"@radix-ui/react-toast@npm:^1.2.2":
   version: 1.2.2
   resolution: "@radix-ui/react-toast@npm:1.2.2"
   dependencies:
@@ -1702,7 +1702,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:^6.4.2":
+"@testing-library/jest-dom@npm:^6.6.3":
   version: 6.6.3
   resolution: "@testing-library/jest-dom@npm:6.6.3"
   dependencies:
@@ -1717,7 +1717,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^14.2.2":
+"@testing-library/react@npm:^14.3.1":
   version: 14.3.1
   resolution: "@testing-library/react@npm:14.3.1"
   dependencies:
@@ -1863,7 +1863,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20":
+"@types/node@npm:^20.17.10":
   version: 20.17.10
   resolution: "@types/node@npm:20.17.10"
   dependencies:
@@ -2385,7 +2385,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autoprefixer@npm:^10.0.1":
+"autoprefixer@npm:^10.4.20":
   version: 10.4.20
   resolution: "autoprefixer@npm:10.4.20"
   dependencies:
@@ -2751,7 +2751,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"class-variance-authority@npm:^0.7.0":
+"class-variance-authority@npm:^0.7.1":
   version: 0.7.1
   resolution: "class-variance-authority@npm:0.7.1"
   dependencies:
@@ -2778,7 +2778,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:^2.1.0, clsx@npm:^2.1.1":
+"clsx@npm:^2.1.1":
   version: 2.1.1
   resolution: "clsx@npm:2.1.1"
   checksum: 10c0/c4c8eb865f8c82baab07e71bfa8897c73454881c4f99d6bc81585aecd7c441746c1399d08363dc096c550cceaf97bd4ce1e8854e1771e9998d9f94c4fe075839
@@ -3698,7 +3698,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8":
+"eslint@npm:^8.57.1":
   version: 8.57.1
   resolution: "eslint@npm:8.57.1"
   dependencies:
@@ -4017,7 +4017,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^11.0.20":
+"framer-motion@npm:^11.13.5":
   version: 11.13.5
   resolution: "framer-motion@npm:11.13.5"
   dependencies:
@@ -5666,12 +5666,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^0.343.0":
-  version: 0.343.0
-  resolution: "lucide-react@npm:0.343.0"
+"lucide-react@npm:^0.468.0":
+  version: 0.468.0
+  resolution: "lucide-react@npm:0.468.0"
   peerDependencies:
-    react: ^16.5.1 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/dac188c045499b997e6562c0695ad84adbd800b434aa5f7e48f99b6e14aeda224e6f8efaee39860180dedc409c6d017d0320007667a2fedfbb62de6bd5e2d291
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
+  checksum: 10c0/da7640e4ad09d8987716e9124fd85c4a0c49b7658dbbf45db64547fc0f155f7e8b2d7f68115ada3e24012f3e1a4f209d7a87762ba4de5ca3dd753f6b68d8e622
   languageName: node
   linkType: hard
 
@@ -6197,35 +6197,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openapi-fetch@npm:0.9.3":
-  version: 0.9.3
-  resolution: "openapi-fetch@npm:0.9.3"
+"openapi-fetch@npm:0.13.3":
+  version: 0.13.3
+  resolution: "openapi-fetch@npm:0.13.3"
   dependencies:
-    openapi-typescript-helpers: "npm:^0.0.7"
-  checksum: 10c0/b74c6c8800cf889241e9c3733d54e7a20b3f79e84fcbb7a022d45f5521ba6fc141152f4d4a4c681daccbda8d6ab92e8cd02e2a165c7dd068800f2a74ebe8aff4
+    openapi-typescript-helpers: "npm:^0.0.15"
+  checksum: 10c0/4d66bcc9e3f74fac7b1df1139436f7c53623f1df3e39991eb39ee5dece34b960d3b090998e86d20dd5c14dff84f2f776d776826fc41f12be1121881905a89ef2
   languageName: node
   linkType: hard
 
-"openapi-typescript-helpers@npm:^0.0.7":
-  version: 0.0.7
-  resolution: "openapi-typescript-helpers@npm:0.0.7"
-  checksum: 10c0/06fee561e8ceee7a1aa0ff000a6a9ebbf77ffa7de40907898410c40da55dfb957ba650d5fd03f22ee68cd3781489009b5fb62b50cce967448de85e1b3d5f9ad1
+"openapi-typescript-helpers@npm:^0.0.15":
+  version: 0.0.15
+  resolution: "openapi-typescript-helpers@npm:0.0.15"
+  checksum: 10c0/5eb68d487b787e3e31266470b1a310726549dd45a1079655ab18066ab291b0b3c343fdf629991013706a2329b86964f8798d56ef0272b94b931fe6c19abd7a88
   languageName: node
   linkType: hard
 
-"openapi-typescript@npm:6.7.5":
-  version: 6.7.5
-  resolution: "openapi-typescript@npm:6.7.5"
+"openapi-typescript@npm:6.7.6":
+  version: 6.7.6
+  resolution: "openapi-typescript@npm:6.7.6"
   dependencies:
     ansi-colors: "npm:^4.1.3"
     fast-glob: "npm:^3.3.2"
     js-yaml: "npm:^4.1.0"
     supports-color: "npm:^9.4.0"
-    undici: "npm:^5.28.2"
+    undici: "npm:^5.28.4"
     yargs-parser: "npm:^21.1.1"
   bin:
     openapi-typescript: bin/cli.js
-  checksum: 10c0/d4486a1a08d40a4292389af26093fd1b5c26ea4ee8c91f2d4d3f3fb910484cf3720eacafb38699a4de11759c2f67f866466ed75ab463b04f4f9d28e6ceb3cff2
+  checksum: 10c0/43b5a64cca2a53a0adc7f8763152db67c56369f06bdb5063d0c7aa3d4d53e76f54131cdbaee7e5e30404da15784b92ae3f814389f1f71428bcaa4ffcfa1c5197
   languageName: node
   linkType: hard
 
@@ -6500,7 +6500,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8, postcss@npm:^8.4.47":
+"postcss@npm:^8.4.47, postcss@npm:^8.4.49":
   version: 8.4.49
   resolution: "postcss@npm:8.4.49"
   dependencies:
@@ -6518,7 +6518,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.2.5":
+"prettier@npm:^3.4.2":
   version: 3.4.2
   resolution: "prettier@npm:3.4.2"
   bin:
@@ -7061,7 +7061,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sharp@npm:^0.33.3, sharp@npm:^0.33.5":
+"sharp@npm:^0.33.5":
   version: 0.33.5
   resolution: "sharp@npm:0.33.5"
   dependencies:
@@ -7591,7 +7591,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwind-merge@npm:^2.2.1":
+"tailwind-merge@npm:^2.5.5":
   version: 2.5.5
   resolution: "tailwind-merge@npm:2.5.5"
   checksum: 10c0/32614dd2b4ddd4fab070d5ec569e6da00e2b34269b9ac2f2ff16733cef29a076c8e2210fbfc1904d7983a8fdb6b3e63d18ca117645f21b12ca7bcf8fe3507241
@@ -7607,7 +7607,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:^3.3.0":
+"tailwindcss@npm:^3.4.16":
   version: 3.4.16
   resolution: "tailwindcss@npm:3.4.16"
   dependencies:
@@ -7866,7 +7866,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5":
+"typescript@npm:^5.7.2":
   version: 5.7.2
   resolution: "typescript@npm:5.7.2"
   bin:
@@ -7876,7 +7876,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^5.7.2#optional!builtin<compat/typescript>":
   version: 5.7.2
   resolution: "typescript@patch:typescript@npm%3A5.7.2#optional!builtin<compat/typescript>::version=5.7.2&hash=5786d5"
   bin:
@@ -7890,40 +7890,40 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "typing-app@workspace:."
   dependencies:
-    "@chakra-ui/react": "npm:^2.8.2"
-    "@emotion/react": "npm:^11.11.4"
-    "@emotion/styled": "npm:^11.11.0"
+    "@chakra-ui/react": "npm:^2.10.4"
+    "@emotion/react": "npm:^11.14.0"
+    "@emotion/styled": "npm:^11.14.0"
     "@jest/globals": "npm:^29.7.0"
-    "@radix-ui/react-slot": "npm:^1.0.2"
-    "@radix-ui/react-toast": "npm:^1.1.5"
-    "@testing-library/jest-dom": "npm:^6.4.2"
-    "@testing-library/react": "npm:^14.2.2"
-    "@types/node": "npm:^20"
+    "@radix-ui/react-slot": "npm:^1.1.0"
+    "@radix-ui/react-toast": "npm:^1.2.2"
+    "@testing-library/jest-dom": "npm:^6.6.3"
+    "@testing-library/react": "npm:^14.3.1"
+    "@types/node": "npm:^20.17.10"
     "@types/react": "npm:19.0.1"
     "@types/react-dom": "npm:19.0.2"
-    autoprefixer: "npm:^10.0.1"
-    class-variance-authority: "npm:^0.7.0"
-    clsx: "npm:^2.1.0"
-    eslint: "npm:^8"
+    autoprefixer: "npm:^10.4.20"
+    class-variance-authority: "npm:^0.7.1"
+    clsx: "npm:^2.1.1"
+    eslint: "npm:^8.57.1"
     eslint-config-next: "npm:15.1.0"
     eslint-config-prettier: "npm:^9.1.0"
-    framer-motion: "npm:^11.0.20"
+    framer-motion: "npm:^11.13.5"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
-    lucide-react: "npm:^0.343.0"
+    lucide-react: "npm:^0.468.0"
     next: "npm:15.1.0"
-    openapi-fetch: "npm:0.9.3"
-    openapi-typescript: "npm:6.7.5"
-    postcss: "npm:^8"
-    prettier: "npm:^3.2.5"
+    openapi-fetch: "npm:0.13.3"
+    openapi-typescript: "npm:6.7.6"
+    postcss: "npm:^8.4.49"
+    prettier: "npm:^3.4.2"
     react: "npm:19.0.0"
     react-dom: "npm:19.0.0"
     server-only: "npm:^0.0.1"
-    sharp: "npm:^0.33.3"
-    tailwind-merge: "npm:^2.2.1"
-    tailwindcss: "npm:^3.3.0"
+    sharp: "npm:^0.33.5"
+    tailwind-merge: "npm:^2.5.5"
+    tailwindcss: "npm:^3.4.16"
     tailwindcss-animate: "npm:^1.0.7"
-    typescript: "npm:^5"
+    typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -7953,7 +7953,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^5.28.2":
+"undici@npm:^5.28.4":
   version: 5.28.4
   resolution: "undici@npm:5.28.4"
   dependencies:
