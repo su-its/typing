@@ -7,10 +7,14 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/su-its/typing/typing-server/api/handler"
 	"github.com/su-its/typing/typing-server/api/middleware"
+	"github.com/su-its/typing/typing-server/domain/repository/ent"
 )
 
-func SetupRouter(log *slog.Logger) http.Handler {
+func SetupRouter(log *slog.Logger, entClient *ent.Client) http.Handler {
 	r := chi.NewRouter()
+
+	// ハンドラーの初期化
+	h := handler.New(log, entClient)
 
 	// ミドルウェアの設定
 	r.Use(middleware.Trace)
@@ -22,10 +26,10 @@ func SetupRouter(log *slog.Logger) http.Handler {
 		path    string
 		handler http.HandlerFunc
 	}{
-		{"GET", "/health", handler.HealthCheck},
-		{"GET", "/users", handler.GetUser},
-		{"GET", "/scores/ranking", handler.GetScoresRanking},
-		{"POST", "/scores", handler.PostScore},
+		{"GET", "/health", h.HealthCheck},
+		{"GET", "/users", h.GetUser},
+		{"GET", "/scores/ranking", h.GetScoresRanking},
+		{"POST", "/scores", h.PostScore},
 	}
 
 	for _, route := range routes {
@@ -39,7 +43,7 @@ func SetupRouter(log *slog.Logger) http.Handler {
 			"method", route.method,
 			"path", route.path)
 	}
-	log.Info("routes configured")
 
+	log.Info("routes configured")
 	return r
 }

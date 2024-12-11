@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/su-its/typing/typing-server/api/handler"
 	"github.com/su-its/typing/typing-server/api/router"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
 	"github.com/su-its/typing/typing-server/pkg/logger"
@@ -58,7 +57,6 @@ func main() {
 	}
 	defer entClient.Close()
 
-	handler.SetEntClient(entClient)
 	log.Info("database connection established")
 
 	// スキーマの作成
@@ -84,7 +82,7 @@ func main() {
 		defer wg.Done() // 関数終了時にWaitGroupをデクリメント
 
 		// ルーティングの設定
-		r := router.SetupRouter(log)
+		r := router.SetupRouter(log, entClient)
 
 		// サーバーの設定
 		server := &http.Server{
