@@ -5,8 +5,6 @@ import (
 	"log/slog"
 	"os"
 	"time"
-
-	"github.com/su-its/typing/typing-server/api/config"
 )
 
 type TraceIDLogHandler struct {
@@ -24,9 +22,10 @@ func (h *TraceIDLogHandler) Handle(ctx context.Context, r slog.Record) error {
 	return h.Handler.Handle(ctx, r)
 }
 
-func New(config *config.Config) *slog.Logger {
+func New() *slog.Logger {
 	logLevel := new(slog.LevelVar)
-	if config.Environment == "production" {
+	// NOTE: ここだけはconfigが未定義な状態で呼び出されるので直接環境変数を参照する
+	if os.Getenv("ENVIRONMENT") == "production" {
 		logLevel.Set(slog.LevelInfo)
 	} else {
 		logLevel.Set(slog.LevelDebug)
