@@ -1,24 +1,26 @@
 package router
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/cors"
+	"github.com/su-its/typing/typing-server/api/config"
 	"github.com/su-its/typing/typing-server/api/handler"
 )
 
-func SetupRouter() http.Handler {
+func SetupRouter(config *config.Config) http.Handler {
 	r := chi.NewRouter()
 
-	// CORSの設定
 	cors := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"}, // 許可するオリジンを指定
+		AllowedOrigins: getAllowedOrigins(config.Environment),
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders: []string{"Link"},
 		MaxAge:         300, // Preflightリクエストの結果をキャッシュする時間（秒）
 	})
+	fmt.Println(getAllowedOrigins(config.Environment))
 	r.Use(cors.Handler)
 
 	r.Get("/health", handler.HealthCheck)
@@ -29,4 +31,17 @@ func SetupRouter() http.Handler {
 	r.Post("/scores", handler.PostScore)
 
 	return r
+}
+
+func getAllowedOrigins(enviroment string) []string {
+	if enviroment == "local" {
+		return []string{
+			"http://localhost:3000",
+			"http://127.0.0.1:3000",
+		}
+	}
+	return []string{
+		"http://ty.inf.in.shizuoka.ac.jp",
+		"https://ty.inf.in.shizuoka.ac.jp",
+	}
 }
