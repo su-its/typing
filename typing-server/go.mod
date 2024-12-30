@@ -16,6 +16,7 @@ require (
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.19.1 // indirect
+	github.com/joho/godotenv v1.5.1
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/rs/cors v1.10.1
 	github.com/zclconf/go-cty v1.14.2 // indirect

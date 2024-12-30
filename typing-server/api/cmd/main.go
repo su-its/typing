@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/su-its/typing/typing-server/api/config"
 	"github.com/su-its/typing/typing-server/api/handler"
 	"github.com/su-its/typing/typing-server/api/router"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
@@ -19,6 +20,7 @@ import (
 func main() {
 	// ロガーの初期化
 	logger := slog.Default()
+	config := config.New(logger)
 
 	// タイムゾーンの設定
 	jst, err := time.LoadLocation("Asia/Tokyo")
@@ -77,7 +79,7 @@ func main() {
 
 		// サーバーの設定
 		// ルーティングの設定
-		r := router.SetupRouter()
+		r := router.SetupRouter(config)
 
 		// サーバーの設定
 		server := &http.Server{
