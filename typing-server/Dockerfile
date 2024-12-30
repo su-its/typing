@@ -27,7 +27,6 @@ WORKDIR /root
 
 # ビルドしたバイナリをコピー
 COPY --from=builder /app/server .
-COPY --from=builder /app/.env .
 
 
 # アプリケーションの実行
