@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/su-its/typing/typing-server/api/config"
+	"github.com/su-its/typing/typing-server/api/handler"
 	"github.com/su-its/typing/typing-server/api/router"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
 	"github.com/su-its/typing/typing-server/pkg/logger"
@@ -17,7 +19,8 @@ import (
 
 func main() {
 	// ロガーの初期化
-	log := logger.New()
+	logger := slog.Default()
+	config := config.New(logger)
 
 	// タイムゾーンの設定
 	jst, err := time.LoadLocation("Asia/Tokyo")

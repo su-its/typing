@@ -47,3 +47,16 @@ func SetupRouter(log *slog.Logger, entClient *ent.Client) http.Handler {
 	log.Info("routes configured")
 	return r
 }
+
+func getAllowedOrigins(enviroment string) []string {
+	if enviroment == "local" {
+		return []string{
+			"http://localhost:3000",
+			"http://127.0.0.1:3000",
+		}
+	}
+	return []string{
+		"http://ty.inf.in.shizuoka.ac.jp",
+		"https://ty.inf.in.shizuoka.ac.jp",
+	}
+}
