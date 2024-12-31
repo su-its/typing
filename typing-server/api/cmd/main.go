@@ -11,7 +11,6 @@ import (
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/su-its/typing/typing-server/api/config"
-	"github.com/su-its/typing/typing-server/api/handler"
 	"github.com/su-its/typing/typing-server/api/router"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
 	"github.com/su-its/typing/typing-server/pkg/logger"
@@ -19,8 +18,8 @@ import (
 
 func main() {
 	// ロガーの初期化
-	logger := slog.Default()
-	config := config.New(logger)
+	log := logger.New()
+	config := config.New(log)
 
 	// タイムゾーンの設定
 	jst, err := time.LoadLocation("Asia/Tokyo")
@@ -31,21 +30,13 @@ func main() {
 		return
 	}
 
-	// データベース接続設定の取得
-	addr := os.Getenv("DB_ADDR") // TODO: configから取得する
-	if addr == "" {
-		addr = "db:3306" // アドレス（Docker Compose内でのサービス名とポート）
-		log.Info("using default database address",
-			"addr", addr)
-	}
-
 	// MySQLの接続設定
 	mysqlConfig := &mysql.Config{
 		DBName:    "typing-db",
 		User:      "user",
 		Passwd:    "password",
 		Net:       "tcp",
-		Addr:      addr,
+		Addr:      config.DBAddr,
 		ParseTime: true,
 		Loc:       jst,
 	}
@@ -85,7 +76,7 @@ func main() {
 		defer wg.Done() // 関数終了時にWaitGroupをデクリメント
 
 		// ルーティングの設定
-		r := router.SetupRouter(log, entClient)
+		r := router.SetupRouter(log, entClient, config)
 
 		// サーバーの設定
 		server := &http.Server{

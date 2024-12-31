@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/su-its/typing/typing-server/api/config"
 	"github.com/su-its/typing/typing-server/api/handler"
 	"github.com/su-its/typing/typing-server/api/middleware"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
 )
 
-func SetupRouter(log *slog.Logger, entClient *ent.Client) http.Handler {
+func SetupRouter(log *slog.Logger, entClient *ent.Client, config *config.Config) http.Handler {
 	r := chi.NewRouter()
 
 	// ハンドラーの初期化
@@ -18,7 +19,7 @@ func SetupRouter(log *slog.Logger, entClient *ent.Client) http.Handler {
 
 	// ミドルウェアの設定
 	r.Use(middleware.Trace)
-	r.Use(middleware.CORS(log))
+	r.Use(middleware.CORS(log, getAllowedOrigins(config.Environment)))
 
 	// ルートの設定
 	routes := []struct {
@@ -39,9 +40,6 @@ func SetupRouter(log *slog.Logger, entClient *ent.Client) http.Handler {
 		case "POST":
 			r.Post(route.path, route.handler)
 		}
-		log.Debug("route configured",
-			"method", route.method,
-			"path", route.path)
 	}
 
 	log.Info("routes configured")

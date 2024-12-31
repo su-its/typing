@@ -7,8 +7,7 @@ import (
 	"github.com/rs/cors"
 )
 
-func CORS(log *slog.Logger) func(http.Handler) http.Handler {
-	allowedOrigins := []string{"*"}
+func CORS(log *slog.Logger, allowedOrigins []string) func(http.Handler) http.Handler {
 	allowedMethods := []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	allowedHeaders := []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"}
 	exposedHeaders := []string{"Link"}
