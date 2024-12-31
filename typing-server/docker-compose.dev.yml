@@ -10,6 +10,8 @@ services:
       - ./api:/app
     environment:
       DB_ADDR: ${DB_ADDR:-db:3306}
+      DEV_MODE: true
+      ENVIRONMENT: local
     ports:
       - "8080:8080"
     networks:

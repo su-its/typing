@@ -45,9 +45,13 @@ func GetScoresRanking(ctx context.Context, client *ent.Client, request *model.Ge
 		All(ctx)
 
 	if err != nil {
-		if !ent.IsNotFound(err) {
-			return nil, err
+		if ent.IsNotFound(err) {
+			return &model.GetScoresRankingResponse{
+				Rankings:   make([]*model.ScoreRanking, 0),
+				TotalCount: 0,
+			}, nil
 		}
+		return nil, err
 	}
 
 	rankings := make([]*model.ScoreRanking, 0, len(scores))
