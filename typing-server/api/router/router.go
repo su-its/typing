@@ -1,35 +1,48 @@
 package router
 
 import (
-	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/rs/cors"
 	"github.com/su-its/typing/typing-server/api/config"
 	"github.com/su-its/typing/typing-server/api/handler"
+	"github.com/su-its/typing/typing-server/api/middleware"
+	"github.com/su-its/typing/typing-server/domain/repository/ent"
 )
 
-func SetupRouter(config *config.Config) http.Handler {
+func SetupRouter(log *slog.Logger, entClient *ent.Client, config *config.Config) http.Handler {
 	r := chi.NewRouter()
 
-	cors := cors.New(cors.Options{
-		AllowedOrigins: getAllowedOrigins(config.Environment),
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		ExposedHeaders: []string{"Link"},
-		MaxAge:         300, // Preflightリクエストの結果をキャッシュする時間（秒）
-	})
-	fmt.Println(getAllowedOrigins(config.Environment))
-	r.Use(cors.Handler)
+	// ハンドラーの初期化
+	h := handler.New(log, entClient)
 
-	r.Get("/health", handler.HealthCheck)
+	// ミドルウェアの設定
+	r.Use(middleware.Trace)
+	r.Use(middleware.CORS(log, getAllowedOrigins(config.Environment)))
 
-	r.Get("/users", handler.GetUser)
+	// ルートの設定
+	routes := []struct {
+		method  string
+		path    string
+		handler http.HandlerFunc
+	}{
+		{"GET", "/health", h.HealthCheck},
+		{"GET", "/users", h.GetUser},
+		{"GET", "/scores/ranking", h.GetScoresRanking},
+		{"POST", "/scores", h.PostScore},
+	}
 
-	r.Get("/scores/ranking", handler.GetScoresRanking)
-	r.Post("/scores", handler.PostScore)
+	for _, route := range routes {
+		switch route.method {
+		case "GET":
+			r.Get(route.path, route.handler)
+		case "POST":
+			r.Post(route.path, route.handler)
+		}
+	}
 
+	log.Info("routes configured")
 	return r
 }
 
