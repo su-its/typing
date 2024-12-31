@@ -10,70 +10,87 @@ import (
 	"github.com/su-its/typing/typing-server/domain/model"
 )
 
-func GetScoresRanking(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetScoresRanking(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
+	// クエリパラメータの取得と検証
 	sortBy := r.URL.Query().Get("sort_by")
 	if sortBy == "" {
 		sortBy = "keystrokes"
 	}
 
-	startStr := r.URL.Query().Get("start")
-	start, err := strconv.Atoi(startStr)
+	start, err := strconv.Atoi(r.URL.Query().Get("start"))
 	if err != nil {
 		start = 1
 	}
 
-	limitStr := r.URL.Query().Get("limit")
-	limit, err := strconv.Atoi(limitStr)
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
 	if err != nil {
 		limit = 10
 	}
 
+	// リクエストの構築
 	request := model.GetScoresRankingRequest{
 		SortBy: sortBy,
 		Start:  start,
 		Limit:  limit,
 	}
 
-	response, err := service.GetScoresRanking(ctx, entClient, &request)
+	// サービス呼び出し
+	response, err := service.GetScoresRanking(ctx, h.entClient, &request)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		h.log.Error("failed to get scores ranking",
+			"error", err,
+			"request", request)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
+	// レスポンス返却
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(response)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		h.log.Error("failed to encode response",
+			"error", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 }
 
-func PostScore(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) PostScore(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	// リクエストボディから値を取得
+	// リクエストのデコード
 	var requestBody struct {
 		UserID     string  `json:"user_id"`
 		Keystrokes int     `json:"keystrokes"`
 		Accuracy   float64 `json:"accuracy"`
 	}
+
 	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
+		h.log.Error("failed to decode request body",
+			"error", err)
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	// user_idをUUIDに変換
+	// UUIDの検証
 	userID, err := uuid.Parse(requestBody.UserID)
 	if err != nil {
+		h.log.Error("invalid user_id",
+			"error", err,
+			"user_id", requestBody.UserID)
 		http.Error(w, "Invalid user_id", http.StatusBadRequest)
 		return
 	}
 
-	// スコアを作成
-	if err := service.CreateScore(ctx, entClient, userID, requestBody.Keystrokes, requestBody.Accuracy); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// スコアの作成
+	if err := service.CreateScore(ctx, h.entClient, userID, requestBody.Keystrokes, requestBody.Accuracy); err != nil {
+		h.log.Error("failed to create score",
+			"error", err,
+			"user_id", userID,
+			"keystrokes", requestBody.Keystrokes,
+			"accuracy", requestBody.Accuracy)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 

@@ -9,6 +9,7 @@ import (
 
 type Config struct {
 	Environment string
+	DBAddr      string
 }
 
 func New(logger *slog.Logger) *Config {
@@ -21,7 +22,17 @@ func New(logger *slog.Logger) *Config {
 		environment = "production"
 	}
 
+	dbAddr := os.Getenv("DB_ADDR")
+	if dbAddr == "" {
+		dbAddr = "db:3306"
+	}
+
+	logger.Info("config",
+		"environment", environment,
+		"db_addr", dbAddr)
+
 	return &Config{
 		Environment: environment,
+		DBAddr:      dbAddr,
 	}
 }
