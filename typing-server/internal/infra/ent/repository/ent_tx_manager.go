@@ -3,16 +3,16 @@ package repository
 import (
 	"context"
 
-	"github.com/su-its/typing/typing-server/internal/infra/ent"
+	"github.com/su-its/typing/typing-server/internal/infra/ent/generated"
 )
 
 // EntTxManager は ent を用いた TxManager の実装
 type EntTxManager struct {
-	client *ent.Client
+	client *generated.Client
 }
 
 // NewEntTxManager は EntTxManager を作成する
-func NewEntTxManager(client *ent.Client) *EntTxManager {
+func NewEntTxManager(client *generated.Client) *EntTxManager {
 	return &EntTxManager{client: client}
 }
 

@@ -6,20 +6,20 @@ import (
 	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/internal/domain/model"
 	"github.com/su-its/typing/typing-server/internal/domain/repository"
-	"github.com/su-its/typing/typing-server/internal/infra/ent"
-	"github.com/su-its/typing/typing-server/internal/infra/ent/score"
+	"github.com/su-its/typing/typing-server/internal/infra/ent/generated"
+	"github.com/su-its/typing/typing-server/internal/infra/ent/generated/score"
 )
 
 // EntScoreRepository は ent を使用して ScoreRepository を実装する。
 type EntScoreRepository struct {
-	client *ent.Client
+	client *generated.Client
 }
 
 // コンパイル時チェック: EntScoreRepository が ScoreRepository インターフェースを実装していることを保証する。
 var _ repository.ScoreRepository = (*EntScoreRepository)(nil)
 
 // NewEntScoreRepository は EntScoreRepository のコンストラクタ。
-func NewEntScoreRepository(client *ent.Client) *EntScoreRepository {
+func NewEntScoreRepository(client *generated.Client) *EntScoreRepository {
 	return &EntScoreRepository{client: client}
 }
 
@@ -32,7 +32,7 @@ func (r *EntScoreRepository) GetScores(ctx context.Context, sortBy string, start
 				score.AccuracyGTE(0.95),
 			),
 		).
-		Order(ent.Desc(sortBy))
+		Order(generated.Desc(sortBy))
 
 	totalCount := query.CountX(ctx)
 
@@ -61,14 +61,14 @@ func (r *EntScoreRepository) GetMaxScores(ctx context.Context, userID uuid.UUID)
 	maxKeystrokeScore, err := r.client.Score.Query().
 		Where(score.UserID(userID), score.IsMaxKeystrokes(true)).
 		Only(ctx)
-	if err != nil && !ent.IsNotFound(err) {
+	if err != nil && !generated.IsNotFound(err) {
 		return nil, nil, err
 	}
 
 	maxAccuracyScore, err := r.client.Score.Query().
 		Where(score.UserID(userID), score.IsMaxAccuracy(true)).
 		Only(ctx)
-	if err != nil && !ent.IsNotFound(err) {
+	if err != nil && !generated.IsNotFound(err) {
 		return nil, nil, err
 	}
 
