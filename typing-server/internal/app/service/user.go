@@ -1,0 +1,17 @@
+package service
+
+import (
+	"context"
+
+	"github.com/su-its/typing/typing-server/internal/app/repository"
+	"github.com/su-its/typing/typing-server/internal/infra/ent"
+)
+
+func GetUserByStudentNumber(ctx context.Context, client *ent.Client, studentNumber string) (*ent.User, error) {
+	user, err := repository.GetUserByStudentNumber(ctx, client, studentNumber)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
