@@ -19,7 +19,11 @@ func SetupRouter(log *slog.Logger, entClient *ent.Client, config *config.Config)
 
 	// ミドルウェアの設定
 	r.Use(middleware.Trace)
-	r.Use(middleware.CORS(log, getAllowedOrigins(config.Environment)))
+
+	// CORSの設定
+	corsConfig := middleware.DefaultCORSConfig()
+	corsConfig.AllowedOrigins = getAllowedOrigins(config.Environment)
+	r.Use(middleware.CORSMiddleware(corsConfig))
 
 	// ルートの設定
 	routes := []struct {

@@ -1,30 +1,36 @@
 package middleware
 
 import (
-	"log/slog"
 	"net/http"
 
 	"github.com/rs/cors"
 )
 
-func CORS(log *slog.Logger, allowedOrigins []string) func(http.Handler) http.Handler {
-	allowedMethods := []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
-	allowedHeaders := []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"}
-	exposedHeaders := []string{"Link"}
-	maxAge := 300
+type CORSConfig struct {
+	AllowedOrigins []string
+	AllowedMethods []string
+	AllowedHeaders []string
+	ExposedHeaders []string
+	MaxAge         int
+}
 
+func DefaultCORSConfig() CORSConfig {
+	return CORSConfig{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders: []string{"Link"},
+		MaxAge:         300,
+	}
+}
+
+func CORSMiddleware(config CORSConfig) func(http.Handler) http.Handler {
 	corsMiddleware := cors.New(cors.Options{
-		AllowedOrigins: allowedOrigins,
-		AllowedMethods: allowedMethods,
-		AllowedHeaders: allowedHeaders,
-		ExposedHeaders: exposedHeaders,
-		MaxAge:         maxAge,
+		AllowedOrigins: config.AllowedOrigins,
+		AllowedMethods: config.AllowedMethods,
+		AllowedHeaders: config.AllowedHeaders,
+		ExposedHeaders: config.ExposedHeaders,
+		MaxAge:         config.MaxAge,
 	})
-
-	log.Info("CORS middleware configured",
-		"allowedOrigins", allowedOrigins,
-		"allowedMethods", allowedMethods,
-		"maxAge", maxAge)
-
 	return corsMiddleware.Handler
 }
