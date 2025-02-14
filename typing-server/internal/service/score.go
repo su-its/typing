@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/su-its/typing/typing-server/api/repository"
+	"github.com/su-its/typing/typing-server/internal/repository"
 	"github.com/su-its/typing/typing-server/domain/model"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
 )

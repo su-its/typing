@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/su-its/typing/typing-server/api/service"
+	"github.com/su-its/typing/typing-server/internal/service"
 )
 
 func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {

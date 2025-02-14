@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/google/uuid"
-	"github.com/su-its/typing/typing-server/api/service"
+	"github.com/su-its/typing/typing-server/internal/service"
 	"github.com/su-its/typing/typing-server/domain/model"
 )
 

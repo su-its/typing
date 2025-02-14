@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/su-its/typing/typing-server/api/config"
-	"github.com/su-its/typing/typing-server/api/handler"
-	"github.com/su-its/typing/typing-server/api/middleware"
+	"github.com/su-its/typing/typing-server/internal/config"
+	"github.com/su-its/typing/typing-server/internal/handler"
+	"github.com/su-its/typing/typing-server/internal/middleware"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
 )
 

@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/su-its/typing/typing-server/api/config"
-	"github.com/su-its/typing/typing-server/api/router"
+	"github.com/su-its/typing/typing-server/internal/config"
+	"github.com/su-its/typing/typing-server/internal/router"
 	"github.com/su-its/typing/typing-server/domain/repository/ent"
 	"github.com/su-its/typing/typing-server/pkg/logger"
 )
