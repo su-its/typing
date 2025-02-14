@@ -64,6 +64,9 @@ func main() {
 	}
 	log.Info("database schema created successfully")
 
+	// トランザクションマネージャの作成
+	txManager := repository.NewEntTxManager(entClient)
+
 	// リポジトリの作成
 	userRepo := repository.NewEntUserRepository(entClient)
 	scoreRepo := repository.NewEntScoreRepository(entClient)
@@ -73,7 +76,7 @@ func main() {
 
 	// ユースケースの作成
 	userUseCase := usecase.NewUserUseCase(userRepo)
-	scoreUseCase := usecase.NewScoreUseCase(scoreRepo, scoreService)
+	scoreUseCase := usecase.NewScoreUseCase(txManager, scoreRepo, scoreService)
 
 	// ハンドラの作成
 	healthHandler := handler.NewHealthCheckHandler()

@@ -11,13 +11,15 @@ import (
 
 // ScoreUseCase はスコア関連のユースケース
 type ScoreUseCase struct {
+	txManager    repository.TxManager
 	scoreRepo    repository.ScoreRepository
 	scoreService *service.ScoreService
 }
 
 // NewScoreUseCase は ScoreUseCase のインスタンスを生成する
-func NewScoreUseCase(scoreRepo repository.ScoreRepository, scoreService *service.ScoreService) *ScoreUseCase {
+func NewScoreUseCase(txManager repository.TxManager, scoreRepo repository.ScoreRepository, scoreService *service.ScoreService) *ScoreUseCase {
 	return &ScoreUseCase{
+		txManager:    txManager,
 		scoreRepo:    scoreRepo,
 		scoreService: scoreService,
 	}
@@ -61,5 +63,7 @@ func (uc *ScoreUseCase) RegisterScore(ctx context.Context, userID uuid.UUID, key
 	}
 
 	// DB にスコアを保存
-	return uc.scoreRepo.CreateScore(ctx, userID, keystrokes, accuracy, isMaxKeystrokes, isMaxAccuracy)
+	return uc.txManager.Execute(ctx, func(ctx context.Context) error {
+		return uc.scoreRepo.CreateScore(ctx, userID, keystrokes, accuracy, isMaxKeystrokes, isMaxAccuracy)
+	})
 }

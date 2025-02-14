@@ -94,18 +94,8 @@ func (r *EntScoreRepository) GetMaxScores(ctx context.Context, userID uuid.UUID)
 
 // CreateScore は新しいスコアを作成する
 func (r *EntScoreRepository) CreateScore(ctx context.Context, userID uuid.UUID, keystrokes int, accuracy float64, isMaxKeystrokes bool, isMaxAccuracy bool) error {
-	tx, err := r.client.Tx(ctx)
-	if err != nil {
-		return err
-	}
-	defer func() {
-		if tx != nil {
-			_ = tx.Rollback()
-		}
-	}()
-
 	// スコアを保存
-	_, err = tx.Score.Create().
+	_, err := r.client.Score.Create().
 		SetUserID(userID).
 		SetKeystrokes(keystrokes).
 		SetAccuracy(accuracy).
@@ -118,7 +108,7 @@ func (r *EntScoreRepository) CreateScore(ctx context.Context, userID uuid.UUID, 
 
 	// 以前の最大スコアのフラグを更新
 	if isMaxKeystrokes {
-		err := tx.Score.Update().
+		err := r.client.Score.Update().
 			Where(score.UserID(userID), score.IsMaxKeystrokes(true)).
 			SetIsMaxKeystrokes(false).
 			Exec(ctx)
@@ -128,7 +118,7 @@ func (r *EntScoreRepository) CreateScore(ctx context.Context, userID uuid.UUID, 
 	}
 
 	if isMaxAccuracy {
-		err := tx.Score.Update().
+		err := r.client.Score.Update().
 			Where(score.UserID(userID), score.IsMaxAccuracy(true)).
 			SetIsMaxAccuracy(false).
 			Exec(ctx)
@@ -137,5 +127,5 @@ func (r *EntScoreRepository) CreateScore(ctx context.Context, userID uuid.UUID, 
 		}
 	}
 
-	return tx.Commit()
+	return nil
 }
