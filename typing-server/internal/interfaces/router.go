@@ -1,21 +1,16 @@
-package router
+package interfaces
 
 import (
-	"log/slog"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/su-its/typing/typing-server/config"
-	"github.com/su-its/typing/typing-server/internal/app/handler"
-	"github.com/su-its/typing/typing-server/internal/infra/ent"
+	"github.com/su-its/typing/typing-server/internal/interfaces/handler"
 	"github.com/su-its/typing/typing-server/pkg/middleware"
 )
 
-func SetupRouter(log *slog.Logger, entClient *ent.Client, config *config.Config) http.Handler {
+func NewRouter(healthHandler *handler.HealthCheckHandler, userHandler *handler.UserHandler, scoreHandler *handler.ScoreHandler, config *config.Config) http.Handler {
 	r := chi.NewRouter()
-
-	// ハンドラーの初期化
-	h := handler.New(log, entClient)
 
 	// ミドルウェアの設定
 	r.Use(middleware.Trace)
@@ -31,10 +26,10 @@ func SetupRouter(log *slog.Logger, entClient *ent.Client, config *config.Config)
 		path    string
 		handler http.HandlerFunc
 	}{
-		{"GET", "/health", h.HealthCheck},
-		{"GET", "/users", h.GetUser},
-		{"GET", "/scores/ranking", h.GetScoresRanking},
-		{"POST", "/scores", h.PostScore},
+		{"GET", "/health", healthHandler.LivenessProbe},
+		{"GET", "/users", userHandler.GetUserByStudentNumber},
+		{"GET", "/scores/ranking", scoreHandler.GetScoresRanking},
+		{"POST", "/scores", scoreHandler.RegisterScore},
 	}
 
 	for _, route := range routes {
@@ -46,7 +41,6 @@ func SetupRouter(log *slog.Logger, entClient *ent.Client, config *config.Config)
 		}
 	}
 
-	log.Info("routes configured")
 	return r
 }
 

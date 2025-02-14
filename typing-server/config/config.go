@@ -1,10 +1,7 @@
 package config
 
 import (
-	"log/slog"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -12,11 +9,7 @@ type Config struct {
 	DBAddr      string
 }
 
-func New(logger *slog.Logger) *Config {
-	if err := godotenv.Load(); err != nil {
-		logger.Warn(".env file not found")
-	}
-
+func New() *Config {
 	environment := os.Getenv("ENVIRONMENT")
 	if environment == "" {
 		environment = "production"
@@ -26,10 +19,6 @@ func New(logger *slog.Logger) *Config {
 	if dbAddr == "" {
 		dbAddr = "db:3306"
 	}
-
-	logger.Info("config",
-		"environment", environment,
-		"db_addr", dbAddr)
 
 	return &Config{
 		Environment: environment,

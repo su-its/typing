@@ -3,25 +3,22 @@ package main
 import (
 	"context"
 	"net/http"
-	"os"
-	"os/signal"
-	"sync"
-	"syscall"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/su-its/typing/typing-server/config"
-	"github.com/su-its/typing/typing-server/internal/app/router"
+	"github.com/su-its/typing/typing-server/internal/domain/service"
+	"github.com/su-its/typing/typing-server/internal/domain/usecase"
 	"github.com/su-its/typing/typing-server/internal/infra/ent"
+	"github.com/su-its/typing/typing-server/internal/infra/ent/repository"
+	"github.com/su-its/typing/typing-server/internal/interfaces"
+	"github.com/su-its/typing/typing-server/internal/interfaces/handler"
 	"github.com/su-its/typing/typing-server/pkg/logger"
 )
 
 func main() {
-	// ロガーの初期化
 	log := logger.New()
-	config := config.New(log)
-
-	// タイムゾーンの設定
+	config := config.New()
 	jst, err := time.LoadLocation("Asia/Tokyo")
 	if err != nil {
 		log.Error("failed to load timezone",
@@ -29,8 +26,12 @@ func main() {
 			"timezone", "Asia/Tokyo")
 		return
 	}
+	log.Info("config",
+		"environment", config.Environment,
+		"db_addr", config.DBAddr)
+	log.Info("timezone",
+		"timezone", "Asia/Tokyo")
 
-	// MySQLの接続設定
 	mysqlConfig := &mysql.Config{
 		DBName:    "typing-db",
 		User:      "user",
@@ -40,6 +41,8 @@ func main() {
 		ParseTime: true,
 		Loc:       jst,
 	}
+	log.Info("mysql config",
+		"config", mysqlConfig.FormatDSN())
 
 	// entクライアントの初期化
 	entClient, err := ent.Open("mysql", mysqlConfig.FormatDSN())
@@ -50,7 +53,6 @@ func main() {
 		return
 	}
 	defer entClient.Close()
-
 	log.Info("database connection established")
 
 	// スキーマの作成
@@ -62,61 +64,29 @@ func main() {
 	}
 	log.Info("database schema created successfully")
 
-	// WaitGroupとチャネルの初期化
-	var wg sync.WaitGroup
-	// エラーを通知するためのチャネル
-	errChan := make(chan error, 1)
-	// シグナルハンドリングの準備
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	// リポジトリの作成
+	userRepo := repository.NewEntUserRepository(entClient)
+	scoreRepo := repository.NewEntScoreRepository(entClient)
 
-	// HTTPサーバーの非同期起動
-	wg.Add(1)
-	go func() {
-		defer wg.Done() // 関数終了時にWaitGroupをデクリメント
+	// サービスの作成
+	scoreService := service.NewScoreService(scoreRepo)
 
-		// ルーティングの設定
-		r := router.SetupRouter(log, entClient, config)
+	// ユースケースの作成
+	userUseCase := usecase.NewUserUseCase(userRepo)
+	scoreUseCase := usecase.NewScoreUseCase(scoreRepo, scoreService)
 
-		// サーバーの設定
-		server := &http.Server{
-			Addr:    ":8080",
-			Handler: r,
-		}
+	// ハンドラの作成
+	healthHandler := handler.NewHealthCheckHandler()
+	userHandler := handler.NewUserHandler(userUseCase)
+	scoreHandler := handler.NewScoreHandler(scoreUseCase)
 
-		// 非同期でサーバーを起動
-		go func() {
-			log.Info("starting HTTP server",
-				"addr", server.Addr)
-			if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-				log.Error("server failed to start",
-					"error", err)
-				errChan <- err // エラーをチャネルに送信
-			}
-		}()
+	// ルーターの作成
+	router := interfaces.NewRouter(healthHandler, userHandler, scoreHandler, config)
 
-		// エラーまたはシグナルを待機
-		select {
-		case err := <-errChan:
-			log.Error("server stopped due to error",
-				"error", err)
-		case sig := <-sigChan:
-			log.Info("received shutdown signal",
-				"signal", sig)
-
-			// グレースフルシャットダウン
-			shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-			defer cancel()
-
-			if err := server.Shutdown(shutdownCtx); err != nil {
-				log.Error("error during server shutdown",
-					"error", err)
-				errChan <- err // エラーをチャネルに送信
-			}
-		}
-	}()
-
-	wg.Wait() // HTTPサーバーの終了を待機
-	close(errChan)
-	log.Info("server shutdown completed")
+	// サーバー起動
+	log.Info("Starting server on :8080")
+	if err := http.ListenAndServe(":8080", router); err != nil {
+		log.Error("failed to start server",
+			"error", err)
+	}
 }
