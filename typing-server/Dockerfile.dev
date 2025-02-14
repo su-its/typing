@@ -11,7 +11,7 @@ COPY . .
 RUN go mod download
 
 # アプリケーションをビルド
-RUN CGO_ENABLED=0 GOOS=linux go build -v -o server ./api/cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -v -o server ./api/cmd/server/main.go
 
 # 実行イメージ
 FROM alpine:latest
