@@ -37,5 +37,7 @@ func (h *UserHandler) GetUserByStudentNumber(w http.ResponseWriter, r *http.Requ
 
 	// JSON レスポンスを返す
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
+	if err := json.NewEncoder(w).Encode(user); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+	}
 }

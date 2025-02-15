@@ -60,7 +60,9 @@ func (h *ScoreHandler) GetScoresRanking(w http.ResponseWriter, r *http.Request) 
 
 	// JSON レスポンスを返す
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(resp)
+	if err := json.NewEncoder(w).Encode(resp); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+	}
 }
 
 // RegisterScore はスコアを登録するエンドポイント
@@ -93,5 +95,7 @@ func (h *ScoreHandler) RegisterScore(w http.ResponseWriter, r *http.Request) {
 
 	// 成功時のレスポンス
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Score registered successfully"))
+	if _, err := w.Write([]byte("Score registered successfully")); err != nil {
+		http.Error(w, "Failed to write response", http.StatusInternalServerError)
+	}
 }

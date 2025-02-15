@@ -15,5 +15,7 @@ func NewHealthCheckHandler() *HealthCheckHandler {
 // LivenessProbe はアプリケーションが「生存」しているかを確認する
 func (h *HealthCheckHandler) LivenessProbe(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("OK"))
+	if _, err := w.Write([]byte("OK")); err != nil {
+		http.Error(w, "Failed to write response", http.StatusInternalServerError)
+	}
 }
