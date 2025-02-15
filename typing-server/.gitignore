@@ -1,4 +1,1 @@
-!internal/infra/ent/generated/schema
-!internal/infra/ent/generated/generate.go
-
-internal/infra/ent/generated
+internal/infra/ent/ent_generated

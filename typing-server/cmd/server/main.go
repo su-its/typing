@@ -9,7 +9,7 @@ import (
 	"github.com/su-its/typing/typing-server/config"
 	"github.com/su-its/typing/typing-server/internal/domain/service"
 	"github.com/su-its/typing/typing-server/internal/domain/usecase"
-	"github.com/su-its/typing/typing-server/internal/infra/ent/generated"
+	"github.com/su-its/typing/typing-server/internal/infra/ent/ent_generated"
 	"github.com/su-its/typing/typing-server/internal/infra/ent/repository"
 	"github.com/su-its/typing/typing-server/internal/interfaces"
 	"github.com/su-its/typing/typing-server/internal/interfaces/handler"
@@ -45,7 +45,7 @@ func main() {
 		"config", mysqlConfig.FormatDSN())
 
 	// entクライアントの初期化
-	entClient, err := generated.Open("mysql", mysqlConfig.FormatDSN())
+	entClient, err := ent_generated.Open("mysql", mysqlConfig.FormatDSN())
 	if err != nil {
 		log.Error("failed to open database connection",
 			"error", err,

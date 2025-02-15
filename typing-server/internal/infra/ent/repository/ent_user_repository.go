@@ -5,20 +5,20 @@ import (
 
 	"github.com/su-its/typing/typing-server/internal/domain/model"
 	"github.com/su-its/typing/typing-server/internal/domain/repository"
-	"github.com/su-its/typing/typing-server/internal/infra/ent/generated"
-	"github.com/su-its/typing/typing-server/internal/infra/ent/generated/user"
+	"github.com/su-its/typing/typing-server/internal/infra/ent/ent_generated"
+	"github.com/su-its/typing/typing-server/internal/infra/ent/ent_generated/user"
 )
 
 // EntUserRepository は ent を使用して UserRepository を実装する。
 type EntUserRepository struct {
-	client *generated.Client
+	client *ent_generated.Client
 }
 
 // コンパイル時チェック: EntUserRepository が UserRepository インターフェースを実装していることを保証する。
 var _ repository.UserRepository = (*EntUserRepository)(nil)
 
 // NewEntUserRepository は EntUserRepository のコンストラクタ。
-func NewEntUserRepository(client *generated.Client) *EntUserRepository {
+func NewEntUserRepository(client *ent_generated.Client) *EntUserRepository {
 	return &EntUserRepository{client: client}
 }
 
@@ -30,7 +30,7 @@ func (r *EntUserRepository) GetUserByStudentNumber(ctx context.Context, studentN
 		Where(user.StudentNumberEQ(studentNumber)).
 		Only(ctx)
 
-	if generated.IsNotFound(err) {
+	if ent_generated.IsNotFound(err) {
 		return nil, nil
 	} else if err != nil {
 		return nil, err
