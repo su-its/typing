@@ -10,8 +10,10 @@ COPY . .
 # 依存関係をインストール
 RUN go mod download
 
+RUN cd internal/infra/ent && go generate
+
 # アプリケーションをビルド
-RUN CGO_ENABLED=0 GOOS=linux go build -v -o server ./api/cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -v -o server ./cmd/server/main.go
 
 # 実行イメージ
 FROM alpine:latest
