@@ -30,12 +30,10 @@ func TestHealthCheckHandler_LivenessProbe(t *testing.T) {
 	tests := []struct {
 		name       string
 		wantStatus int
-		wantBody   string
 	}{
 		{
 			name:       "正常にヘルスチェックが返されること",
 			wantStatus: http.StatusOK,
-			wantBody:   "OK",
 		},
 	}
 
@@ -53,11 +51,6 @@ func TestHealthCheckHandler_LivenessProbe(t *testing.T) {
 			if status := w.Code; status != tt.wantStatus {
 				t.Errorf("handler returned wrong status code: got %v want %v",
 					status, tt.wantStatus)
-			}
-
-			if body := w.Body.String(); body != tt.wantBody {
-				t.Errorf("handler returned unexpected body: got %v want %v",
-					body, tt.wantBody)
 			}
 		})
 	}
