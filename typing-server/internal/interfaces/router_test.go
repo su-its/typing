@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"net/http"
+	"net/http/httptest"
 	"reflect"
 	"testing"
 
@@ -10,42 +11,87 @@ import (
 )
 
 func TestNewRouter(t *testing.T) {
-	type args struct {
-		healthHandler *handler.HealthCheckHandler
-		userHandler   *handler.UserHandler
-		scoreHandler  *handler.ScoreHandler
-		config        *config.Config
+	// テストケースのセットアップ
+	healthHandler := &handler.HealthCheckHandler{}
+	userHandler := &handler.UserHandler{}
+	scoreHandler := &handler.ScoreHandler{}
+	cfg := &config.Config{
+		Environment: "local",
 	}
-	tests := []struct {
-		name string
-		args args
-		want http.Handler
+
+	router := NewRouter(healthHandler, userHandler, scoreHandler, cfg)
+
+	// 各エンドポイントのテスト
+	testCases := []struct {
+		name           string
+		method         string
+		path           string
+		expectedStatus int
 	}{
-		// TODO: Add test cases.
+		{
+			name:           "ヘルスチェックエンドポイント",
+			method:         "GET",
+			path:           "/health",
+			expectedStatus: http.StatusOK,
+		},
+		{
+			name:           "存在しないエンドポイント",
+			method:         "GET",
+			path:           "/not-exists",
+			expectedStatus: http.StatusNotFound,
+		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := NewRouter(tt.args.healthHandler, tt.args.userHandler, tt.args.scoreHandler, tt.args.config); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewRouter() = %v, want %v", got, tt.want)
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			req := httptest.NewRequest(tc.method, tc.path, nil)
+			w := httptest.NewRecorder()
+
+			router.ServeHTTP(w, req)
+
+			if w.Code != tc.expectedStatus {
+				t.Errorf("期待したステータスコード %d, 実際のステータスコード %d", tc.expectedStatus, w.Code)
 			}
 		})
 	}
 }
 
 func Test_getAllowedOrigins(t *testing.T) {
-	type args struct {
-		enviroment string
-	}
 	tests := []struct {
-		name string
-		args args
-		want []string
+		name        string
+		environment string
+		want        []string
 	}{
-		// TODO: Add test cases.
+		{
+			name:        "ローカル環境",
+			environment: "local",
+			want: []string{
+				"http://localhost:3000",
+				"http://127.0.0.1:3000",
+			},
+		},
+		{
+			name:        "本番環境",
+			environment: "production",
+			want: []string{
+				"http://ty.inf.in.shizuoka.ac.jp",
+				"https://ty.inf.in.shizuoka.ac.jp",
+			},
+		},
+		{
+			name:        "その他の環境",
+			environment: "staging",
+			want: []string{
+				"http://ty.inf.in.shizuoka.ac.jp",
+				"https://ty.inf.in.shizuoka.ac.jp",
+			},
+		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := getAllowedOrigins(tt.args.enviroment); !reflect.DeepEqual(got, tt.want) {
+			got := getAllowedOrigins(tt.environment)
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("getAllowedOrigins() = %v, want %v", got, tt.want)
 			}
 		})

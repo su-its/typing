@@ -2,7 +2,7 @@ package handler
 
 import (
 	"net/http"
-	"reflect"
+	"net/http/httptest"
 	"testing"
 )
 
@@ -11,32 +11,54 @@ func TestNewHealthCheckHandler(t *testing.T) {
 		name string
 		want *HealthCheckHandler
 	}{
-		// TODO: Add test cases.
+		{
+			name: "正常にハンドラーが生成されること",
+			want: &HealthCheckHandler{},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewHealthCheckHandler(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewHealthCheckHandler() = %v, want %v", got, tt.want)
+			got := NewHealthCheckHandler()
+			if got == nil {
+				t.Error("NewHealthCheckHandler() returned nil")
 			}
 		})
 	}
 }
 
 func TestHealthCheckHandler_LivenessProbe(t *testing.T) {
-	type args struct {
-		w http.ResponseWriter
-		r *http.Request
-	}
 	tests := []struct {
-		name string
-		h    *HealthCheckHandler
-		args args
+		name       string
+		wantStatus int
+		wantBody   string
 	}{
-		// TODO: Add test cases.
+		{
+			name:       "正常にヘルスチェックが返されること",
+			wantStatus: http.StatusOK,
+			wantBody:   "OK",
+		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.h.LivenessProbe(tt.args.w, tt.args.r)
+			// テスト用のリクエストとレスポンスを作成
+			req := httptest.NewRequest(http.MethodGet, "/health", nil)
+			w := httptest.NewRecorder()
+
+			// ハンドラーを実行
+			h := NewHealthCheckHandler()
+			h.LivenessProbe(w, req)
+
+			// レスポンスを検証
+			if status := w.Code; status != tt.wantStatus {
+				t.Errorf("handler returned wrong status code: got %v want %v",
+					status, tt.wantStatus)
+			}
+
+			if body := w.Body.String(); body != tt.wantBody {
+				t.Errorf("handler returned unexpected body: got %v want %v",
+					body, tt.wantBody)
+			}
 		})
 	}
 }
