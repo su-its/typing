@@ -3,5 +3,5 @@ package repository
 import "errors"
 
 var (
-	ErrAlreadyExists = errors.New("student number already exists")
+	ErrAlreadyExists = errors.New("user already exists")
 )
