@@ -50,8 +50,8 @@ const RankingTabs = () => {
       direction === "prev"
         ? Math.max(rankingStartFrom - LIMIT, 1)
         : rankingStartFrom + LIMIT <= totalRankingCount
-        ? rankingStartFrom + LIMIT
-        : rankingStartFrom;
+          ? rankingStartFrom + LIMIT
+          : rankingStartFrom;
     setRankingStartFrom(newStartFrom);
   };
 
