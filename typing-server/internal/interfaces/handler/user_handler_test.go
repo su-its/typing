@@ -112,6 +112,25 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 			wantStatus: http.StatusNotFound,
 			wantBody:   "ユーザーが見つかりません\n",
 		},
+		{
+			name: "異常系: useCaseが想定外のエラーを吐いたとき",
+			h: &UserHandler{
+				userUseCase: &mockUserUseCase{
+					getUserByStudentNumber: func(ctx context.Context, studentNumber string) (*model.User, error) {
+						return nil, error.New("hoge")
+					},
+				},
+			},
+			args: args{
+				w: httptest.NewRecorder(),
+				r: httptest.NewRequest("GET", "/?student_number=k99999", nil),
+			},
+			wantStatus: http.InternalServerError,
+			wantBody:   "内部サーバーエラーが発生しました。",
+		}
+
+
+
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
