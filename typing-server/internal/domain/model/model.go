@@ -9,6 +9,7 @@ type ScoreRanking struct {
 
 type User struct {
 	ID            string    `json:"id"`
+	// NOTE: 学籍番号はユニークであるべき．
 	StudentNumber string    `json:"student_number"`
 	HandleName    string    `json:"handle_name"`
 	CreatedAt     time.Time `json:"created_at"`
@@ -18,7 +19,9 @@ type User struct {
 type Score struct {
 	ID         string    `json:"id"`
 	UserID     string    `json:"user_id"`
+	// NOTE: キーストロークは正の値
 	Keystrokes int       `json:"keystrokes"`
+	// NOTE: 正確性は0.0から1.0の範囲であるべき．
 	Accuracy   float64   `json:"accuracy"`
 	CreatedAt  time.Time `json:"created_at"`
 	User       User      `json:"user"`

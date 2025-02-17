@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"github.com/su-its/typing/typing-server/internal/domain/model"
 	"github.com/su-its/typing/typing-server/internal/domain/repository"
@@ -43,4 +44,8 @@ func (r *EntUserRepository) GetUserByStudentNumber(ctx context.Context, studentN
 		CreatedAt:     entUser.CreatedAt,
 		UpdatedAt:     entUser.UpdatedAt,
 	}, nil
+}
+
+func (r *EntUserRepository) CreateUser(ctx context.Context, studentNumber string, handleName string) (*model.User, error) {
+	return nil, errors.New("not implemented")
 }
