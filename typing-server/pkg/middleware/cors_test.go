@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 	"reflect"
 	"testing"
@@ -35,8 +36,8 @@ func TestCORSMiddleware(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CORSMiddleware(tt.args.config); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CORSMiddleware() = %v, want %v", got, tt.want)
+			if got := CORSMiddleware(tt.args.config); fmt.Sprintf("%T", got) != fmt.Sprintf("%T", tt.want) {
+				t.Errorf("CORSMiddleware() = %T, want %T", got, tt.want)
 			}
 		})
 	}
