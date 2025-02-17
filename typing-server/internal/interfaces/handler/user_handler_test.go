@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"testing"
 	"time"
+	"errors"
 
 	"net/http/httptest"
 
@@ -117,7 +118,7 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 			h: &UserHandler{
 				userUseCase: &mockUserUseCase{
 					getUserByStudentNumber: func(ctx context.Context, studentNumber string) (*model.User, error) {
-						return nil, error.New("hoge")
+						return nil, errors.New("hoge")
 					},
 				},
 			},
@@ -125,11 +126,9 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 				w: httptest.NewRecorder(),
 				r: httptest.NewRequest("GET", "/?student_number=k99999", nil),
 			},
-			wantStatus: http.InternalServerError,
-			wantBody:   "内部サーバーエラーが発生しました。",
-		}
-
-
+			wantStatus: http.StatusInternalServerError,
+			wantBody:   "内部サーバーエラーが発生しました\n",
+		},
 
 	}
 	for _, tt := range tests {
