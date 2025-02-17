@@ -4,101 +4,93 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex, Center, Box, Grid } from
 import RankingTable from "../organism/RankingTable";
 import { Pagination } from "../molecules/Pagination";
 import RefreshButton from "../atoms/RefreshButton";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { client } from "@/libs/api";
 import { components } from "@/libs/api/v0";
 import { showErrorToast } from "@/utils/toast";
 
-const ITEMS_PER_PAGE = 10;
-
-export default function RankingTabs() {
-  const [data, setData] = useState<{
-    rankings: components["schemas"]["ScoreRanking"][];
-    totalCount: number;
-  }>({
-    rankings: [],
-    totalCount: 0,
-  });
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
+const RankingTabs = () => {
+  const [scoreRankings, setScoreRankings] = useState<components["schemas"]["ScoreRanking"][]>([]);
+  const [rankingStartFrom, setRankingStartFrom] = useState(1);
   const [sortBy, setSortBy] = useState<"accuracy" | "keystrokes">("accuracy");
+  const [totalRankingCount, setTotalRankingCount] = useState<number>(0);
 
-  const fetchRankingData = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const { data: responseData } = await client.GET("/scores/ranking", {
-        params: {
-          query: {
-            sort_by: sortBy,
-            start: (currentPage - 1) * ITEMS_PER_PAGE + 1,
-            limit: ITEMS_PER_PAGE,
-          },
+  const LIMIT = 10; //TODO: Configファイルから取得
+
+  const fetchData = async () => {
+    const { data, error } = await client.GET("/scores/ranking", {
+      params: {
+        query: {
+          sort_by: sortBy,
+          start: rankingStartFrom,
+          limit: LIMIT,
         },
-      });
-
-      if (responseData) {
-        setData({
-          rankings: responseData.rankings,
-          totalCount: responseData.total_count,
-        });
-      } else {
-        throw new Error("ランキングデータの取得に失敗しました");
-      }
-    } catch (error) {
-      showErrorToast("ランキングの取得に失敗しました");
-      setData({ rankings: [], totalCount: 0 });
-    } finally {
-      setIsLoading(false);
+      },
+    });
+    if (data) {
+      setScoreRankings(data.rankings);
+      setTotalRankingCount(data.total_count);
+    } else {
+      showErrorToast(error);
     }
-  }, [sortBy, currentPage]);
+  };
 
   useEffect(() => {
-    fetchRankingData();
-  }, [fetchRankingData]);
+    fetchData();
+  }, [sortBy, rankingStartFrom]);
 
   const handleTabChange = (index: number) => {
-    setSortBy(index === 0 ? "accuracy" : "keystrokes");
-    setCurrentPage(1);
+    const sortOption = index === 0 ? "accuracy" : "keystrokes";
+    setSortBy(sortOption);
+    setRankingStartFrom(1);
   };
 
   const handlePaginationClick = (direction: "next" | "prev") => {
-    const newPage =
+    const newStartFrom =
       direction === "prev"
-        ? Math.max(currentPage - 1, 1)
-        : Math.min(currentPage + 1, Math.ceil(data.totalCount / ITEMS_PER_PAGE));
-    setCurrentPage(newPage);
+        ? Math.max(rankingStartFrom - LIMIT, 1)
+        : rankingStartFrom + LIMIT <= totalRankingCount
+        ? rankingStartFrom + LIMIT
+        : rankingStartFrom;
+    setRankingStartFrom(newStartFrom);
   };
 
   return (
     <Tabs onChange={handleTabChange} mt={6}>
-      <Flex justifyContent="center">
-        <Grid templateColumns="repeat(3, 1fr)" gap="300px">
-          <Box opacity="0" />
-          <TabList color="white">
+      <Flex justifyContent={"center"}>
+        <Grid templateColumns={"repeat(3, 1fr)"} gap={"300px"}>
+          <Box opacity={"0"}>{/* 幅を揃えるためだけの要素，視覚的な意味はなし */}</Box>
+          <TabList color={"white"}>
             <Tab _selected={{ color: "#00ace6" }}>正打率</Tab>
             <Tab _selected={{ color: "#00ace6" }}>入力文字数</Tab>
           </TabList>
-          <RefreshButton onClick={fetchRankingData} isDisabled={isLoading} />
+          <RefreshButton
+            onClick={() => {
+              setRankingStartFrom(1);
+              fetchData();
+            }}
+            isDisabled={false}
+          />
         </Grid>
       </Flex>
-
       <TabPanels>
         <TabPanel>
-          <RankingTable scoreRankings={data.rankings} />
+          <RankingTable scoreRankings={scoreRankings} />
         </TabPanel>
         <TabPanel>
-          <RankingTable scoreRankings={data.rankings} />
+          <RankingTable scoreRankings={scoreRankings} />
         </TabPanel>
       </TabPanels>
-
       <Center>
         <Pagination
           onPrev={() => handlePaginationClick("prev")}
           onNext={() => handlePaginationClick("next")}
-          isPrevDisabled={currentPage <= 1}
-          isNextDisabled={currentPage >= Math.ceil(data.totalCount / ITEMS_PER_PAGE)}
+          isPrevDisabled={rankingStartFrom <= 1}
+          isNextDisabled={rankingStartFrom + LIMIT > totalRankingCount}
         />
       </Center>
     </Tabs>
   );
-}
+};
+
+export default RankingTabs;
