@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"errors"
 
 	"github.com/su-its/typing/typing-server/internal/domain/model"
 	"github.com/su-its/typing/typing-server/internal/domain/repository"
@@ -47,5 +46,22 @@ func (r *EntUserRepository) GetUserByStudentNumber(ctx context.Context, studentN
 }
 
 func (r *EntUserRepository) CreateUser(ctx context.Context, studentNumber string, handleName string) (*model.User, error) {
-	return nil, errors.New("not implemented")
+	entUser, err := r.client.User.Create().
+		SetStudentNumber(studentNumber).
+		SetHandleName(handleName).
+		Save(ctx)
+
+	if !ent_generated.IsNotFound(err) {
+		return nil, repository.ErrAlreadyExists
+	} else if err != nil {
+		return nil, err
+	}
+
+	return &model.User{
+		ID:            entUser.ID.String(),
+		StudentNumber: entUser.StudentNumber,
+		HandleName:    entUser.HandleName,
+		CreatedAt:     entUser.CreatedAt,
+		UpdatedAt:     entUser.UpdatedAt,
+	}, nil
 }
