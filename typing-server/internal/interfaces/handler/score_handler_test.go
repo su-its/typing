@@ -12,12 +12,22 @@ func TestNewScoreHandler(t *testing.T) {
 	type args struct {
 		scoreUseCase *usecase.ScoreUseCase
 	}
+	fakeUseCase := &usecase.ScoreUseCase{}
 	tests := []struct {
 		name string
 		args args
 		want *ScoreHandler
 	}{
 		// TODO: Add test cases.
+		{
+			name: "正常系: ScoreHandlerが正しく生成される",
+			args: args{
+				scoreUseCase: fakeUseCase,
+			},
+			want: &ScoreHandler{
+				scoreUseCase: fakeUseCase,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
