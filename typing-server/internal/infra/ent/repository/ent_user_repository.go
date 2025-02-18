@@ -46,6 +46,7 @@ func (r *EntUserRepository) GetUserByStudentNumber(ctx context.Context, studentN
 }
 
 func (r *EntUserRepository) CreateUser(ctx context.Context, studentNumber string, handleName string) (*model.User, error) {
+        // TODO: トランザクション処理に対応する https://github.com/su-its/typing/issues/181
 	entUser, err := r.client.User.Create().
 		SetStudentNumber(studentNumber).
 		SetHandleName(handleName).
