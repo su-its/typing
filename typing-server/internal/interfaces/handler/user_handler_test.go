@@ -202,14 +202,12 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 		
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			//rec := httptest.NewRecorder()
-			//tt.h.GetUserByStudentNumber(rec, tt.args.r)
+		t.Run(tt.name, func(t *testing.T) {S
 			tt.h.GetUserByStudentNumber(tt.args.w, tt.args.r)
 
 			var code int
 			var body string
-			switch w := tt.args.w.(type) {
+			switch w := tt.argsS.w.(type) {
 			case *fakeResponseWriter:
 				code = w.statusCode
 				body = w.body.String()
