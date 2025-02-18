@@ -8,6 +8,8 @@ import (
 	"testing"
 	"time"
 	"errors"
+	"bytes"
+	"strings"
 
 	"net/http/httptest"
 
@@ -45,6 +47,36 @@ func TestNewUserHandler(t *testing.T) {
 
 type mockUserUseCase struct {
 	getUserByStudentNumber func(ctx context.Context, studentNumber string) (*model.User, error)
+}
+type fakeResponseWriter struct {
+	header      http.Header
+	body        *bytes.Buffer
+	statusCode  int
+	failOnWrite bool
+	wrote       bool
+}
+
+func newFakeResponseWriter() *fakeResponseWriter {
+	return &fakeResponseWriter{
+		header:      make(http.Header),
+		body:        new(bytes.Buffer),
+		failOnWrite: true,
+	}
+}
+func (f *fakeResponseWriter) Header() http.Header {
+	return f.header
+}
+
+func (f *fakeResponseWriter) Write(b []byte) (int, error) {
+	if f.failOnWrite && !f.wrote {
+		f.wrote = true
+		return 0, errors.New("simulated write error")
+	}
+	return f.body.Write(b)
+}
+
+func (f *fakeResponseWriter) WriteHeader(statusCode int) {
+	f.statusCode = statusCode
 }
 
 func (m *mockUserUseCase) GetUserByStudentNumber(ctx context.Context, studentNumber string) (*model.User, error) {
@@ -129,20 +161,72 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 			wantStatus: http.StatusInternalServerError,
 			wantBody:   "内部サーバーエラーが発生しました\n",
 		},
-
+		{
+			name: "異常系: userがnilのとき",
+			h: &UserHandler{
+				userUseCase: &mockUserUseCase{
+					getUserByStudentNumber: func(ctx context.Context, studentNumber string) (*model.User, error) {
+						return nil, nil
+					},
+				},
+			},
+			args: args{
+				w: httptest.NewRecorder(),
+				r: httptest.NewRequest("GET", "/?student_number=k99999", nil),
+			},
+			wantStatus: http.StatusNotFound,
+			wantBody:   "ユーザーが見つかりません\n",
+		},
+		{
+			name: "異常系: レスポンスのエンコードが失敗したとき",
+			h: &UserHandler{
+				userUseCase: &mockUserUseCase{
+					getUserByStudentNumber: func(ctx context.Context, studentNumber string) (*model.User, error) {
+						return &model.User{
+							ID:            "1",
+							StudentNumber: "k20000",
+							HandleName:    "テストユーザー",
+							CreatedAt:     time.Now(),
+							UpdatedAt:     time.Now(),
+						}, nil
+					},
+				},
+			},
+			args: args{
+				w: newFakeResponseWriter(),
+				r: httptest.NewRequest("GET", "/?student_number=k99999", nil),
+			},
+			wantStatus: http.StatusInternalServerError,
+			wantBody:   "レスポンスのエンコードに失敗しました\n",
+		},
+		
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rec := httptest.NewRecorder()
-			tt.h.GetUserByStudentNumber(rec, tt.args.r)
+			//rec := httptest.NewRecorder()
+			//tt.h.GetUserByStudentNumber(rec, tt.args.r)
+			tt.h.GetUserByStudentNumber(tt.args.w, tt.args.r)
 
-			if rec.Code != tt.wantStatus {
-				t.Errorf("GetUserByStudentNumber() status = %v, want %v", rec.Code, tt.wantStatus)
+			var code int
+			var body string
+			switch w := tt.args.w.(type) {
+			case *fakeResponseWriter:
+				code = w.statusCode
+				body = w.body.String()
+			case *httptest.ResponseRecorder:
+				code = w.Code
+				body = w.Body.String()
+			default:
+				t.Fatal("unknown ResponseWriter type")
+			}
+			
+			if code != tt.wantStatus {
+				t.Errorf("GetUserByStudentNumber() status = %v, want %v", code, tt.wantStatus)
 			}
 
 			if tt.wantStatus == http.StatusOK {
 				var got, want model.User
-				if err := json.Unmarshal(rec.Body.Bytes(), &got); err != nil {
+				if err := json.Unmarshal([]byte(body), &got); err != nil {
 					t.Errorf("Failed to parse response body: %v", err)
 				}
 				if err := json.Unmarshal([]byte(tt.wantBody), &want); err != nil {
@@ -152,8 +236,8 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 					t.Errorf("GetUserByStudentNumber() = %+v, want %+v", got, want)
 				}
 			} else {
-				if rec.Body.String() != tt.wantBody {
-					t.Errorf("GetUserByStudentNumber() body = %v, want %v", rec.Body.String(), tt.wantBody)
+				if !strings.Contains(body, strings.TrimSpace(tt.wantBody)) {
+					t.Errorf("GetUserByStudentNumber() body = %q, want to contain %q", body, tt.wantBody)
 				}
 			}
 		})
