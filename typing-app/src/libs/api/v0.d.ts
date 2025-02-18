@@ -91,6 +91,10 @@ export interface operations {
           "application/json": components["schemas"]["User"];
         };
       };
+      /** @description student_numberが指定されていません。 */
+      400: {
+        content: never;
+      };
       /** @description ユーザーが見つかりません。 */
       404: {
         content: never;
