@@ -51,7 +51,7 @@ func (r *EntUserRepository) CreateUser(ctx context.Context, studentNumber string
 		SetHandleName(handleName).
 		Save(ctx)
 
-	if !ent_generated.IsNotFound(err) {
+	if ent_generated.IsConstraintError(err) {
 		return nil, repository.ErrAlreadyExists
 	} else if err != nil {
 		return nil, err
