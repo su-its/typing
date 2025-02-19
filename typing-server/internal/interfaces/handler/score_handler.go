@@ -25,7 +25,7 @@ const (
 	ErrMsgInvalidStartParam		= "Invalid start parameter"
 	ErrMsgInvalidLimitParam		= "Invalid limit parameter"
 	ErrMsgFetchRanking			= "Failed to fetch ranking"
-	ErrMsgEncodeResponse		= "Failed to encode response"
+	ErrMsgScoreEncodeResponse	= "Failed to encode response"
 
 	ErrMsgInvalidReqBody		= "Invalid request body"
 	ErrMsgInvalidUserIdFormat	= "Invalid user_id format"
@@ -74,7 +74,7 @@ func (h *ScoreHandler) GetScoresRanking(w http.ResponseWriter, r *http.Request) 
 	// JSON レスポンスを返す
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		http.Error(w, ErrMsgEncodeResponse, http.StatusInternalServerError)
+		http.Error(w, ErrMsgScoreEncodeResponse, http.StatusInternalServerError)
 	}
 }
 
