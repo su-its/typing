@@ -7,6 +7,13 @@ import (
 	"github.com/su-its/typing/typing-server/internal/domain/repository"
 )
 
+type IUserUseCase interface {
+	GetUserByStudentNumber(ctx context.Context, studentNumber string) (*model.User, error)
+}
+
+// コンパイル時にインターフェースの実装を確認
+var _ IUserUseCase = (*UserUseCase)(nil)
+
 // UserUseCase はユーザー関連のユースケースを管理する
 type UserUseCase struct {
 	userRepo repository.UserRepository

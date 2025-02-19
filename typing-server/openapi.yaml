@@ -46,6 +46,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        "400":
+          description: student_numberが指定されていません。
         "404":
           description: ユーザーが見つかりません。
 

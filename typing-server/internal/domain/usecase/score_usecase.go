@@ -8,6 +8,14 @@ import (
 	"github.com/su-its/typing/typing-server/internal/domain/repository"
 	"github.com/su-its/typing/typing-server/internal/domain/service"
 )
+//モック作成のためインターフェースを実装
+type IScoreUseCase interface {
+	GetScoresRanking(ctx context.Context, request *model.GetScoresRankingRequest) (*model.GetScoresRankingResponse, error)
+    RegisterScore(ctx context.Context, userID uuid.UUID, keystrokes int, accuracy float64) error
+}
+
+// コンパイル時にインターフェースの実装を確認
+var _ IScoreUseCase = (*ScoreUseCase)(nil)
 
 // ScoreUseCase はスコア関連のユースケース
 type ScoreUseCase struct {
