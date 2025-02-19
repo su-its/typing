@@ -3,18 +3,18 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
-	"errors"
-	"bytes"
-	"strings"
 
 	"net/http/httptest"
 
 	"github.com/su-its/typing/typing-server/internal/domain/model"
 	"github.com/su-its/typing/typing-server/internal/domain/usecase"
+	"github.com/su-its/typing/typing-server/internal/testutils"
 )
 
 func TestNewUserHandler(t *testing.T) {
@@ -47,36 +47,6 @@ func TestNewUserHandler(t *testing.T) {
 
 type mockUserUseCase struct {
 	getUserByStudentNumber func(ctx context.Context, studentNumber string) (*model.User, error)
-}
-type fakeResponseWriter struct {
-	header      http.Header
-	body        *bytes.Buffer
-	statusCode  int
-	failOnWrite bool
-	wrote       bool
-}
-
-func newFakeResponseWriter() *fakeResponseWriter {
-	return &fakeResponseWriter{
-		header:      make(http.Header),
-		body:        new(bytes.Buffer),
-		failOnWrite: true,
-	}
-}
-func (f *fakeResponseWriter) Header() http.Header {
-	return f.header
-}
-
-func (f *fakeResponseWriter) Write(b []byte) (int, error) {
-	if f.failOnWrite && !f.wrote {
-		f.wrote = true
-		return 0, errors.New("simulated write error")
-	}
-	return f.body.Write(b)
-}
-
-func (f *fakeResponseWriter) WriteHeader(statusCode int) {
-	f.statusCode = statusCode
 }
 
 func (m *mockUserUseCase) GetUserByStudentNumber(ctx context.Context, studentNumber string) (*model.User, error) {
@@ -193,13 +163,12 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 				},
 			},
 			args: args{
-				w: newFakeResponseWriter(),
+				w: testutils.NewFakeResponseWriter(),
 				r: httptest.NewRequest("GET", "/?student_number=k99999", nil),
 			},
 			wantStatus: http.StatusInternalServerError,
 			wantBody:   "レスポンスのエンコードに失敗しました\n",
 		},
-		
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -208,16 +177,16 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 			var code int
 			var body string
 			switch w := tt.args.w.(type) {
-			case *fakeResponseWriter:
-				code = w.statusCode
-				body = w.body.String()
+			case *testutils.FakeResponseWriter:
+				code = w.StatusCode
+				body = w.Body.String()
 			case *httptest.ResponseRecorder:
 				code = w.Code
 				body = w.Body.String()
 			default:
 				t.Fatal("unknown ResponseWriter type")
 			}
-			
+
 			if code != tt.wantStatus {
 				t.Errorf("GetUserByStudentNumber() status = %v, want %v", code, tt.wantStatus)
 			}
