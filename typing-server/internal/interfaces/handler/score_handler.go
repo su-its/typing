@@ -31,7 +31,7 @@ const (
 	ErrMsgInvalidUserIdFormat	= "Invalid user_id format"
 	ErrMsgRegisterScore			= "Failed to register score"
 	MsgRegisteredSuccessfully	= "Score registered successfully"
-	ErrMsgWriteResponse			="Failed to write response"
+	ErrMsgWriteResponse			= "Failed to write response"
 )
 // GetScoresRanking はスコアランキングを取得するエンドポイント
 func (h *ScoreHandler) GetScoresRanking(w http.ResponseWriter, r *http.Request) {
