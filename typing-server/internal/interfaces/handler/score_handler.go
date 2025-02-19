@@ -12,11 +12,11 @@ import (
 
 // ScoreHandler はスコア関連の HTTP ハンドラ
 type ScoreHandler struct {
-	scoreUseCase *usecase.ScoreUseCase
+	scoreUseCase usecase.IScoreUseCase
 }
 
 // NewScoreHandler は ScoreHandler のインスタンスを生成する
-func NewScoreHandler(scoreUseCase *usecase.ScoreUseCase) *ScoreHandler {
+func NewScoreHandler(scoreUseCase usecase.IScoreUseCase) *ScoreHandler {
 	return &ScoreHandler{scoreUseCase: scoreUseCase}
 }
 
