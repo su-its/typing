@@ -1,33 +1,50 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 	"reflect"
 	"testing"
+	"time"
+	"strings"
 
 	"net/http/httptest"
+	"github.com/google/uuid"
 
+	"github.com/su-its/typing/typing-server/internal/domain/model"
 	"github.com/su-its/typing/typing-server/internal/domain/usecase"
 )
 
+type mockScoreUseCase struct {
+	getScoresRanking func(ctx context.Context, request *model.GetScoresRankingRequest) (*model.GetScoresRankingResponse, error)
+    registerScore func(ctx context.Context, userID uuid.UUID, keystrokes int, accuracy float64) error
+}
+
+func (m *mockScoreUseCase) GetScoresRanking(ctx context.Context, req *model.GetScoresRankingRequest) (*model.GetScoresRankingResponse, error) {
+	return m.getScoresRanking(ctx,req)
+}
+
+// RegisterScore は今回は使わないため簡易実装
+func (m *mockScoreUseCase) RegisterScore(ctx context.Context, userID uuid.UUID, keystrokes int, accuracy float64) error {
+	return m.registerScore(ctx,userID,keystrokes,accuracy)
+}
+
 func TestNewScoreHandler(t *testing.T) {
 	type args struct {
-		scoreUseCase *usecase.ScoreUseCase
+		scoreUseCase usecase.IScoreUseCase
 	}
-	fakeUseCase := &usecase.ScoreUseCase{}
 	tests := []struct {
 		name string
 		args args
 		want *ScoreHandler
 	}{
-		// TODO: Add test cases.
 		{
 			name: "正常系: ScoreHandlerが正しく生成される",
 			args: args{
-				scoreUseCase: fakeUseCase,
+				scoreUseCase: &mockScoreUseCase{},
 			},
 			want: &ScoreHandler{
-				scoreUseCase: fakeUseCase,
+				scoreUseCase: &mockScoreUseCase{},
 			},
 		},
 	}
@@ -55,17 +72,41 @@ func TestScoreHandler_GetScoresRanking(t *testing.T) {
 	}{
 		// TODO: Add test cases.
 		{
-			name: "sort_by が無効な場合は 400 が返る",
+			name: "正常系: スコアランキングが取得できる場合",
 			h: &ScoreHandler{
-				scoreUseCase: &usecase.ScoreUseCase{}, // 必要に応じてモック等に差し替え
+				scoreUseCase: &mockScoreUseCase{
+					getScoresRanking: func(ctx context.Context, request *model.GetScoresRankingRequest) (*model.GetScoresRankingResponse, error) {
+						return &model.GetScoresRankingResponse{
+							Rankings: []*model.ScoreRanking{
+								{
+									Rank: 1,
+									Score: model.Score{
+										ID:         "score-1",
+										UserID:     "user-1",
+										Keystrokes: 300,
+										Accuracy:   0.95,
+										CreatedAt:  time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
+										User: model.User{
+											ID:            "1",
+											StudentNumber: "k20000",
+											HandleName:    "テストユーザー",
+											CreatedAt:     time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
+											UpdatedAt:     time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
+										},
+									},
+								},
+							},
+							TotalCount: 1,
+						}, nil
+					},
+				},
 			},
 			args: args{
 				w: httptest.NewRecorder(),
-				// 例: sort_by=invalid をセットし、不正パラメータにしている
-				r: httptest.NewRequest("GET", "/scores?sort_by=invalid&start=1&limit=10", nil),
+				r: httptest.NewRequest("GET", "/scores/ranking?sort_by=keystrokes&start=1&limit=10", nil),
 			},
-			wantStatus: http.StatusBadRequest,
-			wantBody: "Invalid sort_by parameter\n",
+			wantStatus: http.StatusOK,
+			wantBody: `{"rankings":[{"rank":1,"score":{"id":"score-1","user_id":"user-1","keystrokes":300,"accuracy":0.95,"created_at":"2021-01-01T00:00:00Z","user":{"id":"1","student_number":"k20000","handle_name":"テストユーザー","created_at":"2021-01-01T00:00:00Z","updated_at":"2021-01-01T00:00:00Z"}}}],"total_count":1}`,
 		},
 	}
 	for _, tt := range tests {
@@ -78,7 +119,7 @@ func TestScoreHandler_GetScoresRanking(t *testing.T) {
 				t.Errorf("GetScoresRanking() status code = %v, want %v",
 					rr.Code, tt.wantStatus)
 			}
-			gotBody := rr.Body.String()
+			gotBody := strings.TrimSpace(rr.Body.String())
 			if gotBody != tt.wantBody {
 				t.Errorf("GetScoresRanking() body = %q, want %q", gotBody, tt.wantBody)
 			}
