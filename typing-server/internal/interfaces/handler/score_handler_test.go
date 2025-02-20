@@ -75,9 +75,8 @@ func TestScoreHandler_GetScoresRanking(t *testing.T) {
 		wantStatus int
 		wantBody   string
 	}{
-		// TODO: Add test cases.
 		{
-			name: "正常系: スコアランキングが取得できる場合",
+			name: "正常系: スコアランキングが取得できる場合(keystrokes)",
 			h: &ScoreHandler{
 				scoreUseCase: &mockScoreUseCase{
 					getScoresRanking: func(ctx context.Context, request *model.GetScoresRankingRequest) (*model.GetScoresRankingResponse, error) {
@@ -109,6 +108,43 @@ func TestScoreHandler_GetScoresRanking(t *testing.T) {
 			args: args{
 				w: httptest.NewRecorder(),
 				r: httptest.NewRequest("GET", "/scores/ranking?sort_by=keystrokes&start=1&limit=10", nil),
+			},
+			wantStatus: http.StatusOK,
+			wantBody:   `{"rankings":[{"rank":1,"score":{"id":"score-1","user_id":"user-1","keystrokes":300,"accuracy":0.95,"created_at":"2021-01-01T00:00:00Z","user":{"id":"1","student_number":"k20000","handle_name":"テストユーザー","created_at":"2021-01-01T00:00:00Z","updated_at":"2021-01-01T00:00:00Z"}}}],"total_count":1}`,
+		},
+		{
+			name: "正常系: スコアランキングが取得できる場合(accuracy)",
+			h: &ScoreHandler{
+				scoreUseCase: &mockScoreUseCase{
+					getScoresRanking: func(ctx context.Context, request *model.GetScoresRankingRequest) (*model.GetScoresRankingResponse, error) {
+						return &model.GetScoresRankingResponse{
+							Rankings: []*model.ScoreRanking{
+								{
+									Rank: 1,
+									Score: model.Score{
+										ID:         "score-1",
+										UserID:     "user-1",
+										Keystrokes: 300,
+										Accuracy:   0.95,
+										CreatedAt:  time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
+										User: model.User{
+											ID:            "1",
+											StudentNumber: "k20000",
+											HandleName:    "テストユーザー",
+											CreatedAt:     time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
+											UpdatedAt:     time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
+										},
+									},
+								},
+							},
+							TotalCount: 1,
+						}, nil
+					},
+				},
+			},
+			args: args{
+				w: httptest.NewRecorder(),
+				r: httptest.NewRequest("GET", "/scores/ranking?sort_by=accuracy&start=1&limit=10", nil),
 			},
 			wantStatus: http.StatusOK,
 			wantBody:   `{"rankings":[{"rank":1,"score":{"id":"score-1","user_id":"user-1","keystrokes":300,"accuracy":0.95,"created_at":"2021-01-01T00:00:00Z","user":{"id":"1","student_number":"k20000","handle_name":"テストユーザー","created_at":"2021-01-01T00:00:00Z","updated_at":"2021-01-01T00:00:00Z"}}}],"total_count":1}`,
