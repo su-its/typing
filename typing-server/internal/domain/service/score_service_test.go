@@ -166,11 +166,83 @@ func TestScoreService_ComputeRanking(t *testing.T) {
 		want []*model.ScoreRanking
 	}{
 		// TODO: Add test cases.
+		{
+			name: "正常系: keystrokes で降順ソート、 start=1",
+			s:    &ScoreService{},
+			args: args{
+				scores: []*model.Score{
+					{
+						ID:         "s1",
+						Keystrokes: 200,
+						Accuracy:   0.90,
+					},
+					{
+						ID:         "s2",
+						Keystrokes: 300,
+						Accuracy:   0.85,
+					},
+					{
+						ID:         "s3",
+						Keystrokes: 100,
+						Accuracy:   0.95,
+					},
+				},
+				sortBy: "keystrokes",
+				start:  1,
+			},
+			want: []*model.ScoreRanking{
+				// s2: keystrokes=300
+				{Rank: 1, Score: model.Score{ID: "s2", Keystrokes: 300, Accuracy: 0.85}},
+				// s1: keystrokes=200
+				{Rank: 2, Score: model.Score{ID: "s1", Keystrokes: 200, Accuracy: 0.90}},
+				// s3: keystrokes=100
+				{Rank: 3, Score: model.Score{ID: "s3", Keystrokes: 100, Accuracy: 0.95}},
+			},
+		},
+		{
+			name: "正常系: accuracy で降順ソート、 start=1, 重複accuracyあり",
+			s:    &ScoreService{},
+			args: args{
+				scores: []*model.Score{
+					{
+						ID:         "s1",
+						Keystrokes: 200,
+						Accuracy:   0.90,
+					},
+					{
+						ID:         "s2",
+						Keystrokes: 500,
+						Accuracy:   0.90, // s1 と同じ accuracy
+					},
+					{
+						ID:         "s3",
+						Keystrokes: 100,
+						Accuracy:   0.95,
+					},
+				},
+				sortBy: "accuracy",
+				start:  1,
+			},
+			want: []*model.ScoreRanking{
+				// s3: accuracy=0.95
+				{Rank: 1, Score: model.Score{ID: "s3", Keystrokes: 100, Accuracy: 0.95}},
+				// s1: accuracy=0.90 (上から2番目)
+				{Rank: 2, Score: model.Score{ID: "s1", Keystrokes: 200, Accuracy: 0.90}},
+				// s2: accuracy=0.90 (上と同じ accuracy => 現状の実装ではスコアが同じでも rank を別にしているので rank=3)
+				{Rank: 2, Score: model.Score{ID: "s2", Keystrokes: 500, Accuracy: 0.90}},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.s.ComputeRanking(tt.args.scores, tt.args.sortBy, tt.args.start); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ScoreService.ComputeRanking() = %v, want %v", got, tt.want)
+				t.Errorf("ScoreService.ComputeRanking() = %+v, want %+v", got, tt.want)
+				for i := range got {
+					t.Logf("got[%d] = %+v", i, got[i])
+				}
+				for i := range tt.want {
+					t.Logf("want[%d] = %+v", i, tt.want[i])
+				}
 			}
 		})
 	}
