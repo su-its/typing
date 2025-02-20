@@ -10,6 +10,24 @@ import (
 	"github.com/su-its/typing/typing-server/internal/domain/repository"
 )
 
+type mockScoreRepository struct {
+	getScores    func(ctx context.Context, sortBy string, start int, limit int) ([]*model.Score, int, error)
+	getMaxScores func(ctx context.Context, userID uuid.UUID) (*model.Score, *model.Score, error)
+	createScore  func(ctx context.Context, userID uuid.UUID, keystrokes int, accuracy float64, isMaxKeystrokes bool, isMaxAccuracy bool) error
+}
+
+func (m *mockScoreRepository) GetScores(ctx context.Context, sortBy string, start int, limit int) ([]*model.Score, int, error) {
+	return m.getScores(ctx, sortBy, start, limit)
+}
+
+func (m *mockScoreRepository) GetMaxScores(ctx context.Context, userID uuid.UUID) (*model.Score, *model.Score, error) {
+	return m.getMaxScores(ctx, userID)
+}
+
+func (m *mockScoreRepository) CreateScore(ctx context.Context, userID uuid.UUID, keystrokes int, accuracy float64, isMaxKeystrokes bool, isMaxAccuracy bool) error {
+	return m.createScore(ctx, userID, keystrokes, accuracy, isMaxKeystrokes, isMaxAccuracy)
+}
+
 func TestNewScoreService(t *testing.T) {
 	type args struct {
 		scoreRepo repository.ScoreRepository
@@ -20,6 +38,15 @@ func TestNewScoreService(t *testing.T) {
 		want *ScoreService
 	}{
 		// TODO: Add test cases.
+		{
+			name: "正常系: インスタンスが正しく生成される",
+			args: args{
+				scoreRepo: &mockScoreRepository{},
+			},
+			want: &ScoreService{
+				scoreRepo: &mockScoreRepository{},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
