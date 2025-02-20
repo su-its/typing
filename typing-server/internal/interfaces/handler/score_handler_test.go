@@ -29,7 +29,6 @@ func (m *mockScoreUseCase) GetScoresRanking(ctx context.Context, req *model.GetS
 	return m.getScoresRanking(ctx, req)
 }
 
-// RegisterScore は今回は使わないため簡易実装
 func (m *mockScoreUseCase) RegisterScore(ctx context.Context, userID uuid.UUID, keystrokes int, accuracy float64) error {
 	return m.registerScore(ctx, userID, keystrokes, accuracy)
 }
