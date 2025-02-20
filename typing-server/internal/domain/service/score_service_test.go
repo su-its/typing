@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/google/uuid"
@@ -37,7 +38,6 @@ func TestNewScoreService(t *testing.T) {
 		args args
 		want *ScoreService
 	}{
-		// TODO: Add test cases.
 		{
 			name: "正常系: インスタンスが正しく生成される",
 			args: args{
@@ -64,17 +64,90 @@ func TestScoreService_ValidateScore(t *testing.T) {
 		accuracy   float64
 	}
 	tests := []struct {
-		name    string
-		s       *ScoreService
-		args    args
-		wantErr bool
+		name       string
+		s          *ScoreService
+		args       args
+		wantErr    bool
+		wantErrMsg string
 	}{
-		// TODO: Add test cases.
+		{
+			name: "正常系: 正しいパラメータの場合",
+			s: &ScoreService{
+				scoreRepo: &mockScoreRepository{},
+			},
+			args: args{
+				userID:     uuid.New(),
+				keystrokes: 100,
+				accuracy:   0.5,
+			},
+			wantErr: false,
+		},
+		{
+			name: "異常系: keystrokes が負の場合",
+			s: &ScoreService{
+				scoreRepo: &mockScoreRepository{},
+			},
+			args: args{
+				userID:     uuid.New(),
+				keystrokes: -10,
+				accuracy:   0.5,
+			},
+			wantErr:    true,
+			wantErrMsg: "keystrokes must be non-negative",
+		},
+		{
+			name: "異常系: accuracy が 0未満の場合",
+			s: &ScoreService{
+				scoreRepo: &mockScoreRepository{},
+			},
+			args: args{
+				userID:     uuid.New(),
+				keystrokes: 100,
+				accuracy:   -0.1,
+			},
+			wantErr: true,
+		},
+		{
+			name: "異常系: accuracy が 1 を超える場合",
+			s: &ScoreService{
+				scoreRepo: &mockScoreRepository{},
+			},
+			args: args{
+				userID:     uuid.New(),
+				keystrokes: 100,
+				accuracy:   1.1,
+			},
+			wantErr:    true,
+			wantErrMsg: "accuracy must be between 0 and 1",
+		},
+		{
+			name: "異常系: userID が uuid.Nilの場合",
+			s: &ScoreService{
+				scoreRepo: &mockScoreRepository{},
+			},
+			args: args{
+				userID:     uuid.Nil,
+				keystrokes: 100,
+				accuracy:   0.5,
+			},
+			wantErr:    true,
+			wantErrMsg: "invalid user ID\n",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := tt.s.ValidateScore(tt.args.userID, tt.args.keystrokes, tt.args.accuracy); (err != nil) != tt.wantErr {
-				t.Errorf("ScoreService.ValidateScore() error = %v, wantErr %v", err, tt.wantErr)
+			err := tt.s.ValidateScore(tt.args.userID, tt.args.keystrokes, tt.args.accuracy)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ValidateScore() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if tt.wantErrMsg != "" {
+				if err == nil {
+					t.Fatalf("expected error %q, but got nil", tt.wantErrMsg)
+				}
+
+				if !strings.Contains(err.Error(), strings.TrimSpace(tt.wantErrMsg)) {
+					t.Errorf("expected error message %q, but got %q", tt.wantErrMsg, err.Error())
+				}
 			}
 		})
 	}
