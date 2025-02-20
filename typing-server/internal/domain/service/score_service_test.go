@@ -219,6 +219,11 @@ func TestScoreService_ComputeRanking(t *testing.T) {
 						Keystrokes: 100,
 						Accuracy:   0.95,
 					},
+					{
+						ID:         "s4",
+						Keystrokes: 300,
+						Accuracy:   0.85,
+					},
 				},
 				sortBy: "accuracy",
 				start:  1,
@@ -228,8 +233,10 @@ func TestScoreService_ComputeRanking(t *testing.T) {
 				{Rank: 1, Score: model.Score{ID: "s3", Keystrokes: 100, Accuracy: 0.95}},
 				// s1: accuracy=0.90 (上から2番目)
 				{Rank: 2, Score: model.Score{ID: "s1", Keystrokes: 200, Accuracy: 0.90}},
-				// s2: accuracy=0.90 (上と同じ accuracy => 現状の実装ではスコアが同じでも rank を別にしているので rank=3)
+				// s2: accuracy=0.90 (上から2番目)
 				{Rank: 2, Score: model.Score{ID: "s2", Keystrokes: 500, Accuracy: 0.90}},
+				//rank2で重複があったためrank4になる
+				{Rank: 4, Score: model.Score{ID: "s4", Keystrokes: 300, Accuracy: 0.85}},
 			},
 		},
 	}
