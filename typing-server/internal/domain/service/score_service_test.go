@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"reflect"
 	"strings"
 	"testing"
@@ -165,9 +166,8 @@ func TestScoreService_ComputeRanking(t *testing.T) {
 		args args
 		want []*model.ScoreRanking
 	}{
-		// TODO: Add test cases.
 		{
-			name: "正常系: keystrokes で降順ソート、 start=1",
+			name: "正常系: keystrokes で降順ソート、 start=1の場合",
 			s:    &ScoreService{},
 			args: args{
 				scores: []*model.Score{
@@ -200,7 +200,7 @@ func TestScoreService_ComputeRanking(t *testing.T) {
 			},
 		},
 		{
-			name: "正常系: accuracy で降順ソート、 start=1, 重複accuracyあり",
+			name: "正常系: accuracy で降順ソート、 start=1, 重複accuracyありの場合",
 			s:    &ScoreService{},
 			args: args{
 				scores: []*model.Score{
@@ -262,7 +262,118 @@ func TestScoreService_ShouldUpdateMaxScore(t *testing.T) {
 		want1   bool
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "正常系: GetMaxScores が nil を返す場合",
+			s: &ScoreService{
+				scoreRepo: &mockScoreRepository{
+					getMaxScores: func(ctx context.Context, userID uuid.UUID) (*model.Score, *model.Score, error) {
+						// まだ最大スコアが登録されていない状態
+						return nil, nil, nil
+					},
+				},
+			},
+			args: args{
+				ctx:    context.Background(),
+				userID: uuid.New(),
+				newScore: &model.Score{
+					Keystrokes: 100,
+					Accuracy:   0.8,
+				},
+			},
+			want:    true, // isMaxKeystrokes
+			want1:   true, // isMaxAccuracy
+			wantErr: false,
+		},
+		{
+			name: "正常系: 新しいスコアが既存より keystrokes だけ大きい場合",
+			s: &ScoreService{
+				scoreRepo: &mockScoreRepository{
+					getMaxScores: func(ctx context.Context, userID uuid.UUID) (*model.Score, *model.Score, error) {
+						return &model.Score{Keystrokes: 90, Accuracy: 0.8}, // maxKeystrokeScore
+							&model.Score{Keystrokes: 50, Accuracy: 0.9}, // maxAccuracyScore
+							nil
+					},
+				},
+			},
+			args: args{
+				ctx:    context.Background(),
+				userID: uuid.New(),
+				newScore: &model.Score{
+					Keystrokes: 100,
+					Accuracy:   0.8, // 既存 =0.9 より低い
+				},
+			},
+			want:    true,
+			want1:   false,
+			wantErr: false,
+		},
+		{
+			name: "正常系: 新しいスコアが既存より accuracy だけ高い場合",
+			s: &ScoreService{
+				scoreRepo: &mockScoreRepository{
+					getMaxScores: func(ctx context.Context, userID uuid.UUID) (*model.Score, *model.Score, error) {
+						return &model.Score{Keystrokes: 200, Accuracy: 0.7},
+							&model.Score{Keystrokes: 100, Accuracy: 0.8},
+							nil
+					},
+				},
+			},
+			args: args{
+				ctx:    context.Background(),
+				userID: uuid.New(),
+				newScore: &model.Score{
+					Keystrokes: 150, // 既存 200 より低い
+					Accuracy:   0.85,
+				},
+			},
+			want:    false,
+			want1:   true,
+			wantErr: false,
+		},
+		{
+			name: "正常系: どちらも既存より高い場合",
+			s: &ScoreService{
+				scoreRepo: &mockScoreRepository{
+					getMaxScores: func(ctx context.Context, userID uuid.UUID) (*model.Score, *model.Score, error) {
+						return &model.Score{Keystrokes: 200, Accuracy: 0.8},
+							&model.Score{Keystrokes: 150, Accuracy: 0.85},
+							nil
+					},
+				},
+			},
+			args: args{
+				ctx:    context.Background(),
+				userID: uuid.New(),
+				newScore: &model.Score{
+					Keystrokes: 300,
+					Accuracy:   0.9,
+				},
+			},
+			want:    true,
+			want1:   true,
+			wantErr: false,
+		},
+		{
+			name: "異常系: リポジトリがエラーを返す場合",
+			s: &ScoreService{
+				scoreRepo: &mockScoreRepository{
+					getMaxScores: func(ctx context.Context, userID uuid.UUID) (*model.Score, *model.Score, error) {
+						return nil, nil, errors.New("db error")
+					},
+				},
+			},
+			args: args{
+				ctx:    context.Background(),
+				userID: uuid.New(),
+				newScore: &model.Score{
+					Keystrokes: 300,
+					Accuracy:   0.9,
+				},
+			},
+			want:    false,
+			want1:   false,
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
