@@ -21,18 +21,19 @@ func NewScoreHandler(scoreUseCase usecase.IScoreUseCase) *ScoreHandler {
 }
 
 const (
-	ErrMsgInvalidSortbyParam	= "Invalid sort_by parameter"
-	ErrMsgInvalidStartParam		= "Invalid start parameter"
-	ErrMsgInvalidLimitParam		= "Invalid limit parameter"
-	ErrMsgFetchRanking			= "Failed to fetch ranking"
-	ErrMsgScoreEncodeResponse	= "Failed to encode response"
+	ErrMsgInvalidSortbyParam  = "Invalid sort_by parameter"
+	ErrMsgInvalidStartParam   = "Invalid start parameter"
+	ErrMsgInvalidLimitParam   = "Invalid limit parameter"
+	ErrMsgFetchRanking        = "Failed to fetch ranking"
+	ErrMsgScoreEncodeResponse = "Failed to encode response"
 
-	ErrMsgInvalidReqBody		= "Invalid request body"
-	ErrMsgInvalidUserIdFormat	= "Invalid user_id format"
-	ErrMsgRegisterScore			= "Failed to register score"
-	MsgRegisteredSuccessfully	= "Score registered successfully"
-	ErrMsgWriteResponse			= "Failed to write response"
+	ErrMsgInvalidReqBody      = "Invalid request body"
+	ErrMsgInvalidUserIdFormat = "Invalid user_id format"
+	ErrMsgRegisterScore       = "Failed to register score"
+	MsgRegisteredSuccessfully = "Score registered successfully"
+	ErrMsgWriteResponse       = "Failed to write response"
 )
+
 // GetScoresRanking はスコアランキングを取得するエンドポイント
 func (h *ScoreHandler) GetScoresRanking(w http.ResponseWriter, r *http.Request) {
 	// クエリパラメータを取得

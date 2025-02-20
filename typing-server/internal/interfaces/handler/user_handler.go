@@ -22,9 +22,9 @@ func NewUserHandler(userUseCase usecase.IUserUseCase) *UserHandler {
 
 const (
 	ErrMsgStudentNumberRequired = "student_numberが指定されていません"
-	ErrMsgUserNotFound         = "ユーザーが見つかりません"
-	ErrMsgInternalServer       = "内部サーバーエラーが発生しました"
-	ErrMsgEncodeResponse       = "レスポンスのエンコードに失敗しました"
+	ErrMsgUserNotFound          = "ユーザーが見つかりません"
+	ErrMsgInternalServer        = "内部サーバーエラーが発生しました"
+	ErrMsgEncodeResponse        = "レスポンスのエンコードに失敗しました"
 )
 
 // GetUserByStudentNumber は学籍番号をクエリパラメータとして受け取り、該当するユーザー情報を取得する
