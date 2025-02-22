@@ -1,0 +1,6 @@
+@use "../color.scss";
+
+.header {
+  height: 70px;
+  background-color: color.$bluegray-800;
+}
