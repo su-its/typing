@@ -1,0 +1,7 @@
+@use "../color.scss";
+
+.footer {
+  .brand-text {
+    background-color: color.$blue-800;
+  }
+}
