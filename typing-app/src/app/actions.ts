@@ -9,7 +9,10 @@ type LoginActionState = {
 };
 
 export async function login(_: LoginActionState, formData: FormData): Promise<LoginActionState> {
-  const studentNumber = formData.get("student-number")!.toString();
+  const studentNumber = formData.get("student-number")?.toString();
+  if (!studentNumber) {
+    return { error: "学籍番号を入力してください" };
+  }
 
   try {
     const { data, error } = await client.GET("/users", {
@@ -26,15 +29,22 @@ export async function login(_: LoginActionState, formData: FormData): Promise<Lo
       return { error: "もう一度お試しください" };
     }
 
+    if (!data) {
+      return { error: "ユーザー情報を取得できませんでした" };
+    }
+
     const expires = new Date(Date.now() + 3 * 60 * 60 * 1000);
 
     const user: User = {
-      id: data.id!,
-      handleName: data.handle_name!,
-      studentNumber: data.student_number!,
+      id: data.id,
+      handleName: data.handle_name,
+      studentNumber: data.student_number,
     };
 
-    (await cookies()).set("user", JSON.stringify(user), { expires, httpOnly: true });
+    (await cookies()).set("user", JSON.stringify(user), {
+      expires,
+      httpOnly: true,
+    });
   } catch (error) {
     return { error: "通信に失敗しました" };
   }
@@ -50,8 +60,17 @@ export async function getCurrentUser() {
   const userStr = (await cookies()).get("user")?.value;
   if (!userStr) return undefined;
 
-  function isValidUser(o: any): o is User {
-    return o && typeof o.id === "string" && typeof o.studentNumber === "string" && typeof o.handleName == "string";
+  function isValidUser(o: unknown): o is User {
+    return (
+      typeof o === "object" &&
+      o !== null &&
+      "id" in o &&
+      "studentNumber" in o &&
+      "handleName" in o &&
+      typeof (o as User).id === "string" &&
+      typeof (o as User).studentNumber === "string" &&
+      typeof (o as User).handleName === "string"
+    );
   }
 
   const user = JSON.parse(userStr) as User;
