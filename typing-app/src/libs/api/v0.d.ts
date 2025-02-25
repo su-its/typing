@@ -23,7 +23,7 @@ export interface paths {
   };
   "/scores/{user-id}/current-rank": {
     /** ユーザーの現在の順位を取得 */
-    get: operations["getMyscoreRanking"];
+    get: operations["getUserCurrentRank"];
   };
 }
 
@@ -32,26 +32,28 @@ export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
     User: {
-      id?: string;
-      student_number?: string;
-      handle_name?: string;
+      id: string;
+      student_number: string;
+      handle_name: string;
       /** Format: date-time */
-      created_at?: string;
+      created_at: string;
       /** Format: date-time */
-      updated_at?: string;
+      updated_at: string;
     };
     Score: {
-      id?: string;
-      keystrokes?: number;
+      id: string;
+      /** Format: uuid */
+      user_id: string;
+      keystrokes: number;
       /** Format: float */
-      accuracy?: number;
+      accuracy: number;
       /** Format: date-time */
-      created_at?: string;
-      user?: components["schemas"]["User"];
+      created_at: string;
+      user: components["schemas"]["User"];
     };
     ScoreRanking: {
-      rank?: number;
-      score?: components["schemas"]["Score"];
+      rank: number;
+      score: components["schemas"]["Score"];
     };
   };
   responses: never;
@@ -93,24 +95,34 @@ export interface operations {
       };
       /** @description student_numberが指定されていません。 */
       400: {
-        content: never;
+        content: {
+          "text/plain": string;
+        };
       };
       /** @description ユーザーが見つかりません。 */
       404: {
-        content: never;
+        content: {
+          "text/plain": string;
+        };
+      };
+      /** @description サーバー内部エラーが発生しました。 */
+      500: {
+        content: {
+          "text/plain": "内部サーバーエラーが発生しました" | "レスポンスのエンコードに失敗しました";
+        };
       };
     };
   };
   /** スコアランキングを取得 */
   getScoresRanking: {
     parameters: {
-      query?: {
+      query: {
         /** @description ソート対象のカラム */
-        sort_by?: "keystrokes" | "accuracy";
+        sort_by: "keystrokes" | "accuracy";
         /** @description ランキングの開始位置(x位 | x>0) */
-        start?: number;
+        start: number;
         /** @description ランキングの取得件数 */
-        limit?: number;
+        limit: number;
       };
     };
     responses: {
@@ -126,7 +138,9 @@ export interface operations {
       };
       /** @description 不正なリクエストです。 */
       400: {
-        content: never;
+        content: {
+          "text/plain": "不正なソート対象のカラムです" | "不正なランキングの開始位置です" | "不正なランキングの取得件数です";
+        };
       };
     };
   };
@@ -153,16 +167,26 @@ export interface operations {
     responses: {
       /** @description スコアが正常に登録されました。 */
       201: {
-        content: never;
+        content: {
+          "text/plain": string;
+        };
       };
       /** @description 不正なリクエストです。 */
       400: {
-        content: never;
+        content: {
+          "text/plain": "不正なリクエストです" | "不正なユーザーIDです";
+        };
+      };
+      /** @description サーバー内部エラーが発生しました。 */
+      500: {
+        content: {
+          "text/plain": "スコアの登録に失敗しました" | "レスポンスの書き込みに失敗しました";
+        };
       };
     };
   };
   /** ユーザーの現在の順位を取得 */
-  getMyscoreRanking: {
+  getUserCurrentRank: {
     parameters: {
       path: {
         /** @description ユーザーID */
@@ -175,17 +199,29 @@ export interface operations {
         content: {
           "application/json": {
             /** @description ユーザーの現在の順位 */
-            "current-rank": number;
+            current_rank: number;
+            /** @description 全ユーザー数 */
+            total_users: number;
           };
+        };
+      };
+      /** @description ユーザーIDが不正です。 */
+      400: {
+        content: {
+          "text/plain": string;
         };
       };
       /** @description ユーザーが見つかりません。 */
       404: {
-        content: never;
+        content: {
+          "text/plain": string;
+        };
       };
       /** @description サーバーエラーが発生しました。 */
       500: {
-        content: never;
+        content: {
+          "text/plain": string;
+        };
       };
     };
   };
