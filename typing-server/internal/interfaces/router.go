@@ -29,6 +29,7 @@ func NewRouter(healthHandler *handler.HealthCheckHandler, userHandler *handler.U
 		{"GET", "/health", healthHandler.LivenessProbe},
 		{"GET", "/users", userHandler.GetUserByStudentNumber},
 		{"GET", "/scores/ranking", scoreHandler.GetScoresRanking},
+		{"GET", "/scores/user", scoreHandler.GetUserScores},
 		{"POST", "/scores", scoreHandler.RegisterScore},
 	}
 

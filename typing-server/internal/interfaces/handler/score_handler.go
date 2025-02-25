@@ -99,3 +99,9 @@ func (h *ScoreHandler) RegisterScore(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to write response", http.StatusInternalServerError)
 	}
 }
+
+// GetUserScores はユーザーのスコアを取得するエンドポイント
+func (h *ScoreHandler) GetUserScores(w http.ResponseWriter, r *http.Request) {
+	// TODO: 実装する https://github.com/su-its/typing/issues/184
+	http.Error(w, "Not implemented", http.StatusNotImplemented)
+}
