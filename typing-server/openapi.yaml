@@ -48,8 +48,27 @@ paths:
                 $ref: "#/components/schemas/User"
         "400":
           description: student_numberが指定されていません。
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "student_numberが指定されていません"
         "404":
           description: ユーザーが見つかりません。
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "ユーザーが見つかりません"
+        "500":
+          description: サーバー内部エラーが発生しました。
+          content:
+            text/plain:
+              schema:
+                type: string
+                enum:
+                  - "内部サーバーエラーが発生しました"
+                  - "レスポンスのエンコードに失敗しました"
 
   /scores/ranking:
     get:
@@ -64,16 +83,21 @@ paths:
             type: string
             enum: [keystrokes, accuracy]
           description: ソート対象のカラム
+          required: true
         - in: query
           name: start
           schema:
             type: integer
+            minimum: 1
           description: ランキングの開始位置(x位 | x>0)
+          required: true
         - in: query
           name: limit
           schema:
             type: integer
+            minimum: 1
           description: ランキングの取得件数
+          required: true
       responses:
         "200":
           description: スコアランキングを返します。
@@ -94,6 +118,14 @@ paths:
                   - total_count
         "400":
           description: 不正なリクエストです。
+          content:
+            text/plain:
+              schema:
+                type: string
+                enum:
+                  - "不正なソート対象のカラムです"
+                  - "不正なランキングの開始位置です"
+                  - "不正なランキングの取得件数です"
 
   /scores:
     post:
@@ -126,14 +158,35 @@ paths:
       responses:
         "201":
           description: スコアが正常に登録されました。
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "スコアが正常に登録されました"
         "400":
           description: 不正なリクエストです。
+          content:
+            text/plain:
+              schema:
+                type: string
+                enum:
+                  - "不正なリクエストです"
+                  - "不正なユーザーIDです"
+        "500":
+          description: サーバー内部エラーが発生しました。
+          content:
+            text/plain:
+              schema:
+                type: string
+                enum:
+                  - "スコアの登録に失敗しました"
+                  - "レスポンスの書き込みに失敗しました"
 
   /scores/{user-id}/current-rank:
     get:
       tags:
-        - user
-      operationId: getMyscoreRanking
+        - score
+      operationId: getUserCurrentRank
       summary: ユーザーの現在の順位を取得
       parameters:
         - in: path
@@ -151,15 +204,36 @@ paths:
               schema:
                 type: object
                 properties:
-                  current-rank:
+                  current_rank:
                     type: integer
                     description: ユーザーの現在の順位
+                  total_users:
+                    type: integer
+                    description: 全ユーザー数
                 required:
-                  - current-rank
+                  - current_rank
+                  - total_users
+        "400":
+          description: ユーザーIDが不正です。
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "不正なユーザーIDです"
         "404":
           description: ユーザーが見つかりません。
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "ユーザーが見つかりません"
         "500":
           description: サーバーエラーが発生しました。
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "ユーザーの現在の順位の取得に失敗しました"
 
 components:
   schemas:
@@ -178,12 +252,21 @@ components:
         updated_at:
           type: string
           format: date-time
+      required:
+        - id
+        - student_number
+        - handle_name
+        - created_at
+        - updated_at
 
     Score:
       type: object
       properties:
         id:
           type: string
+        user_id:
+          type: string
+          format: uuid
         keystrokes:
           type: integer
         accuracy:
@@ -194,6 +277,13 @@ components:
           format: date-time
         user:
           $ref: "#/components/schemas/User"
+      required:
+        - id
+        - user_id
+        - keystrokes
+        - accuracy
+        - created_at
+        - user
 
     ScoreRanking:
       type: object
@@ -202,3 +292,6 @@ components:
           type: integer
         score:
           $ref: "#/components/schemas/Score"
+      required:
+        - rank
+        - score
