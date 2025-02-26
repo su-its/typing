@@ -45,9 +45,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	// ランダムシードセット
-	rand.Seed(time.Now().UnixNano())
-
 	// ログ・設定の初期化
 	logr := logger.New()
 	cfg := config.New()

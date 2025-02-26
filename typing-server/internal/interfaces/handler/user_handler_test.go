@@ -47,10 +47,23 @@ func TestNewUserHandler(t *testing.T) {
 
 type mockUserUseCase struct {
 	getUserByStudentNumber func(ctx context.Context, studentNumber string) (*model.User, error)
+	createUser             func(ctx context.Context, studentNumber string, handleName string) (*model.User, error)
 }
 
 func (m *mockUserUseCase) GetUserByStudentNumber(ctx context.Context, studentNumber string) (*model.User, error) {
 	return m.getUserByStudentNumber(ctx, studentNumber)
+}
+
+func (m *mockUserUseCase) CreateUser(ctx context.Context, studentNumber string, handleName string) (*model.User, error) {
+	if m.createUser != nil {
+		return m.createUser(ctx, studentNumber, handleName)
+	}
+	return &model.User{
+		StudentNumber: studentNumber,
+		HandleName:    handleName,
+		CreatedAt:     time.Now(),
+		UpdatedAt:     time.Now(),
+	}, nil
 }
 
 func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
