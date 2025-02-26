@@ -73,20 +73,26 @@ func (r *EntScoreRepository) GetMaxScores(ctx context.Context, userID uuid.UUID)
 	}
 
 	// ドメインモデルに変換
-	maxKeystrokeScoreModel := &model.Score{
-		ID:         maxKeystrokeScore.ID.String(),
-		UserID:     maxKeystrokeScore.UserID.String(),
-		Keystrokes: maxKeystrokeScore.Keystrokes,
-		Accuracy:   maxKeystrokeScore.Accuracy,
-		CreatedAt:  maxKeystrokeScore.CreatedAt,
+	var maxKeystrokeScoreModel *model.Score
+	if maxKeystrokeScore != nil {
+		maxKeystrokeScoreModel = &model.Score{
+			ID:         maxKeystrokeScore.ID.String(),
+			UserID:     maxKeystrokeScore.UserID.String(),
+			Keystrokes: maxKeystrokeScore.Keystrokes,
+			Accuracy:   maxKeystrokeScore.Accuracy,
+			CreatedAt:  maxKeystrokeScore.CreatedAt,
+		}
 	}
 
-	maxAccuracyScoreModel := &model.Score{
-		ID:         maxAccuracyScore.ID.String(),
-		UserID:     maxAccuracyScore.UserID.String(),
-		Keystrokes: maxAccuracyScore.Keystrokes,
-		Accuracy:   maxAccuracyScore.Accuracy,
-		CreatedAt:  maxAccuracyScore.CreatedAt,
+	var maxAccuracyScoreModel *model.Score
+	if maxAccuracyScore != nil {
+		maxAccuracyScoreModel = &model.Score{
+			ID:         maxAccuracyScore.ID.String(),
+			UserID:     maxAccuracyScore.UserID.String(),
+			Keystrokes: maxAccuracyScore.Keystrokes,
+			Accuracy:   maxAccuracyScore.Accuracy,
+			CreatedAt:  maxAccuracyScore.CreatedAt,
+		}
 	}
 
 	return maxKeystrokeScoreModel, maxAccuracyScoreModel, nil
