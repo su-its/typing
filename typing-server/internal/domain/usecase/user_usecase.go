@@ -10,7 +10,7 @@ import (
 
 type IUserUseCase interface {
 	GetUserByStudentNumber(ctx context.Context, studentNumber string) (*model.User, error)
-	CreateUser(ctx context.Context, studentNumber string, handleName string) error
+	CreateUser(ctx context.Context, studentNumber string, handleName string) (*model.User, error)
 }
 
 // コンパイル時にインターフェースの実装を確認
@@ -33,15 +33,15 @@ func (uc *UserUseCase) GetUserByStudentNumber(ctx context.Context, studentNumber
 
 // CreateUser はユーザーを作成するユースケース
 // ユーザーが既に存在する場合はErrUserAlreadyExistsを返す
-func (uc *UserUseCase) CreateUser(ctx context.Context, studentNumber string, handleName string) error {
-	_, err := uc.userRepo.CreateUser(ctx, studentNumber, handleName)
+func (uc *UserUseCase) CreateUser(ctx context.Context, studentNumber string, handleName string) (*model.User, error) {
+	u, err := uc.userRepo.CreateUser(ctx, studentNumber, handleName)
 	if err != nil {
 		switch {
 		case errors.Is(err, repository.ErrUserAlreadyExists):
-			return ErrUserAlreadyExists
+			return nil, ErrUserAlreadyExists
 		default:
-			return err
+			return nil, err
 		}
 	}
-	return nil
+	return u, nil
 }
