@@ -25,7 +25,6 @@ services:
       interval: 10s
       retries: 10
       start_period: 30s
-
     image: mysql:8.3.0
     environment:
       MYSQL_DATABASE: typing-db
@@ -39,6 +38,21 @@ services:
     networks:
       app_net:
         ipv4_address: "172.28.1.5"
+  seed:
+    depends_on:
+      db:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      DB_ADDR: db:3306
+      DEV_MODE: true
+      ENVIRONMENT: local
+    command: ["./seed", "-users", "300", "-scores", "3", "-minKeystrokes", "120", "-minAccuracy", "0.95", "-concurrent", "10"]
+    networks:
+      app_net:
+        ipv4_address: "172.28.1.4"
 volumes:
   db-data:
 networks:
