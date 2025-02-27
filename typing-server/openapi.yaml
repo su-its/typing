@@ -25,7 +25,7 @@ paths:
       summary: サーバーの状態を取得
       responses:
         "200":
-          description: サーバーが正常に稼働しています。
+          description: サーバーが正常に稼働していることを示す
   /users:
     get:
       tags:
@@ -41,33 +41,34 @@ paths:
           required: true
       responses:
         "200":
-          description: ユーザー情報を返します。
+          description: ユーザー情報を返す
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
         "400":
-          description: student_numberが指定されていません。
+          description: student_numberがクエリパラメータに指定されていない場合
           content:
             text/plain:
               schema:
                 type: string
                 example: "student_numberが指定されていません"
         "404":
-          description: ユーザーが見つかりません。
+          description: ユーザーが見つからない場合
           content:
             text/plain:
               schema:
                 type: string
                 example: "ユーザーが見つかりません"
         "500":
-          description: サーバー内部エラーが発生しました。
+          description: サーバー内部エラーが発生した場合
           content:
             text/plain:
               schema:
                 type: string
+                example: "サーバー内部でエラーが発生しました"
                 enum:
-                  - "内部サーバーエラーが発生しました"
+                  - "サーバー内部でエラーが発生しました"
                   - "レスポンスのエンコードに失敗しました"
 
   /scores/ranking:
@@ -126,6 +127,13 @@ paths:
                   - "不正なソート対象のカラムです"
                   - "不正なランキングの開始位置です"
                   - "不正なランキングの取得件数です"
+        "500":
+          description: サーバー内部でエラーが発生した場合
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "サーバー内部でエラーが発生しました"
 
   /scores:
     post:
@@ -157,32 +165,31 @@ paths:
                 - accuracy
       responses:
         "201":
-          description: スコアが正常に登録されました。
+          description: スコアが正常に登録された場合
           content:
             text/plain:
               schema:
                 type: string
                 example: "スコアが正常に登録されました"
         "400":
-          description: 不正なリクエストです。
+          description: リクエストBodyが不正である場合
           content:
             text/plain:
               schema:
                 type: string
                 enum:
-                  - "不正なリクエストです"
-                  - "不正なユーザーIDです"
+                  - "リクエストボディが不正です"
+                  - "ユーザーIDが不正です"
         "500":
-          description: サーバー内部エラーが発生しました。
+          description: サーバー内部でエラーが発生した場合
           content:
             text/plain:
               schema:
                 type: string
                 enum:
                   - "スコアの登録に失敗しました"
-                  - "レスポンスの書き込みに失敗しました"
-
-  /scores/{user-id}/current-rank:
+                  - "レスポンスのエンコードに失敗しました"
+  /scores/{user_id}/current-rank:
     get:
       tags:
         - score
@@ -198,7 +205,7 @@ paths:
           description: ユーザーID
       responses:
         "200":
-          description: ユーザーの現在の順位を返します。
+          description: ユーザーの現在の順位を返す
           content:
             application/json:
               schema:
@@ -214,26 +221,29 @@ paths:
                   - current_rank
                   - total_users
         "400":
-          description: ユーザーIDが不正です。
+          description: ユーザーIDが不正である場合
           content:
             text/plain:
               schema:
                 type: string
-                example: "不正なユーザーIDです"
+                example: "ユーザーIDが不正です"
         "404":
-          description: ユーザーが見つかりません。
+          description: ユーザーが見つからない場合
           content:
             text/plain:
               schema:
                 type: string
                 example: "ユーザーが見つかりません"
         "500":
-          description: サーバーエラーが発生しました。
+          description: サーバー内部でエラーが発生した場合
           content:
             text/plain:
               schema:
                 type: string
-                example: "ユーザーの現在の順位の取得に失敗しました"
+                example: "サーバー内部でエラーが発生しました"
+                enum:
+                  - "サーバー内部でエラーが発生しました"
+                  - "レスポンスのエンコードに失敗しました"
 
 components:
   schemas:
