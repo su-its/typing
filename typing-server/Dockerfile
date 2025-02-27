@@ -31,4 +31,4 @@ WORKDIR /root
 COPY --from=builder /app/server .
 
 # アプリケーションの実行
-CMD ["./server","-seed","false"]
+CMD ["./server"]

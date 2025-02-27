@@ -14,6 +14,7 @@ RUN cd internal/infra/ent && go generate
 
 # アプリケーションをビルド
 RUN CGO_ENABLED=0 GOOS=linux go build -v -o server ./cmd/server/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -v -o seed ./cmd/seed/main.go
 
 # 実行イメージ
 FROM alpine:latest
@@ -29,6 +30,7 @@ WORKDIR /root
 
 # ビルドしたバイナリをコピー
 COPY --from=builder /app/server .
+COPY --from=builder /app/seed .
 
 # アプリケーションの実行
-CMD ["./server","-seed","true"]
+CMD ["./server"]
