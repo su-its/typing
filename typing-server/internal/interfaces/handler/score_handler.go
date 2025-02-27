@@ -20,18 +20,6 @@ func NewScoreHandler(scoreUseCase *usecase.ScoreUseCase) *ScoreHandler {
 	return &ScoreHandler{scoreUseCase: scoreUseCase}
 }
 
-const (
-	SuccessMsgScoreRegistered    = "スコアが正常に登録されました"
-	ErrUserNotFound              = "ユーザーが見つかりません"
-	ErrMsgInvalidRequestBody     = "リクエストボディが不正です"
-	ErrMsgInvalidUserIDParameter = "ユーザーIDが不正です"
-	ErrFailedToRegisterScore     = "スコアの登録に失敗しました"
-	ErrFailedToEncodeResponse    = "レスポンスのエンコードに失敗しました"
-	ErrMsgInvalidSortByParameter = "不正なソート対象のカラムです"
-	ErrMsgInvalidStartParameter  = "不正なランキングの開始位置です"
-	ErrMsgInvalidLimitParameter  = "不正なランキングの取得件数です"
-	ErrInternalServer            = "サーバー内部でエラーが発生しました"
-)
 
 // GetScoresRanking はスコアランキングを取得するエンドポイント
 func (h *ScoreHandler) GetScoresRanking(w http.ResponseWriter, r *http.Request) {
