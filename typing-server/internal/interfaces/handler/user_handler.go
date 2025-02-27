@@ -23,7 +23,7 @@ func NewUserHandler(userUseCase usecase.IUserUseCase) *UserHandler {
 const (
 	ErrMsgStudentNumberRequired = "student_numberが指定されていません"
 	ErrMsgUserNotFound         = "ユーザーが見つかりません"
-	ErrMsgInternalServer       = "内部サーバーエラーが発生しました"
+	ErrMsgInternalServer       = "サーバー内部でエラーが発生しました"
 	ErrMsgEncodeResponse       = "レスポンスのエンコードに失敗しました"
 )
 
