@@ -30,7 +30,7 @@ jobs:
         working-directory: typing-app
         run: echo 'NEXT_PUBLIC_API_URL=${{ secrets.PROD_NEXT_PUBLIC_API_URL }}' >> .env.production
       - name: Docker Buildx Bake
-        uses: docker/bake-action@v4
+        uses: docker/bake-action@v5
         with:
           workdir: docker
           files: compose.ci.yaml
