@@ -21,7 +21,7 @@ export interface paths {
     /** スコアを登録 */
     post: operations["registerScore"];
   };
-  "/scores/{user-id}/current-rank": {
+  "/scores/{user_id}/current-rank": {
     /** ユーザーの現在の順位を取得 */
     get: operations["getUserCurrentRank"];
   };
@@ -72,7 +72,7 @@ export interface operations {
   /** サーバーの状態を取得 */
   healthcheck: {
     responses: {
-      /** @description サーバーが正常に稼働しています。 */
+      /** @description サーバーが正常に稼働していることを示す */
       200: {
         content: never;
       };
@@ -87,28 +87,28 @@ export interface operations {
       };
     };
     responses: {
-      /** @description ユーザー情報を返します。 */
+      /** @description ユーザー情報を返す */
       200: {
         content: {
           "application/json": components["schemas"]["User"];
         };
       };
-      /** @description student_numberが指定されていません。 */
+      /** @description student_numberがクエリパラメータに指定されていない場合 */
       400: {
         content: {
           "text/plain": string;
         };
       };
-      /** @description ユーザーが見つかりません。 */
+      /** @description ユーザーが見つからない場合 */
       404: {
         content: {
           "text/plain": string;
         };
       };
-      /** @description サーバー内部エラーが発生しました。 */
+      /** @description サーバー内部エラーが発生した場合 */
       500: {
         content: {
-          "text/plain": "内部サーバーエラーが発生しました" | "レスポンスのエンコードに失敗しました";
+          "text/plain": "サーバー内部でエラーが発生しました" | "レスポンスのエンコードに失敗しました";
         };
       };
     };
@@ -142,6 +142,12 @@ export interface operations {
           "text/plain": "不正なソート対象のカラムです" | "不正なランキングの開始位置です" | "不正なランキングの取得件数です";
         };
       };
+      /** @description サーバー内部でエラーが発生した場合 */
+      500: {
+        content: {
+          "text/plain": string;
+        };
+      };
     };
   };
   /** スコアを登録 */
@@ -165,22 +171,22 @@ export interface operations {
       };
     };
     responses: {
-      /** @description スコアが正常に登録されました。 */
+      /** @description スコアが正常に登録された場合 */
       201: {
         content: {
           "text/plain": string;
         };
       };
-      /** @description 不正なリクエストです。 */
+      /** @description リクエストBodyが不正である場合 */
       400: {
         content: {
-          "text/plain": "不正なリクエストです" | "不正なユーザーIDです";
+          "text/plain": "リクエストボディが不正です" | "ユーザーIDが不正です";
         };
       };
-      /** @description サーバー内部エラーが発生しました。 */
+      /** @description サーバー内部でエラーが発生した場合 */
       500: {
         content: {
-          "text/plain": "スコアの登録に失敗しました" | "レスポンスの書き込みに失敗しました";
+          "text/plain": "スコアの登録に失敗しました" | "レスポンスのエンコードに失敗しました";
         };
       };
     };
@@ -194,7 +200,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description ユーザーの現在の順位を返します。 */
+      /** @description ユーザーの現在の順位を返す */
       200: {
         content: {
           "application/json": {
@@ -205,22 +211,22 @@ export interface operations {
           };
         };
       };
-      /** @description ユーザーIDが不正です。 */
+      /** @description ユーザーIDが不正である場合 */
       400: {
         content: {
           "text/plain": string;
         };
       };
-      /** @description ユーザーが見つかりません。 */
+      /** @description ユーザーが見つからない場合 */
       404: {
         content: {
           "text/plain": string;
         };
       };
-      /** @description サーバーエラーが発生しました。 */
+      /** @description サーバー内部でエラーが発生した場合 */
       500: {
         content: {
-          "text/plain": string;
+          "text/plain": "サーバー内部でエラーが発生しました" | "レスポンスのエンコードに失敗しました";
         };
       };
     };
