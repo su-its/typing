@@ -80,8 +80,7 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, resultScore }) => {
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={6} className={styles.centerText}>
           <Text fontSize="2xl" as="b">
-            {String(resultScore.time.getMinutes() * 60 + resultScore.time.getSeconds()).padStart(2, "0")}.
-            {String(Math.floor(resultScore.time.getMilliseconds() / 100))} 秒
+            {String(resultScore.time)} 秒
           </Text>
         </GridItem>
         <GridItem colSpan={3} colStart={6} rowStart={7} className={styles.centerText}>
