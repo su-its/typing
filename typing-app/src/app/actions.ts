@@ -9,6 +9,7 @@ type LoginActionState = {
 };
 
 export async function login(_: LoginActionState, formData: FormData): Promise<LoginActionState> {
+  // biome-ignore lint/style/noNonNullAssertion: <explanation> // NOTE: login 関数に渡される form の <input> にはrequired属性がついてるからnullにはならない
   const studentNumber = formData.get("student-number")!.toString();
 
   try {
