@@ -14,6 +14,7 @@ import (
 	"github.com/su-its/typing/typing-server/internal/interfaces"
 	"github.com/su-its/typing/typing-server/internal/interfaces/handler"
 	"github.com/su-its/typing/typing-server/pkg/logger"
+	"github.com/su-its/typing/typing-server/pkg/middleware"
 )
 
 func main() {
@@ -88,7 +89,7 @@ func main() {
 
 	// サーバー起動
 	log.Info("Starting server on :8080")
-	if err := http.ListenAndServe(":8080", router); err != nil {
+	if err := http.ListenAndServe(":8080", middleware.LoggingMiddleware(router)); err != nil {
 		log.Error("failed to start server",
 			"error", err)
 	}
