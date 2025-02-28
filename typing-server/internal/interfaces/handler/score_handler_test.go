@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"reflect"
+	"strings"
 	"testing"
 
 	"net/http/httptest"
@@ -45,11 +46,11 @@ func TestScoreHandler_GetScoresRanking(t *testing.T) {
 		w http.ResponseWriter
 		r *http.Request
 	}
-	
+
 	tests := []struct {
-		name string
-		h    *ScoreHandler
-		args args
+		name       string
+		h          *ScoreHandler
+		args       args
 		wantStatus int
 		wantBody   string
 	}{
@@ -65,7 +66,7 @@ func TestScoreHandler_GetScoresRanking(t *testing.T) {
 				r: httptest.NewRequest("GET", "/scores?sort_by=invalid&start=1&limit=10", nil),
 			},
 			wantStatus: http.StatusBadRequest,
-			wantBody: "Invalid sort_by parameter\n",
+			wantBody:   ErrMsgInvalidSortByParameter,
 		},
 	}
 	for _, tt := range tests {
@@ -79,7 +80,7 @@ func TestScoreHandler_GetScoresRanking(t *testing.T) {
 					rr.Code, tt.wantStatus)
 			}
 			gotBody := rr.Body.String()
-			if gotBody != tt.wantBody {
+			if strings.TrimSpace(gotBody) != strings.TrimSpace(tt.wantBody) {
 				t.Errorf("GetScoresRanking() body = %q, want %q", gotBody, tt.wantBody)
 			}
 		})

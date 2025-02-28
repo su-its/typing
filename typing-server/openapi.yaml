@@ -25,7 +25,7 @@ paths:
       summary: サーバーの状態を取得
       responses:
         "200":
-          description: サーバーが正常に稼働しています。
+          description: サーバーが正常に稼働していることを示す
   /users:
     get:
       tags:
@@ -41,15 +41,35 @@ paths:
           required: true
       responses:
         "200":
-          description: ユーザー情報を返します。
+          description: ユーザー情報を返す
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
         "400":
-          description: student_numberが指定されていません。
+          description: student_numberがクエリパラメータに指定されていない場合
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "student_numberが指定されていません"
         "404":
-          description: ユーザーが見つかりません。
+          description: ユーザーが見つからない場合
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "ユーザーが見つかりません"
+        "500":
+          description: サーバー内部エラーが発生した場合
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "サーバー内部でエラーが発生しました"
+                enum:
+                  - "サーバー内部でエラーが発生しました"
+                  - "レスポンスのエンコードに失敗しました"
 
   /scores/ranking:
     get:
@@ -64,16 +84,21 @@ paths:
             type: string
             enum: [keystrokes, accuracy]
           description: ソート対象のカラム
+          required: true
         - in: query
           name: start
           schema:
             type: integer
+            minimum: 1
           description: ランキングの開始位置(x位 | x>0)
+          required: true
         - in: query
           name: limit
           schema:
             type: integer
+            minimum: 1
           description: ランキングの取得件数
+          required: true
       responses:
         "200":
           description: スコアランキングを返します。
@@ -94,6 +119,21 @@ paths:
                   - total_count
         "400":
           description: 不正なリクエストです。
+          content:
+            text/plain:
+              schema:
+                type: string
+                enum:
+                  - "不正なソート対象のカラムです"
+                  - "不正なランキングの開始位置です"
+                  - "不正なランキングの取得件数です"
+        "500":
+          description: サーバー内部でエラーが発生した場合
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "サーバー内部でエラーが発生しました"
 
   /scores:
     post:
@@ -125,15 +165,35 @@ paths:
                 - accuracy
       responses:
         "201":
-          description: スコアが正常に登録されました。
+          description: スコアが正常に登録された場合
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "スコアが正常に登録されました"
         "400":
-          description: 不正なリクエストです。
-
-  /scores/{user-id}/current-rank:
+          description: リクエストBodyが不正である場合
+          content:
+            text/plain:
+              schema:
+                type: string
+                enum:
+                  - "リクエストボディが不正です"
+                  - "ユーザーIDが不正です"
+        "500":
+          description: サーバー内部でエラーが発生した場合
+          content:
+            text/plain:
+              schema:
+                type: string
+                enum:
+                  - "スコアの登録に失敗しました"
+                  - "レスポンスのエンコードに失敗しました"
+  /scores/{user_id}/current-rank:
     get:
       tags:
-        - user
-      operationId: getMyscoreRanking
+        - score
+      operationId: getUserCurrentRank
       summary: ユーザーの現在の順位を取得
       parameters:
         - in: path
@@ -145,21 +205,45 @@ paths:
           description: ユーザーID
       responses:
         "200":
-          description: ユーザーの現在の順位を返します。
+          description: ユーザーの現在の順位を返す
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  current-rank:
+                  current_rank:
                     type: integer
                     description: ユーザーの現在の順位
+                  total_users:
+                    type: integer
+                    description: 全ユーザー数
                 required:
-                  - current-rank
+                  - current_rank
+                  - total_users
+        "400":
+          description: ユーザーIDが不正である場合
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "ユーザーIDが不正です"
         "404":
-          description: ユーザーが見つかりません。
+          description: ユーザーが見つからない場合
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "ユーザーが見つかりません"
         "500":
-          description: サーバーエラーが発生しました。
+          description: サーバー内部でエラーが発生した場合
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "サーバー内部でエラーが発生しました"
+                enum:
+                  - "サーバー内部でエラーが発生しました"
+                  - "レスポンスのエンコードに失敗しました"
 
 components:
   schemas:
@@ -178,12 +262,21 @@ components:
         updated_at:
           type: string
           format: date-time
+      required:
+        - id
+        - student_number
+        - handle_name
+        - created_at
+        - updated_at
 
     Score:
       type: object
       properties:
         id:
           type: string
+        user_id:
+          type: string
+          format: uuid
         keystrokes:
           type: integer
         accuracy:
@@ -194,6 +287,13 @@ components:
           format: date-time
         user:
           $ref: "#/components/schemas/User"
+      required:
+        - id
+        - user_id
+        - keystrokes
+        - accuracy
+        - created_at
+        - user
 
     ScoreRanking:
       type: object
@@ -202,3 +302,6 @@ components:
           type: integer
         score:
           $ref: "#/components/schemas/Score"
+      required:
+        - rank
+        - score

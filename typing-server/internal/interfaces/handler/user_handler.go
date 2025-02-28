@@ -20,13 +20,6 @@ func NewUserHandler(userUseCase usecase.IUserUseCase) *UserHandler {
 	}
 }
 
-const (
-	ErrMsgStudentNumberRequired = "student_numberが指定されていません"
-	ErrMsgUserNotFound         = "ユーザーが見つかりません"
-	ErrMsgInternalServer       = "内部サーバーエラーが発生しました"
-	ErrMsgEncodeResponse       = "レスポンスのエンコードに失敗しました"
-)
-
 // GetUserByStudentNumber は学籍番号をクエリパラメータとして受け取り、該当するユーザー情報を取得する
 // ユーザーが見つからない場合は404 Not Foundを返す
 // エラーが発生した場合は500 Internal Server Errorを返す
@@ -43,20 +36,20 @@ func (h *UserHandler) GetUserByStudentNumber(w http.ResponseWriter, r *http.Requ
 	if err != nil {
 		switch {
 		case errors.Is(err, usecase.ErrUserNotFound):
-			http.Error(w, ErrMsgUserNotFound, http.StatusNotFound)
+			http.Error(w, ErrUserNotFound, http.StatusNotFound)
 		default:
-			http.Error(w, ErrMsgInternalServer, http.StatusInternalServerError)
+			http.Error(w, ErrInternalServer, http.StatusInternalServerError)
 		}
 		return
 	}
 
 	if user == nil {
-		http.Error(w, ErrMsgUserNotFound, http.StatusNotFound)
+		http.Error(w, ErrUserNotFound, http.StatusNotFound)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(user); err != nil {
-		http.Error(w, ErrMsgEncodeResponse, http.StatusInternalServerError)
+		http.Error(w, ErrFailedToEncodeResponse, http.StatusInternalServerError)
 	}
 }

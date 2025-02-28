@@ -110,7 +110,7 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 				r: httptest.NewRequest("GET", "/", nil),
 			},
 			wantStatus: http.StatusBadRequest,
-			wantBody:   "student_numberが指定されていません\n",
+			wantBody:   ErrMsgStudentNumberRequired,
 		},
 		{
 			name: "異常系: ユーザーが見つからない場合",
@@ -126,7 +126,7 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 				r: httptest.NewRequest("GET", "/?student_number=k99999", nil),
 			},
 			wantStatus: http.StatusNotFound,
-			wantBody:   "ユーザーが見つかりません\n",
+			wantBody:   ErrUserNotFound,
 		},
 		{
 			name: "異常系: useCaseが想定外のエラーを吐いたとき",
@@ -142,7 +142,7 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 				r: httptest.NewRequest("GET", "/?student_number=k99999", nil),
 			},
 			wantStatus: http.StatusInternalServerError,
-			wantBody:   "内部サーバーエラーが発生しました\n",
+			wantBody:   ErrInternalServer,
 		},
 		{
 			name: "異常系: userがnilのとき",
@@ -158,7 +158,7 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 				r: httptest.NewRequest("GET", "/?student_number=k99999", nil),
 			},
 			wantStatus: http.StatusNotFound,
-			wantBody:   "ユーザーが見つかりません\n",
+			wantBody:   ErrUserNotFound,
 		},
 		{
 			name: "異常系: レスポンスのエンコードが失敗したとき",
@@ -180,7 +180,7 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 				r: httptest.NewRequest("GET", "/?student_number=k99999", nil),
 			},
 			wantStatus: http.StatusInternalServerError,
-			wantBody:   "レスポンスのエンコードに失敗しました\n",
+			wantBody:   ErrFailedToEncodeResponse,
 		},
 	}
 	for _, tt := range tests {
