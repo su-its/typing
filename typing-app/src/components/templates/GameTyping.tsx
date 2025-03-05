@@ -205,6 +205,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
   return (
     <Box tabIndex={0} ref={boxRef}>
       <div className={styles.box}>
+        {/* TODO: Article Nameって消すんじゃなかったっけ */}
         <div className={`${styles.heading} ${styles.heading_name}`}>Article Name</div>
         <div className={`${styles.heading} ${styles.heading_time}`}>Time Remain</div>
         <div className={`${styles.heading} ${styles.heading_position}`}>Progress</div>
