@@ -20,7 +20,7 @@ const TYPING_QUEUE_SIZE = 5; // 瞬間タイピング速度計算の粒度
 const MAX_TYPING_SPEED = 300; // 表示上限
 const UPDATE_FREQUENCY = 100; // タイマー更新頻度（ミリ秒）
 
-const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResultScore }) => {
+const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore }) => {
   const router = useRouter();
 
   // ステート定義
@@ -74,7 +74,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
       wpm,
     };
 
-    setResultScore(score);
+    setScore(score);
 
     try {
       // ユーザー情報の取得
@@ -104,7 +104,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
       console.error("Score submission error:", error);
       showErrorToast("エラーが発生しました");
     }
-  }, [stats, nextPage, router, setResultScore]);
+  }, [stats, nextPage, router, setScore]);
 
   // 実時間ベースを使用する理由:
   // setIntervalは厳密に一定間隔で実行されるわけではなく、ブラウザの状態やタブのアクティブ状態によって遅延が発生する等といった理由

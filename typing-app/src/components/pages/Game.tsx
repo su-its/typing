@@ -17,7 +17,7 @@ export interface GamePreProps {
 export interface GameTypingProps {
   nextPage: () => void;
   subjectText: string;
-  setResultScore: (data: Score) => void;
+  setScore: (data: Score) => void;
   screenIndex: number;
 }
 
@@ -50,7 +50,7 @@ const GamePage: React.FC<GamePageProps> = ({ subjectText }) => {
 
   type ScreenIndex = (typeof ScreenIndex)[keyof typeof ScreenIndex];
 
-  const [resultScore, setResultScore] = useState<Score>({
+  const [score, setScore] = useState<Score>({
     score: 0,
     keystrokes: 0,
     miss: 0,
@@ -66,14 +66,10 @@ const GamePage: React.FC<GamePageProps> = ({ subjectText }) => {
       key={ScreenIndex.IDX_TYPING}
       nextPage={() => setScreenIndex(ScreenIndex.IDX_RESULT)}
       subjectText={subjectText}
-      setResultScore={setResultScore}
+      setScore={setScore}
       screenIndex={screenIndex}
     />,
-    <GameResult
-      key={ScreenIndex.IDX_RESULT}
-      nextPage={() => setScreenIndex(ScreenIndex.IDX_PRE)}
-      resultScore={resultScore}
-    />,
+    <GameResult key={ScreenIndex.IDX_RESULT} nextPage={() => setScreenIndex(ScreenIndex.IDX_PRE)} score={score} />,
   ];
   return (
     <>
