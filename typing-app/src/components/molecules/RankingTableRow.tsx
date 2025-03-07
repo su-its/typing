@@ -4,8 +4,8 @@ import { components } from "@/libs/api/v0";
 const RankingTableRow: React.FC<components["schemas"]["ScoreRanking"]> = (scoreRanking) => {
   const accuracy = scoreRanking.score?.accuracy ?? 0;
 
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'percent',
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "percent",
     maximumFractionDigits: 2,
   });
 
