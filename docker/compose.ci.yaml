@@ -10,5 +10,5 @@ services:
     build:
       context: ../typing-server
       cache_from:
-        - golang:1.22.0
+        - golang:1.23.4
         - alpine:latest
