@@ -3,11 +3,20 @@ import { components } from "@/libs/api/v0";
 
 const RankingTableRow: React.FC<components["schemas"]["ScoreRanking"]> = (scoreRanking) => {
   const accuracy = scoreRanking.score?.accuracy ?? 0;
-  const formattedAccuracy = new Intl.NumberFormat("en-US", {
-    style: "percent",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(accuracy);
+
+  let formattedAccuracy: string;
+
+  let accuracyPercent = (accuracy * 100).toFixed(2);
+
+  if (accuracyPercent === "100.00") {
+    formattedAccuracy = "100%";
+  } else if (accuracyPercent.endsWith(".00")) {
+    formattedAccuracy = accuracyPercent.slice(0, -3) + "%";
+  } else if (accuracyPercent.endsWith("0")) {
+    formattedAccuracy = accuracyPercent.slice(0, -1) + "%";
+  } else {
+    formattedAccuracy = accuracyPercent + "%";
+  }
 
   const formattedCreatedAt = scoreRanking.score?.created_at
     ? new Date(scoreRanking.score.created_at).toISOString().split("T")[0]
