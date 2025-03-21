@@ -3,19 +3,20 @@ import { components } from "@/libs/api/v0";
 
 const RankingTableRow: React.FC<components["schemas"]["ScoreRanking"]> = (scoreRanking) => {
   const accuracy = scoreRanking.score?.accuracy ?? 0;
-  const formattedAccuracy = new Intl.NumberFormat("en-US", { style: "percent", maximumFractionDigits: 2 }).format(
-    accuracy
-  );
+
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "percent",
+    maximumFractionDigits: 2,
+  });
+
+  const formattedAccuracy = formatter.format(accuracy);
+
   const formattedCreatedAt = scoreRanking.score?.created_at
     ? new Date(scoreRanking.score.created_at).toISOString().split("T")[0]
     : "";
+
   return (
-    <Tr
-      key={String(scoreRanking.score?.user?.student_number)}
-      _even={{ bg: "midnightblue" }}
-      _odd={{ bg: "#192f70" }}
-      color={"silver"}
-    >
+    <Tr _even={{ bg: "midnightblue" }} _odd={{ bg: "#192f70" }} color={"silver"}>
       <Td width={"128px"} textAlign={"center"}>
         {String(scoreRanking.rank)}
       </Td>

@@ -1,5 +1,4 @@
 "use client";
-import { ResultScore } from "@/types/RegisterScore";
 import { VStack } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import GamePre from "../templates/GamePre";
@@ -7,7 +6,8 @@ import GameResult from "../templates/GameResult";
 import GameTyping from "../templates/GameTyping";
 import { useRouter } from "next/navigation";
 import { showWarningToast } from "@/utils/toast";
-import { User } from "@/types/user";
+import type { User } from "@/types/user";
+import type Score from "@/types/Score";
 import { getCurrentUser } from "@/app/actions";
 
 export interface GamePreProps {
@@ -17,7 +17,7 @@ export interface GamePreProps {
 export interface GameTypingProps {
   nextPage: () => void;
   subjectText: string;
-  setResultScore: (data: ResultScore) => void;
+  setScore: (data: Score) => void;
   screenIndex: number;
 }
 
@@ -50,11 +50,11 @@ const GamePage: React.FC<GamePageProps> = ({ subjectText }) => {
 
   type ScreenIndex = (typeof ScreenIndex)[keyof typeof ScreenIndex];
 
-  const [resultScore, setResultScore] = useState<ResultScore>({
+  const [score, setScore] = useState<Score>({
     score: 0,
     keystrokes: 0,
     miss: 0,
-    time: new Date(),
+    time: 0,
     wpm: 0,
     accuracy: 0,
   });
@@ -66,14 +66,10 @@ const GamePage: React.FC<GamePageProps> = ({ subjectText }) => {
       key={ScreenIndex.IDX_TYPING}
       nextPage={() => setScreenIndex(ScreenIndex.IDX_RESULT)}
       subjectText={subjectText}
-      setResultScore={setResultScore}
+      setScore={setScore}
       screenIndex={screenIndex}
     />,
-    <GameResult
-      key={ScreenIndex.IDX_RESULT}
-      nextPage={() => setScreenIndex(ScreenIndex.IDX_PRE)}
-      resultScore={resultScore}
-    />,
+    <GameResult key={ScreenIndex.IDX_RESULT} nextPage={() => setScreenIndex(ScreenIndex.IDX_PRE)} score={score} />,
   ];
   return (
     <>
