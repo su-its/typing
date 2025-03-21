@@ -36,17 +36,22 @@ func NewScoreUseCase(txManager repository.TxManager, scoreRepo repository.ScoreR
 // GetScoresRanking はスコアランキングを取得する
 func (uc *ScoreUseCase) GetScoresRanking(ctx context.Context, request *model.GetScoresRankingRequest) (*model.GetScoresRankingResponse, error) {
 	// DB からスコアを取得
-	scores, totalCount, err := uc.scoreRepo.GetScores(ctx, request.SortBy, request.Start, request.Limit)
+	validKeystrokes := 120
+	validAccuracy := 0.95
+	scores, err := uc.scoreRepo.GetScores(ctx, &validKeystrokes, &validAccuracy, &request.SortBy)
 	if err != nil {
 		return nil, err
 	}
 
 	// サービスでランキング計算
-	rankings := uc.scoreService.ComputeRanking(scores, request.SortBy, request.Start)
+	rankings := uc.scoreService.ComputeRanking(scores, request.SortBy)
+
+	// サービス層でランキングの範囲を限定
+	limitedRankings := uc.scoreService.LimitRankings(rankings, request.Start, request.Limit)
 
 	return &model.GetScoresRankingResponse{
-		Rankings:   rankings,
-		TotalCount: totalCount,
+		Rankings:   limitedRankings,
+		TotalCount: len(rankings),
 	}, nil
 }
 
@@ -57,21 +62,8 @@ func (uc *ScoreUseCase) RegisterScore(ctx context.Context, userID uuid.UUID, key
 		return err
 	}
 
-	// スコアの作成
-	newScore := &model.Score{
-		UserID:     userID.String(),
-		Keystrokes: keystrokes,
-		Accuracy:   accuracy,
-	}
-
-	// 最大スコアの判定
-	isMaxKeystrokes, isMaxAccuracy, err := uc.scoreService.ShouldUpdateMaxScore(ctx, userID, newScore)
-	if err != nil {
-		return err
-	}
-
 	// DB にスコアを保存
 	return uc.txManager.Execute(ctx, func(ctx context.Context) error {
-		return uc.scoreRepo.CreateScore(ctx, userID, keystrokes, accuracy, isMaxKeystrokes, isMaxAccuracy)
+		return uc.scoreRepo.CreateScore(ctx, userID, keystrokes, accuracy)
 	})
 }
