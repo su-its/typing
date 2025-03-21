@@ -78,7 +78,8 @@ func (r *EntScoreRepository) GetMaxScores(ctx context.Context, userID uuid.UUID)
 	maxKeystrokeScore, err := r.client.Score.Query().
 		WithUser().
 		Where(score.UserID(userID), score.IsMaxKeystrokes(true)).
-		Only(ctx)
+		// TODO: isMaxKeyStorokesとかがUniqueじゃないのが悪さしている https://github.com/su-its/typing/issues/203
+		First(ctx) // NOTE: バグでUniqueで検索するとエラーになるため、Firstで検索する
 	if err != nil && !ent_generated.IsNotFound(err) {
 		return nil, nil, err
 	}
@@ -86,7 +87,8 @@ func (r *EntScoreRepository) GetMaxScores(ctx context.Context, userID uuid.UUID)
 	maxAccuracyScore, err := r.client.Score.Query().
 		WithUser().
 		Where(score.UserID(userID), score.IsMaxAccuracy(true)).
-		Only(ctx)
+		// TODO: isMaxAccuracyとかがUniqueじゃないのが悪さしている https://github.com/su-its/typing/issues/203
+		First(ctx) // NOTE: バグでUniqueで検索するとエラーになるため、Firstで検索する
 	if err != nil && !ent_generated.IsNotFound(err) {
 		return nil, nil, err
 	}
