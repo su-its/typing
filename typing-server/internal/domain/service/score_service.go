@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"errors"
 	"sort"
 
@@ -143,18 +142,4 @@ func (s *ScoreService) LimitRankings(rankings []*model.ScoreRanking, start, limi
 	}
 
 	return rankings[zeroBasedStart:end]
-}
-
-// ShouldUpdateMaxScore は新しいスコアが最大スコアかどうかを判定する
-func (s *ScoreService) ShouldUpdateMaxScore(ctx context.Context, userID uuid.UUID, newScore *model.Score) (bool, bool, error) {
-	// 現在の最大スコアを取得
-	maxKeystrokeScore, maxAccuracyScore, err := s.scoreRepo.GetMaxScores(ctx, userID)
-	if err != nil {
-		return false, false, err
-	}
-
-	isMaxKeystrokes := maxKeystrokeScore == nil || newScore.Keystrokes > maxKeystrokeScore.Keystrokes
-	isMaxAccuracy := maxAccuracyScore == nil || newScore.Accuracy > maxAccuracyScore.Accuracy
-
-	return isMaxKeystrokes, isMaxAccuracy, nil
 }
