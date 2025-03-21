@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 	"reflect"
 	"strings"
@@ -20,6 +21,7 @@ import (
 func TestNewUserHandler(t *testing.T) {
 	type args struct {
 		userUseCase usecase.IUserUseCase
+		log         *slog.Logger
 	}
 	tests := []struct {
 		name string
@@ -30,15 +32,17 @@ func TestNewUserHandler(t *testing.T) {
 			name: "正常系: UserHandlerが正しく生成される",
 			args: args{
 				userUseCase: &mockUserUseCase{},
+				log:         slog.Default(),
 			},
 			want: &UserHandler{
 				userUseCase: &mockUserUseCase{},
+				log:         slog.Default(),
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewUserHandler(tt.args.userUseCase); !reflect.DeepEqual(got, tt.want) {
+			if got := NewUserHandler(tt.args.userUseCase, tt.args.log); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewUserHandler() = %v, want %v", got, tt.want)
 			}
 		})
@@ -92,6 +96,7 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 						}, nil
 					},
 				},
+				log: slog.Default(),
 			},
 			args: args{
 				w: httptest.NewRecorder(),
@@ -104,6 +109,7 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 			name: "異常系: student_numberが指定されていない場合",
 			h: &UserHandler{
 				userUseCase: &usecase.UserUseCase{},
+				log:         slog.Default(),
 			},
 			args: args{
 				w: httptest.NewRecorder(),
@@ -120,6 +126,7 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 						return nil, usecase.ErrUserNotFound
 					},
 				},
+				log: slog.Default(),
 			},
 			args: args{
 				w: httptest.NewRecorder(),
@@ -136,6 +143,7 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 						return nil, errors.New("hoge")
 					},
 				},
+				log: slog.Default(),
 			},
 			args: args{
 				w: httptest.NewRecorder(),
@@ -152,6 +160,7 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 						return nil, nil
 					},
 				},
+				log: slog.Default(),
 			},
 			args: args{
 				w: httptest.NewRecorder(),
@@ -174,6 +183,7 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 						}, nil
 					},
 				},
+				log: slog.Default(),
 			},
 			args: args{
 				w: testutils.NewFakeResponseWriter(),
