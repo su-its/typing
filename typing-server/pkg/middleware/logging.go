@@ -35,8 +35,23 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(lrw, r)
 
 		duration := time.Since(start)
-		log.Info("Completed request",
-			"status", lrw.statusCode,
-			"duration", duration)
+
+		if lrw.statusCode >= 500 {
+			log.Error("Request failed with server error",
+				"status", lrw.statusCode,
+				"method", r.Method,
+				"url", r.URL.String(),
+				"duration", duration)
+		} else if lrw.statusCode >= 400 {
+			log.Warn("Request failed with client error",
+				"status", lrw.statusCode,
+				"method", r.Method,
+				"url", r.URL.String(),
+				"duration", duration)
+		} else {
+			log.Info("Completed request",
+				"status", lrw.statusCode,
+				"duration", duration)
+		}
 	})
 }

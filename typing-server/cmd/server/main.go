@@ -81,8 +81,8 @@ func main() {
 
 	// ハンドラの作成
 	healthHandler := handler.NewHealthCheckHandler()
-	userHandler := handler.NewUserHandler(userUseCase)
-	scoreHandler := handler.NewScoreHandler(scoreUseCase)
+	userHandler := handler.NewUserHandler(userUseCase, log)
+	scoreHandler := handler.NewScoreHandler(scoreUseCase, log)
 
 	// ルーターの作成
 	router := interfaces.NewRouter(healthHandler, userHandler, scoreHandler, config)
