@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 
 	"github.com/su-its/typing/typing-server/internal/domain/usecase"
@@ -11,12 +12,14 @@ import (
 // UserHandler はユーザー関連の HTTP ハンドラ
 type UserHandler struct {
 	userUseCase usecase.IUserUseCase
+	log         *slog.Logger
 }
 
 // NewUserHandler は UserHandler のインスタンスを生成する
-func NewUserHandler(userUseCase usecase.IUserUseCase) *UserHandler {
+func NewUserHandler(userUseCase usecase.IUserUseCase, log *slog.Logger) *UserHandler {
 	return &UserHandler{
 		userUseCase: userUseCase,
+		log:         log,
 	}
 }
 
@@ -38,6 +41,7 @@ func (h *UserHandler) GetUserByStudentNumber(w http.ResponseWriter, r *http.Requ
 		case errors.Is(err, usecase.ErrUserNotFound):
 			http.Error(w, ErrUserNotFound, http.StatusNotFound)
 		default:
+			h.log.Error("GetUserByStudentNumber failed", "error", err)
 			http.Error(w, ErrInternalServer, http.StatusInternalServerError)
 		}
 		return
@@ -50,6 +54,7 @@ func (h *UserHandler) GetUserByStudentNumber(w http.ResponseWriter, r *http.Requ
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(user); err != nil {
+		h.log.Error("Failed to encode JSON response", "error", err)
 		http.Error(w, ErrFailedToEncodeResponse, http.StatusInternalServerError)
 	}
 }
