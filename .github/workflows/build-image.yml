@@ -2,8 +2,8 @@ name: Build / Push Docker Image to Registry
 
 on:
   push:
-    branches:
-      - develop
+    tags:
+      - 'v*'
 
 permissions:
   contents: read
@@ -33,5 +33,7 @@ jobs:
         uses: docker/bake-action@v5
         with:
           workdir: docker
-          files: compose.ci.yaml
+          files: docker-bake.hcl
           push: true
+        env:
+          TAG: ${{ github.ref }}
