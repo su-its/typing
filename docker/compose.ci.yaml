@@ -1,12 +1,12 @@
 services:
   app:
-    image: ghcr.io/su-its/typing-app:dev
+    image: ghcr.io/su-its/typing-app:main
     build:
       context: ../typing-app
       cache_from:
         - node:20.11-slim
   api:
-    image: ghcr.io/su-its/typing-server:dev
+    image: ghcr.io/su-its/typing-server:main
     build:
       context: ../typing-server
       cache_from:

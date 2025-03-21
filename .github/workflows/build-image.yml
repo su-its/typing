@@ -3,7 +3,7 @@ name: Build / Push Docker Image to Registry
 on:
   push:
     branches:
-      - develop
+      - main
 
 permissions:
   contents: read
