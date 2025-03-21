@@ -8,10 +8,10 @@ import (
 )
 
 type ScoreRepository interface {
-	// GetScores はスコアのランキングを取得する
-	// ランキングで有効なスコアは、キーストローク数が120以上、正確性が0.95以上
-	// ソート順、開始位置、取得件数を指定して、スコアのランキングを取得する
-	GetScores(ctx context.Context, sortBy string, start int, limit int) ([]*model.Score, int, error)
+	// GetScores は指定されたキーストローク数と精度を持つスコアを取得する
+	// sortByには"accuracy"か"keystrokes"を指定する
+	// TODO: optinal
+	GetScores(ctx context.Context, keystrokes int, accuracy float64, sortBy string) ([]*model.Score, error)
 
 	// GetMaxScores はユーザーの最大スコアを取得する
 	// ユーザーIDを指定して、最大スコアを取得する

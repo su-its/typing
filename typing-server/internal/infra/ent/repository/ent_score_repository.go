@@ -7,7 +7,6 @@ import (
 	"github.com/su-its/typing/typing-server/internal/domain/model"
 	"github.com/su-its/typing/typing-server/internal/domain/repository"
 	"github.com/su-its/typing/typing-server/internal/infra/ent/ent_generated"
-	"github.com/su-its/typing/typing-server/internal/infra/ent/ent_generated/predicate"
 	"github.com/su-its/typing/typing-server/internal/infra/ent/ent_generated/score"
 )
 
@@ -24,31 +23,15 @@ func NewEntScoreRepository(client *ent_generated.Client) *EntScoreRepository {
 	return &EntScoreRepository{client: client}
 }
 
-func (r *EntScoreRepository) GetScores(ctx context.Context, sortBy string, start int, limit int) ([]*model.Score, int, error) {
-	// 基本のWhere条件
-	conditions := []predicate.Score{
-		score.KeystrokesGTE(120),
-		score.AccuracyGTE(0.95),
-	}
-
-	// sortByの値に応じて追加条件を設定
-	switch sortBy {
-	case "accuracy":
-		conditions = append(conditions, score.IsMaxAccuracyEQ(true))
-	case "keystrokes":
-		conditions = append(conditions, score.IsMaxKeystrokesEQ(true))
-	}
-
-	query := r.client.Score.Query().
+// GetScores は指定されたキーストローク数と精度を持つスコアを取得する
+func (r *EntScoreRepository) GetScores(ctx context.Context, keystrokes int, accuracy float64, sortBy string) ([]*model.Score, error) {
+	scores, err := r.client.Score.Query().
 		WithUser().
-		Where(score.And(conditions...)).
-		Order(ent_generated.Desc(sortBy))
-
-	totalCount := query.CountX(ctx)
-
-	scores, err := query.Limit(limit).Offset(start - 1).All(ctx)
+		Where(score.KeystrokesGTE(keystrokes), score.AccuracyGTE(accuracy)).
+		Order(ent_generated.Desc(sortBy)).
+		All(ctx)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 
 	// ドメインモデルに変換
@@ -70,7 +53,7 @@ func (r *EntScoreRepository) GetScores(ctx context.Context, sortBy string, start
 		}
 	}
 
-	return scoreList, totalCount, nil
+	return scoreList, nil
 }
 
 // GetMaxScores はユーザーの現在の最大スコアを取得する
