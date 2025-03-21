@@ -2,8 +2,8 @@ name: Build / Push Docker Image to Registry
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
 
 permissions:
   contents: read
