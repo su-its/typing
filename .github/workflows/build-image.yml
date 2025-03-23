@@ -36,4 +36,4 @@ jobs:
           files: docker-bake.hcl
           push: true
         env:
-          TAG: ${{ github.ref }}
+          TAG: ${{ github.ref_name }}
