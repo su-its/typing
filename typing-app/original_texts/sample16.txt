@@ -1,0 +1,12 @@
+The term "market failure" encompasses several problems which may undermine standard economic assumptions. Although economists categorize market failures differently, the following categories emerge in the main texts.
+
+Information asymmetries and incomplete markets may result in economic inefficiency but also a possibility of improving efficiency through market, legal, and regulatory remedies, as discussed above.
+
+Natural monopoly, or the overlapping concepts of "practical" and "technical" monopoly, is an extreme case of failure of competition as a restraint on producers. Extreme economies of scale are one possible cause.
+
+Public goods are goods which are under-supplied in a typical market. The defining features are that people can consume public goods without having to pay for them and that more than one person can consume the good at the same time.
+
+Externalities occur where there are significant social costs or benefits from production or consumption that are not reflected in market prices. For example, air pollution may generate a negative externality, and education may generate a positive externality (less crime, etc.). Governments often tax and otherwise restrict the sale of goods that have negative externalities and subsidize or otherwise promote the purchase of goods that have positive externalities in an effort to correct the price distortions caused by these externalities. Elementary demand-and-supply theory predicts equilibrium but not the speed of adjustment for changes of equilibrium due to a shift in demand or supply.
+
+
+(from Wikipedia(en) "Economics", https://en.wikipedia.org/wiki/Economics, 2024/05/15)
