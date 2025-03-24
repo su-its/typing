@@ -9,6 +9,7 @@
     "lint": "next lint",
     "format": "prettier . --write",
     "format:ci": "prettier . --check",
+    "clean": "tsx scripts/textCleaning.ts",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -48,6 +49,7 @@
     "openapi-typescript": "6.7.6",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.16",
+    "tsx": "^4.19.3",
     "typescript": "^5.7.2"
   },
   "repository": "https://github.com/su-its/typing",
