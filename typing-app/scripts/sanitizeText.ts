@@ -1,8 +1,9 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 
 // キーボードで入力可能な文字のホワイトリスト
-const allowedChars: string = "1234567890-^¥!\"#$%&'()0=~|qwertyuiop@[QWERTYUIOP`{asdfghjkl;:]ASDFGHJKL+*}zxcvbnm,./_ZXCVBNM<>?_ \n\r\t";
+const allowedChars: string =
+  "1234567890-^¥!\"#$%&'()0=~|qwertyuiop@[QWERTYUIOP`{asdfghjkl;:]ASDFGHJKL+*}zxcvbnm,./_ZXCVBNM<>?_ \n\r\t";
 
 // テキスト処理関数
 function sanitizeText(text: string): string {
@@ -17,36 +18,39 @@ function sanitizeText(text: string): string {
   // この処理を先に行い、アポストロフィを保持する
   const contractionPattern = /(\w)'(\w)/g;
   const contractions: { original: string; position: number }[] = [];
-  
+
   let match;
   while ((match = contractionPattern.exec(processedText)) !== null) {
     contractions.push({
       original: match[0],
-      position: match.index
+      position: match.index,
     });
   }
 
   // ホワイトリストに含まれない文字を削除
-  let filteredText = processedText.split('').filter(char => allowedChars.includes(char)).join('');
-  
+  let filteredText = processedText
+    .split("")
+    .filter((char) => allowedChars.includes(char))
+    .join("");
+
   for (const contraction of contractions) {
     const [first, second] = contraction.original.split("'");
     const pattern = new RegExp(`${first}\\s*${second}`);
     filteredText = filteredText.replace(pattern, contraction.original);
   }
-  
+
   // 連続したスペースを単一のスペースに置換
   return filteredText.replace(/\s+/g, " ").trim();
 }
 
 // 単語の区切りとなる文字かどうかを判定
 function isWordSeparator(char: string): boolean {
-  return [' ', '\t', '\n', '\r', '.', ',', ';', ':', '!', '?', '(', ')', '[', ']', '{', '}'].includes(char);
+  return [" ", "\t", "\n", "\r", ".", ",", ";", ":", "!", "?", "(", ")", "[", "]", "{", "}"].includes(char);
 }
 
 // 入出力ディレクトリの設定
-const sourceDir: string = path.join(__dirname, '../original_texts');
-const targetDir: string = path.join(__dirname, '../public/texts');
+const sourceDir: string = path.join(__dirname, "../original_texts");
+const targetDir: string = path.join(__dirname, "../public/texts");
 
 // メイン処理関数
 function processFiles(): void {
@@ -63,33 +67,33 @@ function processFiles(): void {
 
     // ソースディレクトリ内の全ファイルを処理
     const files: string[] = fs.readdirSync(sourceDir);
-    
+
     if (files.length === 0) {
-      console.log('No files found in the source directory.');
+      console.log("No files found in the source directory.");
       return;
     }
 
     files.forEach((file: string) => {
       const sourcePath: string = path.join(sourceDir, file);
       const targetPath: string = path.join(targetDir, file);
-      
+
       // ディレクトリはスキップ
       if (fs.statSync(sourcePath).isDirectory()) {
         console.log(`Skipping directory: ${file}`);
         return;
       }
-      
+
       // ファイルの読み込み、処理、書き込み
-      const content: string = fs.readFileSync(sourcePath, 'utf-8');
+      const content: string = fs.readFileSync(sourcePath, "utf-8");
       const processedContent: string = sanitizeText(content);
       fs.writeFileSync(targetPath, processedContent);
-      
+
       console.log(`Processed: ${file}`);
     });
 
-    console.log('All files processed successfully.');
+    console.log("All files processed successfully.");
   } catch (error) {
-    console.error('Error processing files:', error instanceof Error ? error.message : String(error));
+    console.error("Error processing files:", error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 }
