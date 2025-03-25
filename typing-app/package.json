@@ -9,7 +9,7 @@
     "lint": "next lint",
     "format": "prettier . --write",
     "format:ci": "prettier . --check",
-    "clean": "tsx scripts/textCleaning.ts",
+    "sanitize": "tsx scripts/sanitizeText.ts",
     "test": "jest",
     "test:watch": "jest --watch"
   },
