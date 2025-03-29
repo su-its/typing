@@ -1,3 +1,5 @@
+@use "@/assets/sass/color.scss";
+
 .game-pre {
   width: 70%;
   height: calc(100% - 300px);
@@ -5,13 +7,13 @@
   position: absolute;
   left: 15%;
   top: 120px;
-  background-color: #263238;
-  border: solid 4px #fff;
+  background-color: color.$bluegray-900;
+  border: solid 4px color.$white;
 }
 
 .header {
   margin-top: 40px;
-  color: #fff;
+  color: color.$white;
   font-size: 40px;
   font-weight: bold;
   display: flex;
@@ -27,7 +29,7 @@
     width: 60%;
     padding-left: 30px;
     float: left;
-    color: #fff;
+    color: color.$white;
     font-size: 24px;
 
     p {
@@ -49,7 +51,7 @@
 
 .footer {
   margin-top: 60px;
-  color: #fff;
+  color: color.$white;
   font-size: 26px;
   font-weight: bold;
   display: flex;
