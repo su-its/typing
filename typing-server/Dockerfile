@@ -1,5 +1,5 @@
 # 基本イメージ
-FROM golang:1.23.4 as builder
+FROM golang:1.23.4 AS builder
 
 # 作業ディレクトリを設定
 WORKDIR /app
@@ -31,4 +31,4 @@ WORKDIR /root
 COPY --from=builder /app/server .
 
 # アプリケーションの実行
-CMD ["./server","-seed","false"]
+CMD ["./server"]

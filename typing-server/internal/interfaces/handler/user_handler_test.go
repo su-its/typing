@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 	"reflect"
 	"strings"
@@ -20,6 +21,7 @@ import (
 func TestNewUserHandler(t *testing.T) {
 	type args struct {
 		userUseCase usecase.IUserUseCase
+		log         *slog.Logger
 	}
 	tests := []struct {
 		name string
@@ -30,15 +32,17 @@ func TestNewUserHandler(t *testing.T) {
 			name: "正常系: UserHandlerが正しく生成される",
 			args: args{
 				userUseCase: &mockUserUseCase{},
+				log:         slog.Default(),
 			},
 			want: &UserHandler{
 				userUseCase: &mockUserUseCase{},
+				log:         slog.Default(),
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewUserHandler(tt.args.userUseCase); !reflect.DeepEqual(got, tt.want) {
+			if got := NewUserHandler(tt.args.userUseCase, tt.args.log); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewUserHandler() = %v, want %v", got, tt.want)
 			}
 		})
@@ -47,10 +51,23 @@ func TestNewUserHandler(t *testing.T) {
 
 type mockUserUseCase struct {
 	getUserByStudentNumber func(ctx context.Context, studentNumber string) (*model.User, error)
+	createUser             func(ctx context.Context, studentNumber string, handleName string) (*model.User, error)
 }
 
 func (m *mockUserUseCase) GetUserByStudentNumber(ctx context.Context, studentNumber string) (*model.User, error) {
 	return m.getUserByStudentNumber(ctx, studentNumber)
+}
+
+func (m *mockUserUseCase) CreateUser(ctx context.Context, studentNumber string, handleName string) (*model.User, error) {
+	if m.createUser != nil {
+		return m.createUser(ctx, studentNumber, handleName)
+	}
+	return &model.User{
+		StudentNumber: studentNumber,
+		HandleName:    handleName,
+		CreatedAt:     time.Now(),
+		UpdatedAt:     time.Now(),
+	}, nil
 }
 
 func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
@@ -79,6 +96,7 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 						}, nil
 					},
 				},
+				log: slog.Default(),
 			},
 			args: args{
 				w: httptest.NewRecorder(),
@@ -91,13 +109,14 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 			name: "異常系: student_numberが指定されていない場合",
 			h: &UserHandler{
 				userUseCase: &usecase.UserUseCase{},
+				log:         slog.Default(),
 			},
 			args: args{
 				w: httptest.NewRecorder(),
 				r: httptest.NewRequest("GET", "/", nil),
 			},
 			wantStatus: http.StatusBadRequest,
-			wantBody:   "student_numberが指定されていません\n",
+			wantBody:   ErrMsgStudentNumberRequired,
 		},
 		{
 			name: "異常系: ユーザーが見つからない場合",
@@ -107,13 +126,14 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 						return nil, usecase.ErrUserNotFound
 					},
 				},
+				log: slog.Default(),
 			},
 			args: args{
 				w: httptest.NewRecorder(),
 				r: httptest.NewRequest("GET", "/?student_number=k99999", nil),
 			},
 			wantStatus: http.StatusNotFound,
-			wantBody:   "ユーザーが見つかりません\n",
+			wantBody:   ErrUserNotFound,
 		},
 		{
 			name: "異常系: useCaseが想定外のエラーを吐いたとき",
@@ -123,13 +143,14 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 						return nil, errors.New("hoge")
 					},
 				},
+				log: slog.Default(),
 			},
 			args: args{
 				w: httptest.NewRecorder(),
 				r: httptest.NewRequest("GET", "/?student_number=k99999", nil),
 			},
 			wantStatus: http.StatusInternalServerError,
-			wantBody:   "内部サーバーエラーが発生しました\n",
+			wantBody:   ErrInternalServer,
 		},
 		{
 			name: "異常系: userがnilのとき",
@@ -139,13 +160,14 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 						return nil, nil
 					},
 				},
+				log: slog.Default(),
 			},
 			args: args{
 				w: httptest.NewRecorder(),
 				r: httptest.NewRequest("GET", "/?student_number=k99999", nil),
 			},
 			wantStatus: http.StatusNotFound,
-			wantBody:   "ユーザーが見つかりません\n",
+			wantBody:   ErrUserNotFound,
 		},
 		{
 			name: "異常系: レスポンスのエンコードが失敗したとき",
@@ -161,13 +183,14 @@ func TestUserHandler_GetUserByStudentNumber(t *testing.T) {
 						}, nil
 					},
 				},
+				log: slog.Default(),
 			},
 			args: args{
 				w: testutils.NewFakeResponseWriter(),
 				r: httptest.NewRequest("GET", "/?student_number=k99999", nil),
 			},
 			wantStatus: http.StatusInternalServerError,
-			wantBody:   "レスポンスのエンコードに失敗しました\n",
+			wantBody:   ErrFailedToEncodeResponse,
 		},
 	}
 	for _, tt := range tests {

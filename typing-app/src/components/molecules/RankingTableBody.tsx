@@ -10,9 +10,10 @@ const RankingTableBody: React.FC<RankingTableBodyProps> = ({ scoreRankings }) =>
   return (
     <Tbody>
       {scoreRankings.map((scoreRanking) => (
-        <RankingTableRow key={String(scoreRanking.score?.user?.student_number)} {...scoreRanking} />
+        <RankingTableRow key={scoreRanking.score?.id ?? `rank-${scoreRanking.rank}`} {...scoreRanking} />
       ))}
     </Tbody>
   );
 };
+
 export default RankingTableBody;

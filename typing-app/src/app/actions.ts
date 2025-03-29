@@ -9,6 +9,7 @@ type LoginActionState = {
 };
 
 export async function login(_: LoginActionState, formData: FormData): Promise<LoginActionState> {
+  // biome-ignore lint/style/noNonNullAssertion: <explanation> // NOTE: login 関数に渡される form の <input> にはrequired属性がついてるからnullにはならない
   const studentNumber = formData.get("student-number")!.toString();
 
   try {
@@ -19,7 +20,7 @@ export async function login(_: LoginActionState, formData: FormData): Promise<Lo
         },
       },
     });
-    if (error) {
+    if (error || !data) {
       if (/not found/.test(`${error}`.toLowerCase())) {
         return { error: "見つかりませんでした" };
       }
@@ -29,9 +30,9 @@ export async function login(_: LoginActionState, formData: FormData): Promise<Lo
     const expires = new Date(Date.now() + 3 * 60 * 60 * 1000);
 
     const user: User = {
-      id: data.id!,
-      handleName: data.handle_name!,
-      studentNumber: data.student_number!,
+      id: data.id,
+      handleName: data.handle_name,
+      studentNumber: data.student_number,
     };
 
     (await cookies()).set("user", JSON.stringify(user), { expires, httpOnly: true });

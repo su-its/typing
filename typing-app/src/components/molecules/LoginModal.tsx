@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useActionState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -12,13 +12,12 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { login } from "@/app/actions";
-import { useFormState } from "react-dom";
 import { showWarningToast } from "@/utils/toast";
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  state: any;
+  state: { error?: string };
   dispatchAction: (payload: FormData) => void;
   pending: boolean;
 }
@@ -69,7 +68,7 @@ interface LoginModalContainerProps {
 }
 
 const LoginModalContainer: React.FC<LoginModalContainerProps> = ({ isOpen, onClose }) => {
-  const [state, dispatchAction, pending] = useFormState(login, {});
+  const [state, dispatchAction, pending] = useActionState(login, {});
 
   return (
     <LoginModalPresenter

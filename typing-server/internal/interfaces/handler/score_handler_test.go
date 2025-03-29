@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"log/slog"
 	"net/http"
 	"reflect"
+	"strings"
 	"testing"
 
 	"net/http/httptest"
@@ -13,6 +15,7 @@ import (
 func TestNewScoreHandler(t *testing.T) {
 	type args struct {
 		scoreUseCase *usecase.ScoreUseCase
+		log          *slog.Logger
 	}
 	fakeUseCase := &usecase.ScoreUseCase{}
 	tests := []struct {
@@ -25,15 +28,17 @@ func TestNewScoreHandler(t *testing.T) {
 			name: "正常系: ScoreHandlerが正しく生成される",
 			args: args{
 				scoreUseCase: fakeUseCase,
+				log:          slog.Default(),
 			},
 			want: &ScoreHandler{
 				scoreUseCase: fakeUseCase,
+				log:          slog.Default(),
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewScoreHandler(tt.args.scoreUseCase); !reflect.DeepEqual(got, tt.want) {
+			if got := NewScoreHandler(tt.args.scoreUseCase, tt.args.log); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewScoreHandler() = %v, want %v", got, tt.want)
 			}
 		})
@@ -45,11 +50,11 @@ func TestScoreHandler_GetScoresRanking(t *testing.T) {
 		w http.ResponseWriter
 		r *http.Request
 	}
-	
+
 	tests := []struct {
-		name string
-		h    *ScoreHandler
-		args args
+		name       string
+		h          *ScoreHandler
+		args       args
 		wantStatus int
 		wantBody   string
 	}{
@@ -65,7 +70,7 @@ func TestScoreHandler_GetScoresRanking(t *testing.T) {
 				r: httptest.NewRequest("GET", "/scores?sort_by=invalid&start=1&limit=10", nil),
 			},
 			wantStatus: http.StatusBadRequest,
-			wantBody: "Invalid sort_by parameter\n",
+			wantBody:   ErrMsgInvalidSortByParameter,
 		},
 	}
 	for _, tt := range tests {
@@ -79,7 +84,7 @@ func TestScoreHandler_GetScoresRanking(t *testing.T) {
 					rr.Code, tt.wantStatus)
 			}
 			gotBody := rr.Body.String()
-			if gotBody != tt.wantBody {
+			if strings.TrimSpace(gotBody) != strings.TrimSpace(tt.wantBody) {
 				t.Errorf("GetScoresRanking() body = %q, want %q", gotBody, tt.wantBody)
 			}
 		})

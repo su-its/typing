@@ -16,7 +16,6 @@ const RankingTabs = () => {
   const [totalRankingCount, setTotalRankingCount] = useState<number>(0);
 
   const LIMIT = 10; //TODO: Configファイルから取得
-  const MAXIMUM = totalRankingCount;
 
   const fetchData = async () => {
     const { data, error } = await client.GET("/scores/ranking", {
@@ -35,6 +34,7 @@ const RankingTabs = () => {
       showErrorToast(error);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, [sortBy, rankingStartFrom]);
@@ -49,7 +49,9 @@ const RankingTabs = () => {
     const newStartFrom =
       direction === "prev"
         ? Math.max(rankingStartFrom - LIMIT, 1)
-        : Math.min(rankingStartFrom + LIMIT, MAXIMUM - LIMIT);
+        : rankingStartFrom + LIMIT <= totalRankingCount
+          ? rankingStartFrom + LIMIT
+          : rankingStartFrom;
     setRankingStartFrom(newStartFrom);
   };
 
@@ -84,7 +86,7 @@ const RankingTabs = () => {
           onPrev={() => handlePaginationClick("prev")}
           onNext={() => handlePaginationClick("next")}
           isPrevDisabled={rankingStartFrom <= 1}
-          isNextDisabled={rankingStartFrom + LIMIT >= MAXIMUM}
+          isNextDisabled={rankingStartFrom + LIMIT > totalRankingCount}
         />
       </Center>
     </Tabs>
