@@ -1,6 +1,4 @@
 import RegisterScore from "@/types/RegisterScore";
-import { Box } from "@chakra-ui/react";
-import Image from "next/image";
 import { client } from "@/libs/api";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ProgressBar from "../atoms/ProgressBar";
@@ -153,7 +151,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
   }, []);
 
   return (
-    <Box tabIndex={0} ref={boxRef}>
+    <div tabIndex={0} ref={boxRef}>
       <div className={styles.box}>
         {/* TODO: Article Nameって消すんじゃなかったっけ */}
         <div className={`${styles.heading} ${styles.heading_name}`}>Article Name</div>
@@ -169,16 +167,9 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
         <div className={`${styles.progress} ${styles.progress_speed}`}>
           <ProgressBar maxWidth={330} height={20} maxValue={1000} value={averageTypeSpeed} />
         </div>
-        <Image className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg} alt={""} width={281} height={24} />
-        <Image
-          className={styles.gauge_position}
-          id="gauge_position"
-          src={gaugePositionImg}
-          alt={""}
-          width={330}
-          height={24}
-        />
-        <Image className={styles.gauge_speed} id="gauge_speed" src={gaugeSpeedImg} alt={""} width={330} height={24} />
+        <img className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg.src} width={281} height={24} />
+        <img className={styles.gauge_position} id="gauge_position" src={gaugePositionImg.src} width={330} height={24} />
+        <img className={styles.gauge_speed} id="gauge_speed" src={gaugeSpeedImg.src} width={330} height={24} />
         <div className={styles.title}>-</div>
         <div className={styles.text}>
           <div>
@@ -194,7 +185,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setResul
           {correctType} 字 / {subjectText.length} 字
         </div>
       </div>
-    </Box>
+    </div>
   );
 };
 
