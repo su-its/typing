@@ -1,0 +1,10 @@
+Microeconomics examines how entities, forming a market structure, interact within a market to create a market system. These entities include private and public players with various classifications, typically operating under scarcity of tradable units and regulation. The item traded may be a tangible product such as apples or a service such as repair services, legal counsel, or entertainment.
+
+Various market structures exist. In perfectly competitive markets, no participants are large enough to have the market power to set the price of a homogeneous product. In other words, every participant is a "price taker" as no participant influences the price of a product. In the real world, markets often experience imperfect competition.
+
+Forms of imperfect competition include monopoly (in which there is only one seller of a good), duopoly (in which there are only two sellers of a good), oligopoly (in which there are few sellers of a good), monopolistic competition (in which there are many sellers producing highly differentiated goods), monopsony (in which there is only one buyer of a good), and oligopsony (in which there are few buyers of a good). Firms under imperfect competition have the potential to be "price makers", which means that they can influence the prices of their products.
+
+In partial equilibrium method of analysis, it is assumed that activity in the market being analysed does not affect other markets. This method aggregates (the sum of all activity) in only one market. General-equilibrium theory studies various markets and their behaviour. It aggregates (the sum of all activity) across all markets. This method studies both changes in markets and their interactions leading towards equilibrium.
+
+
+(from Wikipedia(en) "Economics", https://en.wikipedia.org/wiki/Economics, 2024/05/15)
