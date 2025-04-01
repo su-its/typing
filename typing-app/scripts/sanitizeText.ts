@@ -3,29 +3,16 @@ import * as path from "path";
 
 // キーボードで入力可能な文字のホワイトリスト
 const allowedChars: string =
-  "1234567890-^¥!\"#$%&'()0=~|qwertyuiop@[QWERTYUIOP`{asdfghjkl;:]ASDFGHJKL+*}zxcvbnm,./_ZXCVBNM<>?_ \n\r\t";
+  "1234567890-^¥!\"#$%&'()0=~|qwertyuiop@[QWERTYUIOP`{asdfghjkl;:]ASDFGHJKL+*}zxcvbnm,./_ZXCVBNM<>?_ \n\r";
 
 // テキスト処理関数
 function sanitizeText(text: string): string {
   // 特殊なアポストロフィやクォートを標準的なものに置換
   let processedText = text
-    .replace(/['']/g, "'") // スマートシングルクォート→通常のシングルクォート
-    .replace(/[""]/g, '"') // スマートダブルクォート→通常のダブルクォート
+    .replace(/[\u2018\u2019]/g, "'") // 左右のスマートシングルクォート→通常のシングルクォート
+    .replace(/[\u201C\u201D]/g, '"') // 左右のスマートダブルクォート→通常のダブルクォート
     .replace(/[–—]/g, "-") // 各種ダッシュ→ハイフン
     .replace(/…/g, "..."); // 省略記号→ピリオド3つ
-
-  // アポストロフィを含む単語の特殊処理
-  // この処理を先に行い、アポストロフィを保持する
-  const contractionPattern = /(\w)'(\w)/g;
-  const contractions: { original: string; position: number }[] = [];
-
-  let match;
-  while ((match = contractionPattern.exec(processedText)) !== null) {
-    contractions.push({
-      original: match[0],
-      position: match.index,
-    });
-  }
 
   // ホワイトリストに含まれない文字を削除
   let filteredText = processedText
@@ -33,19 +20,8 @@ function sanitizeText(text: string): string {
     .filter((char) => allowedChars.includes(char))
     .join("");
 
-  for (const contraction of contractions) {
-    const [first, second] = contraction.original.split("'");
-    const pattern = new RegExp(`${first}\\s*${second}`);
-    filteredText = filteredText.replace(pattern, contraction.original);
-  }
-
   // 連続したスペースを単一のスペースに置換
   return filteredText.replace(/\s+/g, " ").trim();
-}
-
-// 単語の区切りとなる文字かどうかを判定
-function isWordSeparator(char: string): boolean {
-  return [" ", "\t", "\n", "\r", ".", ",", ";", ":", "!", "?", "(", ")", "[", "]", "{", "}"].includes(char);
 }
 
 // 入出力ディレクトリの設定
