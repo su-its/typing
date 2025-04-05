@@ -1,6 +1,5 @@
 "use client";
 
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex, Center, Box, Grid } from "@chakra-ui/react";
 import RankingTable from "../organism/RankingTable";
 import { Pagination } from "../molecules/Pagination";
 import RefreshButton from "../atoms/RefreshButton";
@@ -8,6 +7,7 @@ import { useEffect, useState } from "react";
 import { client } from "@/libs/api";
 import { components } from "@/libs/api/v0";
 import { showErrorToast } from "@/utils/toast";
+import styles from "@/assets/sass/organism/RankingTabs.module.scss";
 
 const RankingTabs = () => {
   const [scoreRankings, setScoreRankings] = useState<components["schemas"]["ScoreRanking"][]>([]);
@@ -56,14 +56,36 @@ const RankingTabs = () => {
   };
 
   return (
-    <Tabs onChange={handleTabChange} mt={6}>
-      <Flex justifyContent={"center"}>
-        <Grid templateColumns={"repeat(3, 1fr)"} gap={"300px"}>
-          <Box opacity={"0"}>{/* 幅を揃えるためだけの要素，視覚的な意味はなし */}</Box>
-          <TabList color={"white"}>
-            <Tab _selected={{ color: "#00ace6" }}>正打率</Tab>
-            <Tab _selected={{ color: "#00ace6" }}>入力文字数</Tab>
-          </TabList>
+    <div className={styles.ranking}>
+      <div className={styles.container}>
+        <div className={styles.menu}>
+          <div className={styles.tabs}>
+            {(() => {
+              if (sortBy === "accuracy") {
+                return (
+                  <>
+                    <div className={`${styles.tab} ${styles.selected}`} onClick={() => handleTabChange(0)}>
+                      正打率
+                    </div>
+                    <div className={styles.tab} onClick={() => handleTabChange(1)}>
+                      入力文字数
+                    </div>
+                  </>
+                );
+              } else {
+                return (
+                  <>
+                    <div className={styles.tab} onClick={() => handleTabChange(0)}>
+                      正打率
+                    </div>
+                    <div className={`${styles.tab} ${styles.selected}`} onClick={() => handleTabChange(1)}>
+                      入力文字数
+                    </div>
+                  </>
+                );
+              }
+            })()}
+          </div>
           <RefreshButton
             onClick={() => {
               setRankingStartFrom(1);
@@ -71,25 +93,18 @@ const RankingTabs = () => {
             }}
             isDisabled={false}
           />
-        </Grid>
-      </Flex>
-      <TabPanels>
-        <TabPanel>
-          <RankingTable scoreRankings={scoreRankings} />
-        </TabPanel>
-        <TabPanel>
-          <RankingTable scoreRankings={scoreRankings} />
-        </TabPanel>
-      </TabPanels>
-      <Center>
-        <Pagination
-          onPrev={() => handlePaginationClick("prev")}
-          onNext={() => handlePaginationClick("next")}
-          isPrevDisabled={rankingStartFrom <= 1}
-          isNextDisabled={rankingStartFrom + LIMIT > totalRankingCount}
-        />
-      </Center>
-    </Tabs>
+        </div>
+        <RankingTable scoreRankings={scoreRankings} />
+        <div className={styles.pagination}>
+          <Pagination
+            onPrev={() => handlePaginationClick("prev")}
+            onNext={() => handlePaginationClick("next")}
+            isPrevDisabled={rankingStartFrom <= 1}
+            isNextDisabled={rankingStartFrom + LIMIT > totalRankingCount}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 
