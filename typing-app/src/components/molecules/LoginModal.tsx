@@ -30,6 +30,7 @@ const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state
               <div className={styles.body}>
                 <input
                   required
+                  type="text"
                   name="student-number"
                   placeholder="学籍番号を入力してください"
                   pattern="[0-9A-Z]{8}"
@@ -38,10 +39,10 @@ const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state
                 />
               </div>
               <div className={styles.footer}>
-                <button className={styles.button} role="submit">
+                <button className={`${styles.button} ${styles.blue}`} role="submit">
                   ログインして続行
                 </button>
-                <button className={styles.button} onClick={onClose}>
+                <button className={`${styles.button} ${styles.gray}`} onClick={onClose}>
                   閉じる
                 </button>
               </div>

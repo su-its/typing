@@ -16,7 +16,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose }) => {
             <div className={styles.header}>ログアウトしました</div>
             <div className={styles.body}>ご利用ありがとうございました。</div>
             <div className={styles.footer}>
-              <button className={styles.button} onClick={onClose}>
+              <button className={`${styles.button} ${styles.blue}`} onClick={onClose}>
                 OK
               </button>
             </div>
