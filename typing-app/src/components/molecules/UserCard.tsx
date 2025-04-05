@@ -16,7 +16,7 @@ export const UserCardPresenter = ({ user }: UserCardPresenterProps) => {
         </div>
         <div className={styles.right}>
           <div className={styles.name}>名前: {user ? user.handleName : "ログインしていません"}</div>
-          <div className={styles.number}>学籍番号: {user ? user.studentNumber : ""}</div>
+          <div className={styles.number}>学籍番号: {user ? user.studentNumber : "未ログイン"}</div>
         </div>
       </div>
     </>
