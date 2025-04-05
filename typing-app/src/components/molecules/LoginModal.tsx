@@ -1,18 +1,9 @@
 "use client";
 
 import React, { useActionState } from "react";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  Button,
-  Input,
-} from "@chakra-ui/react";
 import { login } from "@/app/actions";
 import { showWarningToast } from "@/utils/toast";
+import styles from "@/assets/sass/molecules/LoginModal.module.scss";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -24,39 +15,41 @@ interface LoginModalProps {
 
 const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state, dispatchAction, pending }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <form
-          action={async (formData: FormData) => {
-            await dispatchAction(formData);
-            state.error && showWarningToast(state.error);
-          }}
-        >
-          <ModalHeader>続けるにはログインが必要です</ModalHeader>
-          <ModalBody>
-            <Input
-              isRequired
-              required
-              name="student-number"
-              placeholder="学籍番号を入力してください"
-              pattern="[0-9A-Z]{8}"
-              title="学籍番号"
-              role="textbox"
-            />
-          </ModalBody>
-
-          <ModalFooter>
-            <Button type="submit" colorScheme="blue" mr={3} isLoading={pending} role="submit">
-              ログインして続行
-            </Button>
-            <Button variant="ghost" onClick={onClose}>
-              閉じる
-            </Button>
-          </ModalFooter>
-        </form>
-      </ModalContent>
-    </Modal>
+    <>
+      {isOpen && (
+        <div className={styles.modal}>
+          <div className={styles.overlay}></div>
+          <div className={styles.content}>
+            <form
+              action={async (formData: FormData) => {
+                await dispatchAction(formData);
+                state.error && showWarningToast(state.error);
+              }}
+            >
+              <div className={styles.header}>続けるにはログインが必要です</div>
+              <div className={styles.body}>
+                <input
+                  required
+                  name="student-number"
+                  placeholder="学籍番号を入力してください"
+                  pattern="[0-9A-Z]{8}"
+                  title="学籍番号"
+                  role="textbox"
+                />
+              </div>
+              <div className={styles.footer}>
+                <button className={styles.button} role="submit">
+                  ログインして続行
+                </button>
+                <button className={styles.button} onClick={onClose}>
+                  閉じる
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

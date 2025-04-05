@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@chakra-ui/react";
+import styles from "@/assets/sass/molecules/LogoutModal.module.scss";
 
 interface LogoutModalProps {
   isOpen: boolean;
@@ -8,18 +8,22 @@ interface LogoutModalProps {
 
 const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>ログアウトしました</ModalHeader>
-        <ModalBody>ご利用ありがとうございました。</ModalBody>
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
-            OK
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <>
+      {isOpen && (
+        <div className={styles.modal}>
+          <div className={styles.overlay}></div>
+          <div className={styles.content}>
+            <div className={styles.header}>ログアウトしました</div>
+            <div className={styles.body}>ご利用ありがとうございました。</div>
+            <div className={styles.footer}>
+              <button className={styles.button} onClick={onClose}>
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
