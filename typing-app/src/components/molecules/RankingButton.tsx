@@ -12,7 +12,11 @@ const RankingButton = () => {
     router.push("/ranking");
   };
 
-  return <img className={styles.button} src={rankingButton.src} onClick={handleRouteRanking} />;
+  return (
+    <div className={styles.button} onClick={handleRouteRanking}>
+      <img src={rankingButton.src} />
+    </div>
+  );
 };
 
 export default RankingButton;

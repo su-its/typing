@@ -22,7 +22,9 @@ const GameStartButton = () => {
 
   return (
     <>
-      <img className={styles.button} src={gameButton.src} onClick={onClick} />
+      <div className={styles.button} onClick={onClick}>
+        <img src={gameButton.src} />
+      </div>
       <LoginModal isOpen={isOpen} onClose={onClose} />
     </>
   );
