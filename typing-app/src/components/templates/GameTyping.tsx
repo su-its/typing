@@ -3,7 +3,7 @@ import { client } from "@/libs/api";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ProgressBar from "../atoms/ProgressBar";
 import type { GameTypingProps } from "../pages/Game";
-import styles from "./GameTyping.module.css";
+import styles from "./GameTyping.module.scss";
 import { getCurrentUser } from "@/app/actions";
 import gaugePositionImg from "../../../public/img/gauge_position.png";
 import gaugeSpeedImg from "../../../public/img/gauge_speed.png";
