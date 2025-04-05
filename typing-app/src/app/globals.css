@@ -5,11 +5,25 @@
 }
 
 * {
+  margin: 0;
+  padding: 0;
   font-family: "メイリオ", "Meiryo", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "ＭＳ Ｐゴシック", sans-serif;
+  box-sizing: border-box;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-start-rgb));
   overflow-y: hidden;
+}
+
+.children {
+  width: 100%;
+  height: calc(100% - 130px);
+  position: fixed;
+  left: 0;
+  top: 70px;
+  background-image: url("/img/background.png");
+  background-size: cover;
+  background-position: center bottom;
 }

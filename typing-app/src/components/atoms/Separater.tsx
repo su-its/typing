@@ -1,13 +1,8 @@
 import React from "react";
-import { Box } from "@chakra-ui/react";
+import styles from "@/assets/sass/atoms/Separater.module.scss";
 
-interface SeparatorProps {
-  height?: string;
-  backgroundColor?: string;
-}
-
-const Separator: React.FC<SeparatorProps> = ({ height = "5px", backgroundColor = "white" }) => {
-  return <Box height={height} bg={backgroundColor} width="100%" />;
+const Separator: React.FC = () => {
+  return <div className={styles.separator} />;
 };
 
 export default Separator;

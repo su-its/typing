@@ -1,0 +1,51 @@
+@use "../color.scss";
+
+.ranking {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .container {
+    width: 100%;
+    display: block;
+
+    .menu {
+      width: 100%;
+      margin-bottom: 20px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .tabs {
+        margin-right: 50px;
+        border-bottom: solid 1px color.$gray-500;
+        overflow: hidden;
+
+        .tab {
+          padding: 10px 20px;
+          color: color.$gray-500;
+          font-size: 18px;
+          float: left;
+          user-select: none;
+          cursor: pointer;
+
+          &.selected {
+            color: color.$white;
+            border-bottom: solid 2px color.$white;
+          }
+        }
+      }
+    }
+
+    .pagination {
+      width: 100%;
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

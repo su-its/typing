@@ -1,18 +1,20 @@
+@use "@/assets/sass/color.scss";
+
 .box {
   width: 70%;
   height: calc(100% - 300px);
   margin: 50px auto 0 auto;
   position: absolute;
   left: 15%;
-  top: 120px;
-  background-color: #263238;
-  border: solid 4px #fff;
+  top: 90px;
+  background-color: color.$bluegray-900;
+  border: solid 4px color.$white;
 }
 
 .heading {
   height: 40px;
   position: absolute;
-  background-color: #fff;
+  background-color: color.$white;
   font-size: 18px;
   font-weight: bold;
   text-align: center;
@@ -93,7 +95,7 @@
   left: 434px;
   bottom: -48px;
   font-size: 18px;
-  color: #fff;
+  color: color.$white;
 }
 
 .info_time_span {
@@ -108,14 +110,14 @@
   top: -52px;
   font-size: 18px;
   text-align: center;
-  color: #fff;
+  color: color.$white;
 }
 
 .title {
   position: absolute;
   left: 146px;
   top: -36px;
-  color: #fff;
+  color: color.$white;
   font-size: 18px;
   font-weight: bold;
 }
@@ -124,17 +126,17 @@
   padding: 40px;
   font-size: 24px;
   line-height: 48px;
-  color: #fff;
+  color: color.$white;
   height: 100%;
   overflow-y: hidden;
 }
 
 .span_typed_text {
-  color: #888;
+  color: color.$gray-500;
 }
 
 .span_current_text {
-  color: #000;
-  background-color: #ffff00;
+  color: color.$black;
+  background-color: color.$yellow-500;
   white-space: pre-wrap;
 }

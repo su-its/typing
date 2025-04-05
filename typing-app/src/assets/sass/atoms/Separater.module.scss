@@ -1,0 +1,7 @@
+@use "../color.scss";
+
+.separator {
+  width: 100%;
+  height: 2px;
+  background-color: color.$white;
+}

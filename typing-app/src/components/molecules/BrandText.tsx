@@ -1,12 +1,12 @@
 import React from "react";
-import { Box, Image } from "@chakra-ui/react";
+import styles from "@/assets/sass/molecules/BrandText.module.scss";
 import brandImage from "@/assets/images/brand.png";
 
 const BrandText: React.FC = () => {
   return (
-    <Box>
-      <Image src={brandImage.src} alt="Brand" ml={2} />
-    </Box>
+    <div className={styles["brand-text"]}>
+      <img src={brandImage.src} />
+    </div>
   );
 };
 

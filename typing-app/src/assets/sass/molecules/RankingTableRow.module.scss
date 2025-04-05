@@ -1,0 +1,28 @@
+@use "../color.scss";
+
+.row {
+  background-color: color.$gray-900;
+  color: color.$white;
+
+  td {
+    padding: 12px 0;
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .rank {
+    color: color.$white;
+    background-color: color.$blue-800;
+    font-weight: bold;
+    outline: 10px solid color.$gray-900;
+    outline-offset: -10px;
+  }
+
+  &:nth-child(odd) {
+    background-color: color.$gray-800;
+
+    .rank {
+      outline: 10px solid color.$gray-800;
+    }
+  }
+}

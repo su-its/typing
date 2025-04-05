@@ -1,0 +1,38 @@
+@use "../color.scss";
+
+.user-card {
+  width: 360px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: color.$blue-800;
+  overflow: hidden;
+
+  .left {
+    width: 70px;
+    float: left;
+
+    img {
+      width: 70px;
+    }
+  }
+
+  .right {
+    width: calc(100% - 70px);
+    padding-left: 15px;
+    float: right;
+
+    .name {
+      padding-top: 10px;
+      color: color.$white;
+      font-size: 18px;
+      font-weight: bold;
+      text-overflow: ellipsis;
+    }
+
+    .number {
+      color: color.$white;
+      font-size: 14px;
+    }
+  }
+}

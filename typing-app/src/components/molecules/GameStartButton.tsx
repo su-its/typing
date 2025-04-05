@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import { Image, useDisclosure } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import LoginModal from "./LoginModal";
 import gameButton from "@/assets/images/home/game.png";
 import { getCurrentUser } from "@/app/actions";
 import { useRouter } from "next/navigation";
+import styles from "@/assets/sass/molecules/GameStartButton.module.scss";
 
 const GameStartButton = () => {
   const router = useRouter();
@@ -21,7 +22,9 @@ const GameStartButton = () => {
 
   return (
     <>
-      <Image mb={2} src={gameButton.src} onClick={onClick} cursor="pointer" />
+      <div className={styles.button} onClick={onClick}>
+        <img src={gameButton.src} />
+      </div>
       <LoginModal isOpen={isOpen} onClose={onClose} />
     </>
   );

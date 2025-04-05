@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import styles from "@/assets/sass/atoms/CustomButton.module.scss";
 
 interface ButtonProps {
   onClick: () => void;
@@ -7,9 +7,13 @@ interface ButtonProps {
 }
 
 export const CustomButton = ({ onClick, isDisabled, children }: ButtonProps) => {
-  return (
-    <Button bg={"#2B6CB0"} color={"white"} onClick={onClick} isDisabled={isDisabled}>
-      {children}
-    </Button>
-  );
+  if (isDisabled) {
+    return <div className={`${styles.button} ${styles.disabled}`}>{children}</div>;
+  } else {
+    return (
+      <div className={styles.button} onClick={onClick}>
+        {children}
+      </div>
+    );
+  }
 };

@@ -1,0 +1,13 @@
+@use "../color.scss";
+
+.footer {
+  width: 100%;
+  height: 60px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+
+  .brand-text {
+    background-color: color.$blue-800;
+  }
+}

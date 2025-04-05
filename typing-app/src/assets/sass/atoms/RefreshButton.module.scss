@@ -1,0 +1,28 @@
+@use "../color.scss";
+
+.button {
+  width: 60px;
+  height: 50px;
+  padding: 13px 18px;
+  color: color.$white;
+  background-color: color.$blue-800;
+  border-radius: 4px;
+  float: left;
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
+  transition: all 0.2s 0s ease;
+
+  &:hover {
+    background-color: color.$blue-500;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: default;
+
+    &:hover {
+      background-color: color.$blue-800;
+    }
+  }
+}

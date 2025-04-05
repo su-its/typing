@@ -1,4 +1,3 @@
-import { Tbody } from "@chakra-ui/react";
 import RankingTableRow from "./RankingTableRow";
 import { components } from "@/libs/api/v0";
 
@@ -8,11 +7,11 @@ export type RankingTableBodyProps = {
 
 const RankingTableBody: React.FC<RankingTableBodyProps> = ({ scoreRankings }) => {
   return (
-    <Tbody>
+    <tbody>
       {scoreRankings.map((scoreRanking) => (
         <RankingTableRow key={scoreRanking.score?.id ?? `rank-${scoreRanking.rank}`} {...scoreRanking} />
       ))}
-    </Tbody>
+    </tbody>
   );
 };
 
