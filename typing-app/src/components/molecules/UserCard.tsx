@@ -1,19 +1,13 @@
 import React from "react";
-import type { StackProps } from "@chakra-ui/react";
 import { getCurrentUser } from "@/app/actions";
 import type { User } from "@/types/user";
 import styles from "@/assets/sass/molecules/UserCard.module.scss";
 
-interface UserCardPresenterProps extends StackProps {
+interface UserCardPresenterProps {
   user?: User;
 }
 
-export const UserCardPresenter = ({ user, ...rest }: UserCardPresenterProps) => {
-  const props: StackProps = {
-    width: rest?.width ?? "18%",
-    ...rest,
-  };
-
+export const UserCardPresenter = ({ user }: UserCardPresenterProps) => {
   return (
     <>
       <div className={styles["user-card"]}>
@@ -29,7 +23,7 @@ export const UserCardPresenter = ({ user, ...rest }: UserCardPresenterProps) => 
   );
 };
 
-const UserCard = async (props?: StackProps) => {
+const UserCard = async (props?: UserCardPresenterProps) => {
   const user = await getCurrentUser();
   return <UserCardPresenter user={user} {...props} />;
 };
