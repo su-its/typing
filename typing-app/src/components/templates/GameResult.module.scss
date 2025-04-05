@@ -1,0 +1,87 @@
+@use "@/assets/sass/color.scss";
+
+.box {
+  width: 70%;
+  height: calc(100% - 300px);
+  margin: 50px auto 0 auto;
+  padding: 20px 30px;
+  position: absolute;
+  left: 15%;
+  top: 120px;
+  background-color: color.$bluegray-900;
+  border: solid 4px color.$white;
+
+  .header {
+    width: 100%;
+    padding: 10px 0;
+    color: color.$white;
+    background-color: color.$blue-800;
+    border-radius: 4px;
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .table {
+    margin: 30px 0;
+    overflow: hidden;
+
+    .row {
+      width: 50%;
+      margin: 10px auto;
+      overflow: hidden;
+
+      .left,
+      .right {
+        width: 50%;
+        color: color.$white;
+        font-size: 28px;
+      }
+
+      .left {
+        float: left;
+      }
+
+      .right {
+        float: right;
+        text-align: right;
+      }
+    }
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+
+    .container {
+      display: block;
+
+      .button {
+        width: 300px;
+        margin: 0 10px;
+        padding: 10px 0;
+        color: color.$white;
+        border-radius: 4px;
+        float: left;
+        font-size: 24px;
+        text-align: center;
+        user-select: none;
+        cursor: pointer;
+
+        &.red {
+          background-color: color.$red-800;
+        }
+
+        &.blue {
+          background-color: color.$blue-800;
+        }
+      }
+    }
+  }
+}
+
+.centerText {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
