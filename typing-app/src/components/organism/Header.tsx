@@ -10,7 +10,7 @@ const Header: React.FC = () => {
     <>
       <div className={styles.header}>
         <Banner />
-        <UserCard width="360px" />
+        <UserCard />
       </div>
       <Separator />
     </>
