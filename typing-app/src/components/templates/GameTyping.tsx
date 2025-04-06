@@ -220,7 +220,14 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg.src} width={281} height={24} alt="" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className={styles.gauge_position} id="gauge_position" src={gaugePositionImg.src} width={330} height={24} alt="" />
+        <img
+          className={styles.gauge_position}
+          id="gauge_position"
+          src={gaugePositionImg.src}
+          width={330}
+          height={24}
+          alt=""
+        />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={styles.gauge_speed} id="gauge_speed" src={gaugeSpeedImg.src} width={330} height={24} alt="" />
         <div className={styles.title}>-</div>
