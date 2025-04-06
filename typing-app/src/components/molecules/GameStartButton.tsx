@@ -22,8 +22,9 @@ const GameStartButton = () => {
 
   return (
     <>
-      <div className={styles.button} onClick={onClick}>
-        <img src={gameButton.src} />
+      <div className={styles.button} onClick={onClick} aria-label="start game">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={gameButton.src} alt="" />
       </div>
       <LoginModal isOpen={isOpen} onClose={onClose} />
     </>

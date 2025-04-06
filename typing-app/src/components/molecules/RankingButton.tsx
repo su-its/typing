@@ -13,8 +13,9 @@ const RankingButton = () => {
   };
 
   return (
-    <div className={styles.button} onClick={handleRouteRanking}>
-      <img src={rankingButton.src} />
+    <div className={styles.button} onClick={handleRouteRanking} aria-label="see ranking">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={rankingButton.src} alt="" />
     </div>
   );
 };

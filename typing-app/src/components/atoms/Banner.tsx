@@ -7,6 +7,7 @@ const Banner: React.FC = () => {
   return (
     <div className={styles.banner}>
       <Link href="/">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={bannerImage.src} alt="Logo" />
       </Link>
     </div>

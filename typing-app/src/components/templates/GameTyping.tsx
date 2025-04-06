@@ -217,9 +217,12 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
         <div className={`${styles.progress} ${styles.progress_speed}`}>
           <ProgressBar maxWidth={330} height={20} maxValue={1000} value={stats.averageTypeSpeed} />
         </div>
-        <img className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg.src} width={281} height={24} />
-        <img className={styles.gauge_position} id="gauge_position" src={gaugePositionImg.src} width={330} height={24} />
-        <img className={styles.gauge_speed} id="gauge_speed" src={gaugeSpeedImg.src} width={330} height={24} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg.src} width={281} height={24} alt="" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className={styles.gauge_position} id="gauge_position" src={gaugePositionImg.src} width={330} height={24} alt="" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className={styles.gauge_speed} id="gauge_speed" src={gaugeSpeedImg.src} width={330} height={24} alt="" />
         <div className={styles.title}>-</div>
         <div className={styles.text}>
           <div>

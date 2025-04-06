@@ -48,6 +48,7 @@ const GamePre: React.FC<GamePreProps> = ({ nextPage }) => {
           <p>テキストが表示されているボックスをクリックすると元に戻れます。</p>
         </div>
         <div className={styles.right}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={keyboardImage.src} alt="Keyboard" />
         </div>
       </div>

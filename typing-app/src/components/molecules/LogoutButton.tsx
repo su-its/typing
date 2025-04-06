@@ -25,8 +25,9 @@ const LogoutButton: React.FC = () => {
 
   return (
     <>
-      <div className={styles.button} onClick={handleLogout}>
-        <img src={logoutButton.src} />
+      <div className={styles.button} onClick={handleLogout} aria-label="Logout">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={logoutButton.src} alt="" />
       </div>
       <LogoutModal isOpen={isOpen} onClose={reLoad} />
     </>

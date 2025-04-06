@@ -5,7 +5,8 @@ import brandImage from "@/assets/images/brand.png";
 const BrandText: React.FC = () => {
   return (
     <div className={styles["brand-text"]}>
-      <img src={brandImage.src} />
+      {/* eslint-disable-next-line @next/next/no-img-element*/}
+      <img src={brandImage.src} alt="Brand" />
     </div>
   );
 };
