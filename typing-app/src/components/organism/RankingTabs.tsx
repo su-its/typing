@@ -60,31 +60,18 @@ const RankingTabs = () => {
       <div className={styles.container}>
         <div className={styles.menu}>
           <div className={styles.tabs}>
-            {(() => {
-              if (sortBy === "accuracy") {
-                return (
-                  <>
-                    <div className={`${styles.tab} ${styles.selected}`} onClick={() => handleTabChange(0)}>
-                      正打率
-                    </div>
-                    <div className={styles.tab} onClick={() => handleTabChange(1)}>
-                      入力文字数
-                    </div>
-                  </>
-                );
-              } else {
-                return (
-                  <>
-                    <div className={styles.tab} onClick={() => handleTabChange(0)}>
-                      正打率
-                    </div>
-                    <div className={`${styles.tab} ${styles.selected}`} onClick={() => handleTabChange(1)}>
-                      入力文字数
-                    </div>
-                  </>
-                );
-              }
-            })()}
+            <div
+              className={`${styles.tab}${sortBy === "accuracy" ? " " + styles.selected : ""}`}
+              onClick={() => handleTabChange(0)}
+            >
+              正打率
+            </div>
+            <div
+              className={`${styles.tab}${sortBy === "accuracy" ? "" : " " + styles.selected}`}
+              onClick={() => handleTabChange(1)}
+            >
+              入力文字数
+            </div>
           </div>
           <RefreshButton
             onClick={() => {
