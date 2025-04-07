@@ -5,6 +5,8 @@
   padding: 10px 20px;
   color: color.$white;
   background-color: color.$blue-800;
+  font-size: 18px;
+  border: 0;
   border-radius: 4px;
   float: left;
   user-select: none;
@@ -15,9 +17,9 @@
     background-color: color.$blue-500;
   }
 
-  &.disabled {
+  &:disabled {
     opacity: 0.5;
-    cursor: default;
+    cursor: not-allowed;
 
     &:hover {
       background-color: color.$blue-800;

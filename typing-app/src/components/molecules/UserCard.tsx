@@ -12,7 +12,7 @@ export const UserCardPresenter = ({ user }: UserCardPresenterProps) => {
     <>
       <div className={styles["user-card"]}>
         <div className={styles.left}>
-          <img src={"../../../img/user_default.png"} />
+          <img src={"/img/user_default.png"} alt="Icon" />
         </div>
         <div className={styles.right}>
           <div className={styles.name}>名前: {user ? user.handleName : "ログインしていません"}</div>

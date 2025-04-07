@@ -91,7 +91,6 @@ const RankingTabs = () => {
               setRankingStartFrom(1);
               fetchData();
             }}
-            isDisabled={false}
           />
         </div>
         <RankingTable scoreRankings={scoreRankings} />

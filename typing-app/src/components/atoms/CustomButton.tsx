@@ -7,13 +7,9 @@ interface ButtonProps {
 }
 
 export const CustomButton = ({ onClick, isDisabled, children }: ButtonProps) => {
-  if (isDisabled) {
-    return <div className={`${styles.button} ${styles.disabled}`}>{children}</div>;
-  } else {
-    return (
-      <div className={styles.button} onClick={onClick}>
-        {children}
-      </div>
-    );
-  }
+  return (
+    <button className={styles.button} disabled={isDisabled} onClick={onClick}>
+      {children}
+    </button>
+  );
 };
