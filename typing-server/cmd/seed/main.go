@@ -8,9 +8,7 @@ import (
 	"math/rand"
 	"os"
 	"sync"
-	"time"
 
-	"github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/config"
 	"github.com/su-its/typing/typing-server/internal/domain/service"
@@ -47,33 +45,20 @@ func main() {
 
 	// ログ・設定の初期化
 	logr := logger.New()
-	cfg := config.New()
-	jst, err := time.LoadLocation("Asia/Tokyo")
+	cfg, err := config.New()
 	if err != nil {
-		logr.Error("タイムゾーンのロードに失敗", "error", err, "timezone", "Asia/Tokyo")
+		logr.Error("failed to load config", "error", err)
 		os.Exit(1)
 	}
 	logr.Info("config", "environment", cfg.Environment, "db_addr", cfg.DBAddr)
-	logr.Info("timezone", "timezone", "Asia/Tokyo")
+	logr.Info("timezone", "timezone", cfg.GetLocation().String())
 
-	// MySQL設定
-	mysqlConfig := &mysql.Config{
-		DBName:               "typing-db",
-		User:                 "user",
-		Passwd:               "password",
-		Net:                  "tcp",
-		Addr:                 cfg.DBAddr,
-		ParseTime:            true,
-		Loc:                  jst,
-		AllowNativePasswords: true,
-		TLSConfig:            "false", // SSL/TLS接続を無効化
-	}
-	logr.Info("mysql config", "config", mysqlConfig.FormatDSN())
+	logr.Info("mysql config", "dsn", cfg.GetMySQLDSN())
 
 	// entクライアントの初期化
-	entClient, err := ent_generated.Open("mysql", mysqlConfig.FormatDSN())
+	entClient, err := ent_generated.Open("mysql", cfg.GetMySQLDSN())
 	if err != nil {
-		logr.Error("データベース接続に失敗", "error", err, "config", mysqlConfig.FormatDSN())
+		logr.Error("データベース接続に失敗", "error", err, "dsn", cfg.GetMySQLDSN())
 		os.Exit(1)
 	}
 	defer entClient.Close()

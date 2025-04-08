@@ -3,9 +3,7 @@ package main
 import (
 	"context"
 	"net/http"
-	"time"
 
-	"github.com/go-sql-driver/mysql"
 	"github.com/su-its/typing/typing-server/config"
 	"github.com/su-its/typing/typing-server/internal/domain/service"
 	"github.com/su-its/typing/typing-server/internal/domain/usecase"
@@ -19,38 +17,26 @@ import (
 
 func main() {
 	log := logger.New()
-	config := config.New()
-	jst, err := time.LoadLocation("Asia/Tokyo")
+	cfg, err := config.New()
 	if err != nil {
-		log.Error("failed to load timezone",
-			"error", err,
-			"timezone", "Asia/Tokyo")
+		log.Error("failed to load config", "error", err)
 		return
 	}
-	log.Info("config",
-		"environment", config.Environment,
-		"db_addr", config.DBAddr)
-	log.Info("timezone",
-		"timezone", "Asia/Tokyo")
 
-	mysqlConfig := &mysql.Config{
-		DBName:    "typing-db",
-		User:      "user",
-		Passwd:    "password",
-		Net:       "tcp",
-		Addr:      config.DBAddr,
-		ParseTime: true,
-		Loc:       jst,
-	}
-	log.Info("mysql config",
-		"config", mysqlConfig.FormatDSN())
+	log.Info("config",
+		"environment", cfg.Environment,
+		"db_addr", cfg.DBAddr)
+	log.Info("timezone",
+		"timezone", cfg.GetLocation().String())
+
+	log.Info("mysql config", "dsn", cfg.GetMySQLDSN())
 
 	// entクライアントの初期化
-	entClient, err := ent_generated.Open("mysql", mysqlConfig.FormatDSN())
+	entClient, err := ent_generated.Open("mysql", cfg.GetMySQLDSN())
 	if err != nil {
 		log.Error("failed to open database connection",
 			"error", err,
-			"config", mysqlConfig.FormatDSN())
+			"dsn", cfg.GetMySQLDSN())
 		return
 	}
 	defer entClient.Close()
@@ -85,7 +71,7 @@ func main() {
 	scoreHandler := handler.NewScoreHandler(scoreUseCase, log)
 
 	// ルーターの作成
-	router := interfaces.NewRouter(healthHandler, userHandler, scoreHandler, config)
+	router := interfaces.NewRouter(healthHandler, userHandler, scoreHandler, cfg)
 
 	// サーバー起動
 	log.Info("Starting server on :8080")
