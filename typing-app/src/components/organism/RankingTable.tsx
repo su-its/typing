@@ -1,17 +1,15 @@
-import { Table, TableContainer, Container } from "@chakra-ui/react";
 import RankingTableHead from "../molecules/RankingTableHead";
 import RankingTableBody, { RankingTableBodyProps } from "../molecules/RankingTableBody";
+import styles from "@/assets/sass/organism/RankingTable.module.scss";
 
 const RankingTable: React.FC<RankingTableBodyProps> = ({ scoreRankings }) => {
   return (
-    <TableContainer>
-      <Container maxW={"container.xl"}>
-        <Table rounded="base" shadow="md">
-          <RankingTableHead />
-          <RankingTableBody scoreRankings={scoreRankings} />
-        </Table>
-      </Container>
-    </TableContainer>
+    <div>
+      <table className={styles.ranking}>
+        <RankingTableHead />
+        <RankingTableBody scoreRankings={scoreRankings} />
+      </table>
+    </div>
   );
 };
 

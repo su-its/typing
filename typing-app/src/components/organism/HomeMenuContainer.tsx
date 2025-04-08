@@ -1,18 +1,18 @@
-import { Flex, VStack } from "@chakra-ui/react";
 import GameStartButton from "../molecules/GameStartButton";
 import RankingButton from "../molecules/RankingButton";
 import LogoutButton from "../molecules/LogoutButton";
+import styles from "@/assets/sass/organism/HomeMenuContainer.module.scss";
 
 const HomeMenuContainer = () => {
   return (
-    <Flex justify="center" align="center" h="80vh">
-      <VStack>
+    <div className={styles.menu}>
+      <div className={styles.container}>
         {/* TODO: ログイン状況に応じて表示を切り替え */}
         <GameStartButton />
         <RankingButton />
         <LogoutButton />
-      </VStack>
-    </Flex>
+      </div>
+    </div>
   );
 };
 

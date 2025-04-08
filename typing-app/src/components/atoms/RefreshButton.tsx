@@ -1,5 +1,5 @@
 import React from "react";
-import { IconButton } from "@chakra-ui/react";
+import styles from "@/assets/sass/atoms/RefreshButton.module.scss";
 
 const RefreshIcon = () => (
   <svg
@@ -24,17 +24,20 @@ interface RefreshButtonProps {
   isDisabled?: boolean;
 }
 
-const RefreshButton: React.FC<RefreshButtonProps> = ({ onClick, isDisabled = false }) => (
-  <IconButton
-    width={"50px"}
-    right={"250px"}
-    bg="#2B6CB0"
-    color="White"
-    aria-label="refresh"
-    icon={<RefreshIcon />}
-    onClick={onClick}
-    isDisabled={isDisabled}
-  />
-);
+const RefreshButton: React.FC<RefreshButtonProps> = ({ onClick, isDisabled = false }) => {
+  if (isDisabled) {
+    return (
+      <div className={`${styles.button} ${styles.disabled}`}>
+        <RefreshIcon />
+      </div>
+    );
+  } else {
+    return (
+      <div className={styles.button} onClick={onClick}>
+        <RefreshIcon />
+      </div>
+    );
+  }
+};
 
 export default RefreshButton;
