@@ -8,36 +8,58 @@
   align-items: center;
 
   .container {
-    width: 100%;
-    display: block;
+    width: 90%;
+    max-width: 1000px;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
 
     .menu {
       width: 100%;
       margin-bottom: 20px;
-      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-shrink: 0;
 
       .tabs {
-        margin-right: 50px;
         border-bottom: solid 1px color.$gray-500;
         overflow: hidden;
+        display: inline-flex;
 
         .tab {
           padding: 10px 20px;
           color: color.$gray-500;
+          background: none;
+          border: none;
           font-size: 18px;
-          float: left;
           user-select: none;
           cursor: pointer;
+          border-bottom: solid 2px transparent;
+          margin-bottom: -1px;
+          transition:
+            color 0.2s,
+            border-color 0.2s;
+
+          &:hover {
+            color: color.$white;
+          }
 
           &.selected {
             color: color.$white;
-            border-bottom: solid 2px color.$white;
+            border-bottom-color: color.$white;
           }
         }
       }
+
+      .refreshButtonWrapper {
+        margin-left: 20px;
+      }
+    }
+
+    .tableContainer {
+      flex-grow: 1;
+      overflow: auto;
     }
 
     .pagination {
@@ -46,6 +68,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-shrink: 0;
     }
   }
 }

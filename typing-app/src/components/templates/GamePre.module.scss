@@ -9,21 +9,38 @@
   top: 90px;
   background-color: color.$bluegray-900;
   border: solid 4px color.$white;
+  display: flex;
+  flex-direction: column;
+  @media (max-width: 1024px) {
+    width: 90%;
+    left: 5%;
+  }
+  @media (max-width: 768px) {
+    height: calc(100% - 150px);
+    top: 70px;
+  }
 }
 
 .header {
   margin-top: 40px;
+  margin-bottom: 20px;
   color: color.$white;
   font-size: 40px;
   font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
+  @media (max-width: 768px) {
+    font-size: 32px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
 }
 
 .main {
-  margin-top: 50px;
-  overflow: hidden;
+  overflow: auto;
+  flex-grow: 1;
 
   .left {
     width: 60%;
@@ -35,26 +52,59 @@
     p {
       margin-bottom: 5px;
     }
+
+    @media (max-width: 768px) {
+      float: none;
+      width: 90%;
+      padding-left: 5%;
+      padding-right: 5%;
+      font-size: 18px;
+      margin: 0 auto 20px auto;
+    }
   }
 
   .right {
     width: 40%;
     padding-right: 10px;
     float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     img {
       width: auto;
       height: 300px;
     }
+
+    @media (max-width: 768px) {
+      float: none;
+      width: 90%;
+      padding: 0 5%;
+      margin: 0 auto;
+
+      img {
+        width: 80%;
+        height: auto;
+        max-width: 300px;
+      }
+    }
   }
 }
 
 .footer {
-  margin-top: 60px;
+  margin-top: auto;
+  padding-top: 20px;
+  padding-bottom: 20px;
   color: color.$white;
   font-size: 26px;
   font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
+  @media (max-width: 768px) {
+    font-size: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
 }

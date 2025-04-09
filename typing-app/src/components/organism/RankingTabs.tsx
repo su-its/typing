@@ -99,27 +99,33 @@ const RankingTabs = () => {
       <div className={styles.container}>
         <div className={styles.menu}>
           <div className={styles.tabs}>
-            <div
-              className={`${styles.tab}${sortBy === "accuracy" ? " " + styles.selected : ""}`}
+            <button
+              type="button"
+              className={`${styles.tab} ${sortBy === "accuracy" ? styles.selected : ""}`}
               onClick={() => handleTabChange(0)}
             >
               正打率
-            </div>
-            <div
-              className={`${styles.tab}${sortBy === "accuracy" ? "" : " " + styles.selected}`}
+            </button>
+            <button
+              type="button"
+              className={`${styles.tab} ${sortBy !== "accuracy" ? styles.selected : ""}`}
               onClick={() => handleTabChange(1)}
             >
               入力文字数
-            </div>
+            </button>
           </div>
-          <RefreshButton
-            onClick={() => {
-              setRankingStartFrom(1);
-              fetchData();
-            }}
-          />
+          <div className={styles.refreshButtonWrapper}>
+            <RefreshButton
+              onClick={() => {
+                setRankingStartFrom(1);
+                fetchData();
+              }}
+            />
+          </div>
         </div>
-        <RankingTable scoreRankings={scoreRankings} displayRows={LIMIT} columns={columns} />
+        <div className={styles.tableContainer}>
+          <RankingTable scoreRankings={scoreRankings} displayRows={LIMIT} columns={columns} />
+        </div>
         <div className={styles.pagination}>
           <Pagination
             onPrev={() => handlePaginationClick("prev")}
