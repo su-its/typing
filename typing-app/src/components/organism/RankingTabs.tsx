@@ -80,7 +80,7 @@ const RankingTabs = () => {
             }}
           />
         </div>
-        <RankingTable scoreRankings={scoreRankings} />
+        <RankingTable scoreRankings={scoreRankings} displayRows={LIMIT} />
         <div className={styles.pagination}>
           <Pagination
             onPrev={() => handlePaginationClick("prev")}

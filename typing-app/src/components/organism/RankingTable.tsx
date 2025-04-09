@@ -7,7 +7,7 @@ const RankingTable: React.FC<RankingTableBodyProps> = ({ scoreRankings }) => {
     <div>
       <table className={styles.ranking}>
         <RankingTableHead />
-        <RankingTableBody scoreRankings={scoreRankings} />
+        <RankingTableBody scoreRankings={scoreRankings} displayRows={10} />
       </table>
     </div>
   );
