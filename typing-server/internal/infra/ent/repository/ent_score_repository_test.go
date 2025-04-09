@@ -10,46 +10,27 @@ import (
 	"github.com/su-its/typing/typing-server/internal/infra/ent/ent_generated"
 )
 
-func TestNewEntScoreRepository(t *testing.T) {
+func TestEntScoreRepository_GetScores(t *testing.T) {
 	type args struct {
-		client *ent_generated.Client
+		ctx        context.Context
+		keystrokes *int     // 型と名前を変更
+		accuracy   *float64 // 型と名前を変更
+		sortBy     *string  // 型と名前を変更
 	}
 	tests := []struct {
 		name string
+		r    *EntScoreRepository
 		args args
-		want *EntScoreRepository
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := NewEntScoreRepository(tt.args.client); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewEntScoreRepository() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestEntScoreRepository_GetScores(t *testing.T) {
-	type args struct {
-		ctx    context.Context
-		sortBy string
-		start  int
-		limit  int
-	}
-	tests := []struct {
-		name    string
-		r       *EntScoreRepository
-		args    args
-		want    []*model.Score
-		want1   int
+		want []*model.Score
+		// want1 は不要なので削除
 		wantErr bool
 	}{
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, err := tt.r.GetScores(tt.args.ctx, tt.args.sortBy, tt.args.start, tt.args.limit)
+			// 戻り値の数を修正し、引数を正しいものに変更
+			got, err := tt.r.GetScores(tt.args.ctx, tt.args.keystrokes, tt.args.accuracy, tt.args.sortBy)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("EntScoreRepository.GetScores() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -57,13 +38,12 @@ func TestEntScoreRepository_GetScores(t *testing.T) {
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("EntScoreRepository.GetScores() got = %v, want %v", got, tt.want)
 			}
-			if got1 != tt.want1 {
-				t.Errorf("EntScoreRepository.GetScores() got1 = %v, want %v", got1, tt.want1)
-			}
+			// got1 のチェックは不要なので削除
 		})
 	}
 }
 
+/* // GetMaxScores は EntScoreRepository に存在しないためコメントアウト
 func TestEntScoreRepository_GetMaxScores(t *testing.T) {
 	type args struct {
 		ctx    context.Context
@@ -95,15 +75,15 @@ func TestEntScoreRepository_GetMaxScores(t *testing.T) {
 		})
 	}
 }
+*/
 
 func TestEntScoreRepository_CreateScore(t *testing.T) {
 	type args struct {
-		ctx             context.Context
-		userID          uuid.UUID
-		keystrokes      int
-		accuracy        float64
-		isMaxKeystrokes bool
-		isMaxAccuracy   bool
+		ctx        context.Context
+		userID     uuid.UUID
+		keystrokes int
+		accuracy   float64
+		// isMaxKeystrokes と isMaxAccuracy は CreateScore メソッドに不要なため削除
 	}
 	tests := []struct {
 		name    string
@@ -115,8 +95,29 @@ func TestEntScoreRepository_CreateScore(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := tt.r.CreateScore(tt.args.ctx, tt.args.userID, tt.args.keystrokes, tt.args.accuracy, tt.args.isMaxKeystrokes, tt.args.isMaxAccuracy); (err != nil) != tt.wantErr {
+			// 不要な引数を削除
+			if err := tt.r.CreateScore(tt.args.ctx, tt.args.userID, tt.args.keystrokes, tt.args.accuracy); (err != nil) != tt.wantErr {
 				t.Errorf("EntScoreRepository.CreateScore() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestNewEntScoreRepository(t *testing.T) {
+	type args struct {
+		client *ent_generated.Client
+	}
+	tests := []struct {
+		name string
+		args args
+		want *EntScoreRepository
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewEntScoreRepository(tt.args.client); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewEntScoreRepository() = %v, want %v", got, tt.want)
 			}
 		})
 	}

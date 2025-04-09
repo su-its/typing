@@ -56,3 +56,32 @@ func TestEntUserRepository_GetUserByStudentNumber(t *testing.T) {
 		})
 	}
 }
+
+func TestEntUserRepository_CreateUser(t *testing.T) {
+	type args struct {
+		ctx           context.Context
+		studentNumber string
+		handleName    string
+	}
+	tests := []struct {
+		name    string
+		r       *EntUserRepository
+		args    args
+		want    *model.User
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := tt.r.CreateUser(tt.args.ctx, tt.args.studentNumber, tt.args.handleName)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("EntUserRepository.CreateUser() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("EntUserRepository.CreateUser() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
