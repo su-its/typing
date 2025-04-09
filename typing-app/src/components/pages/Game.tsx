@@ -1,5 +1,4 @@
 "use client";
-import { VStack } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import GamePre from "../templates/GamePre";
 import GameResult from "../templates/GameResult";
@@ -73,7 +72,7 @@ const GamePage: React.FC<GamePageProps> = ({ subjectText }) => {
   ];
   return (
     <>
-      <VStack>{subPageList[screenIndex]}</VStack>
+      <div>{subPageList[screenIndex]}</div>
     </>
   );
 };

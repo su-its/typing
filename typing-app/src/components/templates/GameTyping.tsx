@@ -1,11 +1,9 @@
 import type Score from "@/types/Score";
-import { Box } from "@chakra-ui/react";
-import Image from "next/image";
 import { client } from "@/libs/api";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ProgressBar from "../atoms/ProgressBar";
 import type { GameTypingProps } from "../pages/Game";
-import styles from "./GameTyping.module.css";
+import styles from "./GameTyping.module.scss";
 import { getCurrentUser } from "@/app/actions";
 import gaugePositionImg from "../../../public/img/gauge_position.png";
 import gaugeSpeedImg from "../../../public/img/gauge_speed.png";
@@ -203,7 +201,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
   }, []);
 
   return (
-    <Box tabIndex={0} ref={boxRef}>
+    <div tabIndex={0} ref={boxRef}>
       <div className={styles.box}>
         {/* TODO: Article Nameって消すんじゃなかったっけ */}
         <div className={`${styles.heading} ${styles.heading_name}`}>Article Name</div>
@@ -219,16 +217,19 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
         <div className={`${styles.progress} ${styles.progress_speed}`}>
           <ProgressBar maxWidth={330} height={20} maxValue={1000} value={stats.averageTypeSpeed} />
         </div>
-        <Image className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg} alt={""} width={281} height={24} />
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg.src} width={281} height={24} alt="" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           className={styles.gauge_position}
           id="gauge_position"
-          src={gaugePositionImg}
-          alt={""}
+          src={gaugePositionImg.src}
           width={330}
           height={24}
+          alt=""
         />
-        <Image className={styles.gauge_speed} id="gauge_speed" src={gaugeSpeedImg} alt={""} width={330} height={24} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className={styles.gauge_speed} id="gauge_speed" src={gaugeSpeedImg.src} width={330} height={24} alt="" />
         <div className={styles.title}>-</div>
         <div className={styles.text}>
           <div>
@@ -244,7 +245,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
           {stats.correctKeystrokes} 字 / {subjectText.length} 字
         </div>
       </div>
-    </Box>
+    </div>
   );
 };
 

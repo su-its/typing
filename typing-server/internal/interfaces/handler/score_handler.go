@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -13,13 +14,13 @@ import (
 // ScoreHandler はスコア関連の HTTP ハンドラ
 type ScoreHandler struct {
 	scoreUseCase *usecase.ScoreUseCase
+	log          *slog.Logger
 }
 
 // NewScoreHandler は ScoreHandler のインスタンスを生成する
-func NewScoreHandler(scoreUseCase *usecase.ScoreUseCase) *ScoreHandler {
-	return &ScoreHandler{scoreUseCase: scoreUseCase}
+func NewScoreHandler(scoreUseCase *usecase.ScoreUseCase, log *slog.Logger) *ScoreHandler {
+	return &ScoreHandler{scoreUseCase: scoreUseCase, log: log}
 }
-
 
 // GetScoresRanking はスコアランキングを取得するエンドポイント
 func (h *ScoreHandler) GetScoresRanking(w http.ResponseWriter, r *http.Request) {
@@ -55,6 +56,7 @@ func (h *ScoreHandler) GetScoresRanking(w http.ResponseWriter, r *http.Request) 
 
 	resp, err := h.scoreUseCase.GetScoresRanking(r.Context(), req)
 	if err != nil {
+		h.log.Error("GetScoresRanking failed", "error", err)
 		http.Error(w, ErrInternalServer, http.StatusInternalServerError)
 		return
 	}
@@ -62,6 +64,7 @@ func (h *ScoreHandler) GetScoresRanking(w http.ResponseWriter, r *http.Request) 
 	// JSON レスポンスを返す
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
+		h.log.Error("Failed to encode JSON response", "error", err)
 		http.Error(w, ErrFailedToEncodeResponse, http.StatusInternalServerError)
 	}
 }
@@ -90,13 +93,17 @@ func (h *ScoreHandler) RegisterScore(w http.ResponseWriter, r *http.Request) {
 	// ユースケースを呼び出し
 	err = h.scoreUseCase.RegisterScore(r.Context(), userID, req.Keystrokes, req.Accuracy)
 	if err != nil {
+		h.log.Error("RegisterScore failed", "error", err)
 		http.Error(w, ErrFailedToRegisterScore, http.StatusInternalServerError)
 		return
 	}
 
 	// 成功時のレスポンス
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	if _, err := w.Write([]byte(SuccessMsgScoreRegistered)); err != nil {
+	response := map[string]string{"message": SuccessMsgScoreRegistered}
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		h.log.Error("Failed to encode JSON response", "error", err)
 		http.Error(w, ErrFailedToEncodeResponse, http.StatusInternalServerError)
 	}
 }

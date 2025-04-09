@@ -1,0 +1,10 @@
+Governments implement fiscal policy to influence macroeconomic conditions by adjusting spending and taxation policies to alter aggregate demand. When aggregate demand falls below the potential output of the economy, there is an output gap where some productive capacity is left unemployed. Governments increase spending and cut taxes to boost aggregate demand. Resources that have been idled can be used by the government.
+
+For example, unemployed home builders can be hired to expand highways. Tax cuts allow consumers to increase their spending, which boosts aggregate demand. Both tax cuts and spending have multiplier effects where the initial increase in demand from the policy percolates through the economy and generates additional economic activity.
+
+The effects of fiscal policy can be limited by crowding out. When there is no output gap, the economy is producing at full capacity and there are no excess productive resources. If the government increases spending in this situation, the government uses resources that otherwise would have been used by the private sector, so there is no increase in overall output. Some economists think that crowding out is always an issue while others do not think it is a major issue when output is depressed.
+
+Sceptics of fiscal policy also make the argument of Ricardian equivalence. They argue that an increase in debt will have to be paid for with future tax increases, which will cause people to reduce their consumption and save money to pay for the future tax increase. Under Ricardian equivalence, any boost in demand from tax cuts will be offset by the increased saving intended to pay for future higher taxes.
+
+
+(from Wikipedia(en) "Economics", https://en.wikipedia.org/wiki/Economics, 2024/05/15)
