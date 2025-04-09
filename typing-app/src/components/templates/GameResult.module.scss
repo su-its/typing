@@ -103,12 +103,14 @@
         margin: 0 10px;
         padding: 10px 0;
         color: color.$white;
+        border: 0;
         border-radius: 4px;
         float: left;
         font-size: 24px;
         text-align: center;
         user-select: none;
         cursor: pointer;
+        transition: all 0.2s 0s ease;
 
         @media (max-width: 768px) {
           float: none;
@@ -121,10 +123,18 @@
 
         &.red {
           background-color: color.$red-800;
+
+          &:hover {
+            background-color: color.$red-500;
+          }
         }
 
         &.blue {
           background-color: color.$blue-800;
+
+          &:hover {
+            background-color: color.$blue-500;
+          }
         }
       }
     }
