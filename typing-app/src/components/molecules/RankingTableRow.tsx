@@ -1,34 +1,36 @@
 import type { components } from "@/libs/api/v0";
 import styles from "@/assets/sass/molecules/RankingTableRow.module.scss";
+import type { ColumnDefinition } from "../organism/RankingTabs";
 
-// 新しい Props 型を定義
-type RankingTableRowProps = components["schemas"]["ScoreRanking"];
+interface RankingTableRowProps {
+  scoreRanking: components["schemas"]["ScoreRanking"];
+  columns: ColumnDefinition[];
+}
 
-// コンポーネントの Props 型を新しい型に変更し、分割代入を使用
-const RankingTableRow: React.FC<RankingTableRowProps> = ({ rank, score }) => {
-	const accuracy = score.accuracy;
+const RankingTableRow: React.FC<RankingTableRowProps> = ({ scoreRanking, columns }) => {
+  return (
+    <tr className={styles.row}>
+      {/* columns に基づいてセルを動的にレンダリング */}
+      {columns.map((column) => {
+        // dataAccessor があればそれを使用し、なければキーでアクセス
+        let cellData: React.ReactNode = null; // 型を ReactNode に
+        if (column.key === "rank") {
+          cellData = scoreRanking.rank;
+        } else if (column.dataAccessor) {
+          cellData = column.dataAccessor(scoreRanking);
+        }
 
-	const formatter = new Intl.NumberFormat("en-US", {
-		style: "percent",
-		maximumFractionDigits: 2,
-	});
+        // rank 列には特別なスタイルを適用
+        const className = column.key === "rank" ? styles.rank : undefined;
 
-	const formattedAccuracy = formatter.format(accuracy);
-
-	const formattedCreatedAt = new Date(score.created_at)
-		.toISOString()
-		.split("T")[0];
-
-	return (
-		<tr className={styles.row}>
-			<td className={styles.rank}>{String(rank)}</td>
-			<td>{score.user.student_number}</td>
-			<td>{score.user.handle_name}</td>
-			<td>{String(score.keystrokes)}</td>
-			<td>{formattedAccuracy}</td>
-			<td>{formattedCreatedAt}</td>
-		</tr>
-	);
+        return (
+          <td key={column.key} className={className}>
+            {cellData}
+          </td>
+        );
+      })}
+    </tr>
+  );
 };
 
 export default RankingTableRow;

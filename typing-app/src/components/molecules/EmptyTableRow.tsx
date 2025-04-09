@@ -1,18 +1,20 @@
-import styles from "@/assets/sass/molecules/RankingTableRow.module.scss"; // スタイルを再利用
+import styles from "@/assets/sass/molecules/RankingTableRow.module.scss";
+import type { ColumnDefinition } from "../organism/RankingTabs";
 
-const EmptyTableRow: React.FC = () => {
-	// 表示する列の数を RankingTableRow と合わせる
-	const numberOfColumns = 5; // ランク以外のデータ列の数
+interface EmptyTableRowProps {
+  columns: ColumnDefinition[];
+}
 
-	return (
-		<tr className={styles.row}>
-			<td className={styles.rank}>{String("-")}</td>
-			{/* データがない列は "-" を表示 */}
-			{Array.from({ length: numberOfColumns }).map((_, columnIndex) => (
-				<td key={`empty-cell-column-${columnIndex}`}>-</td>
-			))}
-		</tr>
-	);
+const EmptyTableRow: React.FC<EmptyTableRowProps> = ({ columns }) => {
+  return (
+    <tr className={styles.row}>
+      {columns.map((column, index) => (
+        <td key={column.key} className={index === 0 ? styles.rank : undefined}>
+          -
+        </td>
+      ))}
+    </tr>
+  );
 };
 
 export default EmptyTableRow;
