@@ -1,15 +1,19 @@
 import styles from "@/assets/sass/molecules/RankingTableHead.module.scss";
+import type { ColumnDefinition } from "../organism/RankingTabs";
 
-const RankingTableHead: React.FC = () => {
+interface RankingTableHeadProps {
+  columns: ColumnDefinition[];
+}
+
+const RankingTableHead: React.FC<RankingTableHeadProps> = ({ columns }) => {
   return (
     <thead className={styles.head}>
       <tr>
-        <th>順位</th>
-        <th>学籍番号</th>
-        <th>名前</th>
-        <th>入力文字数</th>
-        <th>正打率</th>
-        <th>記録日</th>
+        {columns.map((column, index) => (
+          <th key={column.key} className={index === 0 ? styles.rank : undefined}>
+            {column.label}
+          </th>
+        ))}
       </tr>
     </thead>
   );
