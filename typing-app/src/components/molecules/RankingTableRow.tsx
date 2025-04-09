@@ -19,6 +19,7 @@ const RankingTableRow: React.FC<components["schemas"]["ScoreRanking"]> = (scoreR
     <tr className={styles.row}>
       <td className={styles.rank}>{String(scoreRanking.rank)}</td>
       <td>{scoreRanking.score?.user?.student_number}</td>
+      <td>{scoreRanking.score?.user?.handle_name}</td>
       <td>{String(scoreRanking.score?.keystrokes)}</td>
       <td>{formattedAccuracy}</td>
       <td>{formattedCreatedAt}</td>
