@@ -17,7 +17,7 @@ export default async function RootLayout({
       <body>
         <Header />
         <Footer />
-        <div className="children">{children}</div>{" "}
+        <div className="children">{children}</div>
       </body>
     </html>
   );
