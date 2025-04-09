@@ -1,7 +1,7 @@
-import React from "react";
+import type React from "react";
 import styles from "./GameResult.module.scss";
 import { useRouter } from "next/navigation";
-import Score from "@/types/Score";
+import type Score from "@/types/Score";
 
 interface GameResultProps {
   nextPage: () => void;
@@ -38,18 +38,21 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, score }) => {
         <div className={styles.row}>
           <div className={styles.left}>正打率</div>
           <div className={styles.right}>
-            {new Intl.NumberFormat("en-US", { style: "percent", maximumFractionDigits: 2 }).format(score.accuracy)}
+            {new Intl.NumberFormat("en-US", {
+              style: "percent",
+              maximumFractionDigits: 2,
+            }).format(score.accuracy)}
           </div>
         </div>
       </div>
       <div className={styles.footer}>
         <div className={styles.container}>
-          <div className={`${styles.button} ${styles.red}`} onClick={pushToRoot}>
+          <button type="button" className={`${styles.button} ${styles.red}`} onClick={pushToRoot}>
             ゲームを終了する
-          </div>
-          <div className={`${styles.button} ${styles.blue}`} onClick={nextPage}>
+          </button>
+          <button type="button" className={`${styles.button} ${styles.blue}`} onClick={nextPage}>
             もう一度プレイする
-          </div>
+          </button>
         </div>
       </div>
     </div>
