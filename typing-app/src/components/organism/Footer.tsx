@@ -3,6 +3,8 @@ import BrandText from "../molecules/BrandText";
 import Separator from "../atoms/Separater";
 import styles from "@/assets/sass/organism/Footer.module.scss";
 
+const date = new Date();
+
 const Footer: React.FC = () => {
   return (
     <>
@@ -10,6 +12,10 @@ const Footer: React.FC = () => {
         <Separator />
         <div className={styles["brand-text"]}>
           <BrandText />
+        </div>
+        <div className={styles.text}>
+          Version {process.env.NEXT_APP_VERSION} / (c) 2024-{date.getFullYear()} Faculty of Informatics, Shizuoka
+          University all rights reserved. Developed by IT Solution Room, Shizuoka University.
         </div>
       </div>
     </>
