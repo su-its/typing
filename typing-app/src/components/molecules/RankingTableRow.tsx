@@ -1,38 +1,35 @@
-import { Td, Tr } from "@chakra-ui/react";
-import { components } from "@/libs/api/v0";
+import type { components } from "@/libs/api/v0";
+import styles from "@/assets/sass/molecules/RankingTableRow.module.scss";
+import type { ColumnDefinition } from "../organism/RankingTabs";
 
-const RankingTableRow: React.FC<components["schemas"]["ScoreRanking"]> = (scoreRanking) => {
-  const accuracy = scoreRanking.score?.accuracy ?? 0;
+interface RankingTableRowProps {
+  scoreRanking: components["schemas"]["ScoreRanking"];
+  columns: ColumnDefinition[];
+}
 
-  const formatter = new Intl.NumberFormat("en-US", {
-    style: "percent",
-    maximumFractionDigits: 2,
-  });
-
-  const formattedAccuracy = formatter.format(accuracy);
-
-  const formattedCreatedAt = scoreRanking.score?.created_at
-    ? new Date(scoreRanking.score.created_at).toISOString().split("T")[0]
-    : "";
-
+const RankingTableRow: React.FC<RankingTableRowProps> = ({ scoreRanking, columns }) => {
   return (
-    <Tr _even={{ bg: "midnightblue" }} _odd={{ bg: "#192f70" }} color={"silver"}>
-      <Td width={"128px"} textAlign={"center"}>
-        {String(scoreRanking.rank)}
-      </Td>
-      <Td width={"256px"} textAlign={"center"}>
-        {scoreRanking.score?.user?.student_number}
-      </Td>
-      <Td width={"320px"} textAlign={"center"}>
-        {String(scoreRanking.score?.keystrokes)}
-      </Td>
-      <Td width={"256px"} textAlign={"center"}>
-        {formattedAccuracy}
-      </Td>
-      <Td width={"320px"} textAlign={"center"}>
-        {formattedCreatedAt}
-      </Td>
-    </Tr>
+    <tr className={styles.row}>
+      {/* columns に基づいてセルを動的にレンダリング */}
+      {columns.map((column) => {
+        // dataAccessor があればそれを使用し、なければキーでアクセス
+        let cellData: React.ReactNode = null; // 型を ReactNode に
+        if (column.key === "rank") {
+          cellData = scoreRanking.rank;
+        } else if (column.dataAccessor) {
+          cellData = column.dataAccessor(scoreRanking);
+        }
+
+        // rank 列には特別なスタイルを適用
+        const className = column.key === "rank" ? styles.rank : undefined;
+
+        return (
+          <td key={column.key} className={className}>
+            {cellData}
+          </td>
+        );
+      })}
+    </tr>
   );
 };
 

@@ -1,0 +1,9 @@
+@use "../color.scss";
+
+.head th {
+  padding: 6px 0;
+  color: color.$white;
+  background-color: color.$blue-800;
+  font-size: 18px;
+  font-weight: bold;
+}

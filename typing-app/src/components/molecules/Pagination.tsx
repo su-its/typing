@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import { CustomButton } from "../atoms/CustomButton";
 
 interface PaginationProps {
@@ -9,12 +8,12 @@ interface PaginationProps {
 }
 
 export const Pagination = ({ onPrev, onNext, isPrevDisabled, isNextDisabled }: PaginationProps) => (
-  <Flex>
+  <div>
     <CustomButton onClick={onPrev} isDisabled={isPrevDisabled}>
       前のページ
     </CustomButton>
     <CustomButton onClick={onNext} isDisabled={isNextDisabled}>
       次のページ
     </CustomButton>
-  </Flex>
+  </div>
 );

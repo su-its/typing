@@ -9,6 +9,7 @@
     "lint": "next lint",
     "format": "prettier . --write",
     "format:ci": "prettier . --check",
+    "sanitize": "tsx scripts/sanitizeText.ts",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -22,7 +23,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^11.13.5",
     "lucide-react": "^0.468.0",
-    "next": "15.1.2",
+    "next": "15.2.4",
     "openapi-fetch": "0.13.3",
     "prettier": "^3.4.2",
     "react": "19.0.0",
@@ -47,7 +48,9 @@
     "jest-environment-jsdom": "^29.7.0",
     "openapi-typescript": "6.7.6",
     "postcss": "^8.4.49",
+    "sass": "^1.85.0",
     "tailwindcss": "^3.4.16",
+    "tsx": "^4.19.3",
     "typescript": "^5.7.2"
   },
   "repository": "https://github.com/su-its/typing",

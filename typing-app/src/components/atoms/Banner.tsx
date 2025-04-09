@@ -1,14 +1,16 @@
 import React from "react";
-import { Box, Image, Link } from "@chakra-ui/react";
+import Link from "next/link";
+import styles from "@/assets/sass/atoms/Banner.module.scss";
 import bannerImage from "@/assets/images/banner.png";
 
 const Banner: React.FC = () => {
   return (
-    <Box>
+    <div className={styles.banner}>
       <Link href="/">
-        <Image src={bannerImage.src} alt="Logo" maxH={54} ml={2} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={bannerImage.src} alt="Logo" />
       </Link>
-    </Box>
+    </div>
   );
 };
 

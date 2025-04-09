@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"reflect"
 	"testing"
 
@@ -57,7 +56,6 @@ func TestScoreService_ComputeRanking(t *testing.T) {
 	type args struct {
 		scores []*model.Score
 		sortBy string
-		start  int
 	}
 	tests := []struct {
 		name string
@@ -69,41 +67,31 @@ func TestScoreService_ComputeRanking(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.s.ComputeRanking(tt.args.scores, tt.args.sortBy, tt.args.start); !reflect.DeepEqual(got, tt.want) {
+			if got := tt.s.ComputeRanking(tt.args.scores, tt.args.sortBy); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ScoreService.ComputeRanking() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestScoreService_ShouldUpdateMaxScore(t *testing.T) {
+func TestScoreService_LimitRankings(t *testing.T) {
 	type args struct {
-		ctx      context.Context
-		userID   uuid.UUID
-		newScore *model.Score
+		rankings []*model.ScoreRanking
+		start    int
+		limit    int
 	}
 	tests := []struct {
-		name    string
-		s       *ScoreService
-		args    args
-		want    bool
-		want1   bool
-		wantErr bool
+		name string
+		s    *ScoreService
+		args args
+		want []*model.ScoreRanking
 	}{
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, err := tt.s.ShouldUpdateMaxScore(tt.args.ctx, tt.args.userID, tt.args.newScore)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ScoreService.ShouldUpdateMaxScore() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("ScoreService.ShouldUpdateMaxScore() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("ScoreService.ShouldUpdateMaxScore() got1 = %v, want %v", got1, tt.want1)
+			if got := tt.s.LimitRankings(tt.args.rankings, tt.args.start, tt.args.limit); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ScoreService.LimitRankings() = %v, want %v", got, tt.want)
 			}
 		})
 	}
