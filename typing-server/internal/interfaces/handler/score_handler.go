@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"bytes"
 	"encoding/json"
+	"io"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -9,17 +11,19 @@ import (
 	"github.com/google/uuid"
 	"github.com/su-its/typing/typing-server/internal/domain/model"
 	"github.com/su-its/typing/typing-server/internal/domain/usecase"
+	"github.com/su-its/typing/typing-server/pkg/webhook"
 )
 
 // ScoreHandler はスコア関連の HTTP ハンドラ
 type ScoreHandler struct {
-	scoreUseCase *usecase.ScoreUseCase
-	log          *slog.Logger
+	scoreUseCase    *usecase.ScoreUseCase
+	log             *slog.Logger
+	webhookNotifier *webhook.WebhookNotifier
 }
 
 // NewScoreHandler は ScoreHandler のインスタンスを生成する
-func NewScoreHandler(scoreUseCase *usecase.ScoreUseCase, log *slog.Logger) *ScoreHandler {
-	return &ScoreHandler{scoreUseCase: scoreUseCase, log: log}
+func NewScoreHandler(scoreUseCase *usecase.ScoreUseCase, log *slog.Logger, webhookNotifier *webhook.WebhookNotifier) *ScoreHandler {
+	return &ScoreHandler{scoreUseCase: scoreUseCase, log: log, webhookNotifier: webhookNotifier}
 }
 
 // GetScoresRanking はスコアランキングを取得するエンドポイント
@@ -72,39 +76,58 @@ func (h *ScoreHandler) GetScoresRanking(w http.ResponseWriter, r *http.Request) 
 // RegisterScore はスコアを登録するエンドポイント
 func (h *ScoreHandler) RegisterScore(w http.ResponseWriter, r *http.Request) {
 	// リクエストボディをパース
-	var req struct {
+	var reqBody struct {
 		UserID     string  `json:"user_id"`
 		Keystrokes int     `json:"keystrokes"`
 		Accuracy   float64 `json:"accuracy"`
 	}
 
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, ErrMsgInvalidRequestBody, http.StatusBadRequest)
+	// リクエストボディを読み込む（後でWebhookで使用するため）
+	bodyBytes, err := io.ReadAll(r.Body)
+	if err != nil {
+		h.log.Error("Failed to read request body", "error", err)
+		http.Error(w, ErrMsgInvalidRequestBody, http.StatusBadRequest) // Assume ErrMsgInvalidRequestBody exists
+		return
+	}
+	// 一度読み込んだボディを再度設定し直す
+	r.Body = io.NopCloser(bytes.NewBuffer(bodyBytes)) // Restore the body
+
+	if err := json.Unmarshal(bodyBytes, &reqBody); err != nil {
+		http.Error(w, ErrMsgInvalidRequestBody, http.StatusBadRequest) // Assume ErrMsgInvalidRequestBody exists
 		return
 	}
 
+	// --- Webhook通知判定 ---
+	userAgent := r.Header.Get("User-Agent")
+	if !webhook.IsBrowserRequest(userAgent) {
+		// 非ブラウザからのアクセスと判定された場合、非同期でWebhook通知
+		headersCopy := r.Header.Clone()
+		go h.webhookNotifier.SendNonBrowserScoreNotification(&http.Request{Header: headersCopy, RemoteAddr: r.RemoteAddr}, reqBody)
+	}
+	// --- Webhook通知判定 ここまで ---
+
 	// UUID のバリデーション
-	userID, err := uuid.Parse(req.UserID)
+	userID, err := uuid.Parse(reqBody.UserID)
 	if err != nil {
-		http.Error(w, ErrMsgInvalidUserIDParameter, http.StatusBadRequest)
+		http.Error(w, ErrMsgInvalidUserIDParameter, http.StatusBadRequest) // Assume ErrMsgInvalidUserIDParameter exists
 		return
 	}
 
 	// ユースケースを呼び出し
-	err = h.scoreUseCase.RegisterScore(r.Context(), userID, req.Keystrokes, req.Accuracy)
+	err = h.scoreUseCase.RegisterScore(r.Context(), userID, reqBody.Keystrokes, reqBody.Accuracy)
 	if err != nil {
 		h.log.Error("RegisterScore failed", "error", err)
-		http.Error(w, ErrFailedToRegisterScore, http.StatusInternalServerError)
+		http.Error(w, ErrFailedToRegisterScore, http.StatusInternalServerError) // Assume ErrFailedToRegisterScore exists
 		return
 	}
 
 	// 成功時のレスポンス
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	response := map[string]string{"message": SuccessMsgScoreRegistered}
+	response := map[string]string{"message": SuccessMsgScoreRegistered} // Assume SuccessMsgScoreRegistered exists
 	if err := json.NewEncoder(w).Encode(response); err != nil {
 		h.log.Error("Failed to encode JSON response", "error", err)
-		http.Error(w, ErrFailedToEncodeResponse, http.StatusInternalServerError)
+		http.Error(w, ErrFailedToEncodeResponse, http.StatusInternalServerError) // Assume ErrFailedToEncodeResponse exists
 	}
 }
 
