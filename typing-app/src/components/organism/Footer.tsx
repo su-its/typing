@@ -14,8 +14,8 @@ const Footer: React.FC = () => {
           <BrandText />
         </div>
         <div className={styles.text}>
-          Version {process.env.NEXT_APP_VERSION} / (c) 2024-{date.getFullYear()} Faculty of Informatics, Shizuoka
-          University all rights reserved. Developed by IT Solution Room, Shizuoka University.
+          (c) 2024-{date.getFullYear()} Faculty of Informatics, Shizuoka University all rights reserved. Developed by IT
+          Solution Room, Shizuoka University.
         </div>
       </div>
     </>
