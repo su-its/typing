@@ -29,12 +29,23 @@ jobs:
       - name: Prepare environment variable file
         working-directory: typing-app
         run: echo 'NEXT_PUBLIC_API_URL=${{ secrets.PROD_NEXT_PUBLIC_API_URL }}' >> .env.production
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          flavor: |
+            latest=auto
+          tags: |
+            type=semver,pattern={{raw}}
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: index,manifest
       - name: Docker Buildx Bake
         uses: docker/bake-action@v6
         with:
           source: .
           workdir: docker
-          files: docker-bake.hcl
+          files: |
+            docker-bake.hcl
+            cwd://${{ steps.meta.outputs.bake-file-annotations }}
+            cwd://${{ steps.meta.outputs.bake-file }}
           push: true
-        env:
-          TAG: ${{ github.ref_name }}
