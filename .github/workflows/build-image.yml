@@ -1,5 +1,9 @@
 name: Build / Push Docker Image to Registry
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     tags:
