@@ -52,3 +52,8 @@ jobs:
             cwd://${{ steps.meta.outputs.bake-file-annotations }}
             cwd://${{ steps.meta.outputs.bake-file }}
           push: true
+          set: |
+            api.cache-from=type=gha,scope=buildcache-api
+            api.cache-to=type=gha,scope=buildcache-api,mode=max
+            app.cache-from=type=gha,scope=buildcache-app
+            app.cache-to=type=gha,scope=buildcache-app,mode=max
