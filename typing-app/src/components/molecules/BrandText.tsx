@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "@/assets/sass/molecules/BrandText.module.scss";
-import brandImage from "@/assets/images/brand.png";
+import brandImage from "@/assets/images/brand.svg";
 
 const BrandText: React.FC = () => {
   return (
