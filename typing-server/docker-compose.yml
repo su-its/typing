@@ -6,8 +6,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - ./api:/app
     environment:
       DB_ADDR: ${DB_ADDR:-db:3306}
       DEV_MODE: false
