@@ -10,14 +10,12 @@ import (
 	"net/http/httptest"
 
 	"github.com/su-its/typing/typing-server/internal/domain/usecase"
-	"github.com/su-its/typing/typing-server/pkg/webhook"
 )
 
 func TestNewScoreHandler(t *testing.T) {
 	type args struct {
-		scoreUseCase    *usecase.ScoreUseCase
-		log             *slog.Logger
-		webhookNotifier *webhook.WebhookNotifier
+		scoreUseCase *usecase.ScoreUseCase
+		log          *slog.Logger
 	}
 	fakeUseCase := &usecase.ScoreUseCase{}
 	tests := []struct {
@@ -29,9 +27,8 @@ func TestNewScoreHandler(t *testing.T) {
 		{
 			name: "正常系: ScoreHandlerが正しく生成される",
 			args: args{
-				scoreUseCase:    fakeUseCase,
-				log:             slog.Default(),
-				webhookNotifier: &webhook.WebhookNotifier{},
+				scoreUseCase: fakeUseCase,
+				log:          slog.Default(),
 			},
 			want: &ScoreHandler{
 				scoreUseCase: fakeUseCase,
@@ -41,7 +38,7 @@ func TestNewScoreHandler(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewScoreHandler(tt.args.scoreUseCase, tt.args.log, tt.args.webhookNotifier); !reflect.DeepEqual(got, tt.want) {
+			if got := NewScoreHandler(tt.args.scoreUseCase, tt.args.log); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewScoreHandler() = %v, want %v", got, tt.want)
 			}
 		})
