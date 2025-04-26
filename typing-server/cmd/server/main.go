@@ -15,7 +15,6 @@ import (
 	"github.com/su-its/typing/typing-server/internal/interfaces/handler"
 	"github.com/su-its/typing/typing-server/pkg/logger"
 	"github.com/su-its/typing/typing-server/pkg/middleware"
-	"github.com/su-its/typing/typing-server/pkg/webhook"
 )
 
 func main() {
@@ -83,8 +82,7 @@ func main() {
 	// ハンドラの作成
 	healthHandler := handler.NewHealthCheckHandler()
 	userHandler := handler.NewUserHandler(userUseCase, log)
-	webhookNotifier := webhook.NewWebhookNotifier(log)
-	scoreHandler := handler.NewScoreHandler(scoreUseCase, log, webhookNotifier)
+	scoreHandler := handler.NewScoreHandler(scoreUseCase, log)
 
 	// ルーターの作成
 	router := interfaces.NewRouter(healthHandler, userHandler, scoreHandler, config)
