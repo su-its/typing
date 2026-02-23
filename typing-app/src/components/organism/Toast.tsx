@@ -16,12 +16,17 @@ interface ToastData {
 
 export const Toast = () => {
   const [toast, setToast] = useState<ToastData | null>(null);
+  const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
     const handler = (event: CustomEvent<ToastData>) => {
+      setIsClosing(false);
       setToast(event.detail);
       setTimeout(() => {
-        setToast(null);
+        setIsClosing(true);
+        setTimeout(() => {
+          setToast(null);
+        }, 500);
       }, 3000);
     };
     window.addEventListener("app-toast", handler as EventListener);
@@ -33,7 +38,13 @@ export const Toast = () => {
   if (!toast) return null;
 
   return (
-    <div className={`${styles.toast} ${styles[toast.status ?? "error"]}`}>
+    <div
+      className={`
+        ${styles.toast}
+        ${styles[toast.status ?? "error"]}
+        ${isClosing ? styles.hide : styles.show}
+      `}
+    >
       <div className={styles.image}>
         {toast.status === "info" && <img src={infoImage.src} alt="Info" />}
         {toast.status === "warning" && <img src={warningImage.src} alt="Warning" />}
