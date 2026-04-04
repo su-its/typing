@@ -10,7 +10,6 @@ export type ToastStatus = "info" | "warning" | "success" | "error";
 
 interface ToastData {
   title: string;
-  description?: string;
   status?: ToastStatus;
 }
 

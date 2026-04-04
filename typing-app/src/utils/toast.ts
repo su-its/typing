@@ -1,32 +1,30 @@
 interface showToastProps {
   title: string;
-  description?: string;
   status?: "info" | "warning" | "success" | "error";
 }
 
-const showToast = ({ title, description = "", status }: showToastProps) => {
+const showToast = ({ title, status }: showToastProps) => {
   const event = new CustomEvent("app-toast", {
     detail: {
       title,
-      description,
       status,
     },
   });
   window.dispatchEvent(event);
 };
 
-export const showSuccessToast = (title: string, description?: string) => {
-  showToast({ title, description, status: "success" });
+export const showSuccessToast = (title: string) => {
+  showToast({ title, status: "success" });
 };
 
-export const showWarningToast = (title: string, description?: string) => {
-  showToast({ title, description, status: "warning" });
+export const showWarningToast = (title: string) => {
+  showToast({ title, status: "warning" });
 };
 
-export const showErrorToast = (title: string, description?: string) => {
-  showToast({ title, description, status: "error" });
+export const showErrorToast = (title: string) => {
+  showToast({ title, status: "error" });
 };
 
-export const showInfoToast = (title: string, description?: string) => {
-  showToast({ title, description, status: "info" });
+export const showInfoToast = (title: string) => {
+  showToast({ title, status: "info" });
 };
