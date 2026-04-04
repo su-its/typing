@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import WebAudioPlayer from "@/utils/WebAudioPlayer";
 import Header from "../components/organism/Header";
 import Footer from "../components/organism/Footer";
 import "./globals.css";
@@ -17,7 +18,9 @@ export default async function RootLayout({
       <body>
         <Header />
         <Footer />
-        <div className="children">{children}</div>
+        <div className="children">
+          <WebAudioPlayer>{children}</WebAudioPlayer>
+        </div>
       </body>
     </html>
   );
