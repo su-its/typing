@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "@/assets/sass/organism/Toast.module.scss";
 import infoImage from "@/assets/images/toast/info.svg";
 import warningImage from "@/assets/images/toast/warning.svg";
@@ -21,14 +21,19 @@ const isValidStatus = (status: unknown): status is ToastStatus => {
 export const Toast = () => {
   const [toast, setToast] = useState<ToastData | null>(null);
   const [isClosing, setIsClosing] = useState(false);
+  const closingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const removeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const handler = (event: CustomEvent<ToastData>) => {
+      if (closingTimerRef.current) clearTimeout(closingTimerRef.current);
+      if (removeTimerRef.current) clearTimeout(removeTimerRef.current);
       setIsClosing(false);
       setToast(event.detail);
-      setTimeout(() => {
+
+      closingTimerRef.current = setTimeout(() => {
         setIsClosing(true);
-        setTimeout(() => {
+        removeTimerRef.current = setTimeout(() => {
           setToast(null);
         }, 500);
       }, 3000);
@@ -36,6 +41,8 @@ export const Toast = () => {
     window.addEventListener("app-toast", handler as EventListener);
     return () => {
       window.removeEventListener("app-toast", handler as EventListener);
+      if (closingTimerRef.current) clearTimeout(closingTimerRef.current);
+      if (removeTimerRef.current) clearTimeout(removeTimerRef.current);
     };
   }, []);
 
