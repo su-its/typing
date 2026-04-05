@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import WebAudioPlayer from "@/utils/WebAudioPlayer";
 import Header from "../components/organism/Header";
-import Footer from "../components/organism/Footer";
+import Client from "./client";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,10 +16,7 @@ export default async function RootLayout({
     <html lang="ja">
       <body>
         <Header />
-        <Footer />
-        <div className="children">
-          <WebAudioPlayer>{children}</WebAudioPlayer>
-        </div>
+        <Client>{children}</Client>
       </body>
     </html>
   );

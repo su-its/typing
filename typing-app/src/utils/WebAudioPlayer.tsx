@@ -16,7 +16,7 @@ export const useWebAudio = () => {
   return ctx;
 };
 
-export default function WebAudioPlayer({ children }: { children: ReactNode }) {
+export default function WebAudioPlayer({ children, isPlay }: { children: ReactNode; isPlay: boolean }) {
   const audioContextRef = useRef<AudioContext | null>(null);
   const sourceRef = useRef<AudioBufferSourceNode | null>(null);
   const bufferCacheRef = useRef<Map<string, AudioBuffer>>(new Map());
@@ -40,9 +40,17 @@ export default function WebAudioPlayer({ children }: { children: ReactNode }) {
     }
   };
 
+  // isPlayがOFFになったら即停止
+  useEffect(() => {
+    if (!isPlay) {
+      stop();
+    }
+  }, [isPlay]);
+
   const play = async (url: string) => {
     const ctx = audioContextRef.current;
     if (!ctx) return;
+    if (!isPlay) return;
     const playId = ++playIdRef.current; // 新しいリクエストID
     stop();
     if (ctx.state === "suspended") {
