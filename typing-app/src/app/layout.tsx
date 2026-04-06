@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Header from "../components/organism/Header";
 import Client from "./client";
+import Toast from "../components/organism/Toast";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export default async function RootLayout({
       <body>
         <Header />
         <Client>{children}</Client>
+        <Toast />
       </body>
     </html>
   );

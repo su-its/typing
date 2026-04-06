@@ -1,0 +1,81 @@
+@use "../color.scss";
+
+.toast {
+  width: 800px;
+  height: 120px;
+  position: fixed;
+  left: calc(50% - 400px);
+  top: calc(50% - 60px);
+  border-radius: 20px;
+  z-index: 200;
+  transition: all 0.5s ease;
+  opacity: 0;
+  transform: translateX(-20px);
+
+  &.show {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  &.info {
+    background-color: color.$blue-800;
+  }
+
+  &.warning {
+    background-color: color.$deeporange-800;
+  }
+
+  &.success {
+    background-color: color.$green-800;
+  }
+
+  &.error {
+    background-color: color.$red-800;
+  }
+
+  .image {
+    position: absolute;
+    left: 0;
+    top: 10px;
+  }
+
+  .title {
+    width: 640px;
+    height: 100px;
+    position: absolute;
+    left: 140px;
+    top: 10px;
+    text-align: center;
+    font-size: 24px;
+    color: color.$white;
+    border-radius: 16px;
+
+    &.info {
+      background-color: color.$blue-500;
+    }
+
+    &.warning {
+      background-color: color.$deeporange-500;
+    }
+
+    &.success {
+      background-color: color.$green-500;
+    }
+
+    &.error {
+      background-color: color.$red-500;
+    }
+
+    .text {
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
