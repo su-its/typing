@@ -1,25 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useDisclosure } from "@chakra-ui/react";
 import LogoutModal from "./LogoutModal";
 import { logout } from "@/app/actions";
 import logoutButton from "@/assets/images/home/logout.png";
 import styles from "@/assets/sass/molecules/LogoutButton.module.scss";
 
 const LogoutButton: React.FC = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
-    onOpen();
+    setIsOpen(true);
   };
 
   //Note: ログアウト時にページをリレンダリングするためにリダイレクトする
   const reLoad = () => {
-    onClose();
+    setIsOpen(false);
     router.push("/");
   };
 

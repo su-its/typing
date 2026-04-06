@@ -14,14 +14,10 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.10.4",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "framer-motion": "^11.13.5",
     "lucide-react": "^0.468.0",
     "next": "15.2.4",
     "openapi-fetch": "0.13.3",
