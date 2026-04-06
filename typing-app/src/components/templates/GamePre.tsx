@@ -2,9 +2,14 @@ import React, { useEffect } from "react";
 import { GamePreProps } from "../pages/Game";
 import styles from "./GamePre.module.scss";
 import keyboardImage from "@/assets/images/keyboard.png";
+import { useWebAudio } from "@/utils/WebAudioPlayer";
 
 const GamePre: React.FC<GamePreProps> = ({ nextPage }) => {
+  const { play } = useWebAudio();
+
   useEffect(() => {
+    play("/sounds/bgm1.mp3");
+
     // Spaceキーを押したときに実行する関数
     const handleSpaceButtonDown = (e: KeyboardEvent) => {
       if (e.code === "Space") {

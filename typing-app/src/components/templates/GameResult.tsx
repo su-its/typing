@@ -1,7 +1,8 @@
-import type React from "react";
+import React, { useEffect } from "react";
 import styles from "./GameResult.module.scss";
 import { useRouter } from "next/navigation";
 import type Score from "@/types/Score";
+import { useWebAudio } from "@/utils/WebAudioPlayer";
 
 interface GameResultProps {
   nextPage: () => void;
@@ -10,10 +11,16 @@ interface GameResultProps {
 
 const GameResult: React.FC<GameResultProps> = ({ nextPage, score }) => {
   const router = useRouter();
+  const { play, stop } = useWebAudio();
 
   const pushToRoot = () => {
+    stop();
     router.push("/");
   };
+
+  useEffect(() => {
+    play("/sounds/bgm20.mp3");
+  }, []);
 
   return (
     <div className={styles.box}>

@@ -195,7 +195,12 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
 
   // 初期フォーカス設定
   useEffect(() => {
-    play("/sounds/bgm10.mp3");
+    const rand = Math.random();
+    if (rand >= 0.6) {
+      play("/sounds/bgm11.mp3");
+    } else {
+      play("/sounds/bgm10.mp3");
+    }
 
     if (boxRef.current) {
       boxRef.current.focus();
