@@ -1,5 +1,5 @@
-variable "TAG" {
-  default = "latest"
+target "docker-metadata-action" {
+  tags = ["local"] # just a placeholder for local debug
 }
 
 group "default" {
@@ -7,15 +7,33 @@ group "default" {
 }
 
 target "api" {
+  inherits = ["docker-metadata-action"]
+  annotations = [
+    "index,manifest:org.opencontainers.image.title=typing-server",
+    "index,manifest:org.opencontainers.image.description=API of typing game"
+  ]
   context = "../typing-server"
-  tags = ["ghcr.io/su-its/typing-server:${TAG}", "ghcr.io/su-its/typing-server:latest"]
-  cache_from = ["golang:1.23.4", "alpine:latest"]
+  labels = {
+    "org.opencontainers.image.title" = "typing-server"
+    "org.opencontainers.image.description" = "API of typing game"
+  }
+  tags = [for tag in target.docker-metadata-action.tags : "ghcr.io/su-its/typing-server:${tag}"]
+  cache-from = ["docker.io/library/golang:1.23.4", "docker.io/library/alpine:latest"]
   platforms = ["linux/amd64"]
 }
 
 target "app" {
+  inherits = ["docker-metadata-action"]
+  annotations = [
+    "index,manifest:org.opencontainers.image.title=typing-app",
+    "index,manifest:org.opencontainers.image.description=Web frontend of typing game"
+  ]
   context = "../typing-app"
-  tags = ["ghcr.io/su-its/typing-app:${TAG}", "ghcr.io/su-its/typing-app:latest"]
-  cache_from = ["node:20.11-slim"]
+  labels = {
+    "org.opencontainers.image.title" = "typing-app"
+    "org.opencontainers.image.description" = "Web frontend of typing game"
+  }
+  tags = [for tag in target.docker-metadata-action.tags : "ghcr.io/su-its/typing-app:${tag}"]
+  cache-from = ["docker.io/library/node:20.11-slim"]
   platforms = ["linux/amd64"]
 }
