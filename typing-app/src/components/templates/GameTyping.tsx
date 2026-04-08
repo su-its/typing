@@ -192,10 +192,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
 
   // 初期フォーカス設定
   useEffect(() => {
-    if (boxRef.current) {
-      boxRef.current.focus();
-    }
-
     // コンポーネントマウント時に開始時刻を設定
     startTimeRef.current = Date.now();
   }, []);

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import DisableTab from "./DisableTab";
 import Header from "../components/organism/Header";
 import Footer from "../components/organism/Footer";
 import Toast from "../components/organism/Toast";
@@ -16,6 +17,7 @@ export default async function RootLayout({
   return (
     <html lang="ja">
       <body>
+        <DisableTab />
         <Header />
         <Footer />
         <div className="children">{children}</div>
