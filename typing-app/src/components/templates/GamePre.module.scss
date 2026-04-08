@@ -23,7 +23,7 @@
     width: 90%;
     left: 5%;
   }
-  @media (max-height: 768px) {
+  @media (max-height: 800px) {
     height: calc(100% - 80px);
     top: -10px;
   }
@@ -60,6 +60,7 @@
 .main {
   margin-top: 100px;
   overflow: auto;
+  overflow-x: hidden;
   flex-grow: 1;
 
   .left {
@@ -73,7 +74,7 @@
       margin-bottom: 5px;
     }
 
-    @media (max-height: 768px) {
+    @media (max-height: 800px) {
       font-size: 22px;
     }
 
@@ -100,7 +101,7 @@
       height: 300px;
     }
 
-    @media (max-height: 768px) {
+    @media (max-height: 800px) {
       img {
         height: 260px;
       }
