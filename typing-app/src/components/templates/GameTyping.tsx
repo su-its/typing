@@ -211,7 +211,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
           <ProgressBar maxWidth={330} height={20} maxValue={subjectText.length - 1} value={stats.typeIndex} />
         </div>
         <div className={`${styles.progress} ${styles.progress_speed}`}>
-          <ProgressBar maxWidth={330} height={20} maxValue={1000} value={stats.averageTypeSpeed} />
+          <ProgressBar maxWidth={330} height={20} maxValue={MAX_TYPING_SPEED} value={stats.averageTypeSpeed} />
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg.src} width={281} height={24} alt="" />
