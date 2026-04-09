@@ -31,7 +31,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
   });
 
   // 開始時刻と処理フラグの参照
-  const startTimeRef = useRef<number>(Date.now());
+  const startTimeRef = useRef<number>(0);
   const isProcessingRef = useRef(false);
 
   const typingQueueRef = useRef<number[]>([]);

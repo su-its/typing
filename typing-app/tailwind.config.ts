@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config = {
-  darkMode: ["class"],
+  darkMode: "class",
   // prettier-ignore
   content: [
     "./pages/**/*.{ts,tsx}",
