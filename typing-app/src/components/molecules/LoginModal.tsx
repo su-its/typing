@@ -2,7 +2,7 @@
 
 import React, { useActionState } from "react";
 import { login } from "@/app/actions";
-import { showWarningToast } from "@/utils/toast";
+//import { showWarningToast } from "@/utils/toast"; // FIXME: showWarningToast がちゃんと出ないことがある
 import styles from "@/assets/sass/molecules/LoginModal.module.scss";
 
 interface LoginModalProps {
@@ -13,7 +13,7 @@ interface LoginModalProps {
   pending: boolean;
 }
 
-const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state, dispatchAction, pending }) => {
+const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state, dispatchAction }) => {
   return (
     <>
       {isOpen && (
@@ -21,9 +21,8 @@ const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state
           <div className={styles.overlay}></div>
           <div className={styles.content}>
             <form
-              action={async (formData: FormData) => {
-                await dispatchAction(formData);
-                state.error && showWarningToast(state.error);
+              action={(formData: FormData) => {
+                return dispatchAction(formData);
               }}
             >
               <div className={styles.header}>続けるにはログインが必要です</div>
@@ -37,6 +36,8 @@ const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state
                   title="学籍番号"
                   role="textbox"
                 />
+                {/* FIXME: 一度 state.error に値が入ると次にモーダルを開いたときに前の state.error が表示されてしまう */}
+                {state.error && <span><sub>{state.error}</sub></span>}
               </div>
               <div className={styles.footer}>
                 <button className={`${styles.button} ${styles.blue}`} role="submit">
