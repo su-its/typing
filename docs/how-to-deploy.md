@@ -1,22 +1,11 @@
 # デプロイ手順
 
-## GitHub Actions を利用したデプロイ
-
-手動で workflow を実行すると(学内のサーバで) [deploy.yml](../.github/workflows/deploy.yml) に書かれた内容が実行されます。
-
-**前提条件:** 必要な権限のあるユーザで GitHub にログインしている
-
-1. リポジトリの Actions タブへ移動する
-2. 左のメニューから Deploy Containers というワークフローを選択、main ブランチで実行(Run Workflow)する
-  ![image](https://github.com/su-its/typing/assets/61489178/5fd3fc03-b477-4183-a849-1e0ee65e9d5b)
-
 ## SSH でサーバにログインして行うデプロイ
 
 できれば [GitHub Actions を利用したデプロイ](#GitHub-Actions-を利用したデプロイ)を実施してください。
 どうしてもうまくいかない場合はこちらの方法を試してください。
 
-**前提条件:** github ユーザに ssh でログインしている。以下、全て SSH 先のシェルでの操作です。
-> github ユーザには安全のため sudo 権限を与えていません。注意してください。
+**前提条件:** its ユーザに ssh でログインしている。以下、全て SSH 先のシェルでの操作です。
 
 移動
 ```bash
