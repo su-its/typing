@@ -11,11 +11,11 @@ servers:
     description: 本番環境
 tags:
   - name: other
-    description: いい名前が思いつかない(仮)
+    description: いい名前が思いつかない
   - name: user
-    description: ユーザー関係(仮)
+    description: ユーザー関係
   - name: score
-    description: スコア関係(仮)
+    description: スコア関係
 paths:
   /health:
     get:
