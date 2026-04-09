@@ -1,4 +1,4 @@
-import type { components } from "@/libs/api/v0";
+import type { components } from "@/libs/api/v1";
 import styles from "@/assets/sass/molecules/RankingTableRow.module.scss";
 import type { ColumnDefinition } from "../organism/RankingTabs";
 
