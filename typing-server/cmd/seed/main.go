@@ -94,7 +94,6 @@ func main() {
 	scoreService := service.NewScoreService(scoreRepo)
 	userUseCase := usecase.NewUserUseCase(userRepo)
 	scoreUseCase := usecase.NewScoreUseCase(txManager, scoreRepo, scoreService)
-
 	var wg sync.WaitGroup
 
 	// ユーザー作成とスコア登録処理を並列化
