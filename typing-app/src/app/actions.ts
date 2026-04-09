@@ -21,8 +21,8 @@ export async function login(_: LoginActionState, formData: FormData): Promise<Lo
       },
     });
     if (error || !data) {
-      if (/ユーザーが見つかりません/.test(`${error}`.toLowerCase())) {
-        return { error: "見つかりませんでした" };
+      if (typeof error === "string") {
+        return { error: error };
       }
       return { error: "もう一度お試しください" };
     }
