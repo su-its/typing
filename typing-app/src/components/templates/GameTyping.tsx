@@ -36,7 +36,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
 
   const typingQueueRef = useRef<number[]>([]);
   const typeIndexRef = useRef(stats.typeIndex);
-  const boxRef = useRef<HTMLDivElement>(null);
 
   // タイピング速度を計算
   const calculateTypingSpeed = useCallback(() => {
@@ -192,16 +191,12 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
 
   // 初期フォーカス設定
   useEffect(() => {
-    if (boxRef.current) {
-      boxRef.current.focus();
-    }
-
     // コンポーネントマウント時に開始時刻を設定
     startTimeRef.current = Date.now();
   }, []);
 
   return (
-    <div tabIndex={0} ref={boxRef}>
+    <div>
       <div className={styles.box}>
         {/* TODO: Article Nameって消すんじゃなかったっけ */}
         <div className={`${styles.heading} ${styles.heading_name}`}>Article Name</div>
@@ -215,7 +210,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
           <ProgressBar maxWidth={330} height={20} maxValue={subjectText.length - 1} value={stats.typeIndex} />
         </div>
         <div className={`${styles.progress} ${styles.progress_speed}`}>
-          <ProgressBar maxWidth={330} height={20} maxValue={1000} value={stats.averageTypeSpeed} />
+          <ProgressBar maxWidth={330} height={20} maxValue={MAX_TYPING_SPEED} value={stats.averageTypeSpeed} />
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={styles.gauge_time} id="gauge_time" src={gaugeTimeImg.src} width={281} height={24} alt="" />

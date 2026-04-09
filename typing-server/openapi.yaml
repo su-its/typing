@@ -3,7 +3,7 @@ info:
   title: Typing API
   description: >-
     This is Typing API
-  version: 0.0.1
+  version: 1.0.0
 servers:
   - url: http://localhost:8080
     description: ローカル開発環境
@@ -11,11 +11,11 @@ servers:
     description: 本番環境
 tags:
   - name: other
-    description: いい名前が思いつかない(仮)
+    description: いい名前が思いつかない
   - name: user
-    description: ユーザー関係(仮)
+    description: ユーザー関係
   - name: score
-    description: スコア関係(仮)
+    description: スコア関係
 paths:
   /health:
     get:
