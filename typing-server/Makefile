@@ -13,7 +13,7 @@ import-users:
 		exit 1; \
 	fi
 	@echo "CSVからユーザーを投入しています..."
-	DB_ADDR=$${DB_ADDR:-127.0.0.1:3307} go run ./cmd/seed/main.go -csv "$(CSV)"
+	DB_ADDR=$${DB_ADDR:-127.0.0.1:3307} go run ./cmd/import-users/main.go -csv "$(CSV)"
 	@echo "CSVからのユーザー投入が完了しました"
 
 # ヘルプコマンド

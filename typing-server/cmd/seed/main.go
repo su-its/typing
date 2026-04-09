@@ -5,7 +5,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"log/slog"
 	"math/rand"
 	"os"
 	"sync"
@@ -18,7 +17,6 @@ import (
 	"github.com/su-its/typing/typing-server/internal/domain/usecase"
 	"github.com/su-its/typing/typing-server/internal/infra/ent/ent_generated"
 	"github.com/su-its/typing/typing-server/internal/infra/ent/repository"
-	"github.com/su-its/typing/typing-server/internal/seed/userimport"
 	"github.com/su-its/typing/typing-server/pkg/logger"
 )
 
@@ -29,26 +27,22 @@ func main() {
 	var minKeystrokes int
 	var minAccuracy float64
 	var maxConcurrent int
-	var csvPath string
 	flag.IntVar(&numUsers, "users", 0, "シードするユーザー数")
 	flag.IntVar(&numScores, "scores", 0, "1ユーザーあたりにシードするスコア数")
 	flag.IntVar(&minKeystrokes, "minKeystrokes", 0, "各ユーザーに登録する最低スコア（keystrokes）の下限値")
 	flag.Float64Var(&minAccuracy, "minAccuracy", 0.95, "各ユーザーに登録するaccuracyの最低値（0.0〜1.0）")
 	flag.IntVar(&maxConcurrent, "concurrent", 10, "同時実行するgoroutineの最大数")
-	flag.StringVar(&csvPath, "csv", "", "ユーザーをインポートするCSVファイルのパス")
 	flag.Parse()
 
-	if csvPath == "" {
-		if numUsers <= 0 || numScores <= 0 || minKeystrokes <= 0 {
-			fmt.Println("エラー: -users と -scores と -minKeystrokes は正の整数で指定してください")
-			flag.Usage()
-			os.Exit(1)
-		}
-		if minAccuracy < 0.0 || minAccuracy >= 1.0 {
-			fmt.Println("エラー: -minAccuracy は0.0以上1.0未満で指定してください")
-			flag.Usage()
-			os.Exit(1)
-		}
+	if numUsers <= 0 || numScores <= 0 || minKeystrokes <= 0 {
+		fmt.Println("エラー: -users と -scores と -minKeystrokes は正の整数で指定してください")
+		flag.Usage()
+		os.Exit(1)
+	}
+	if minAccuracy < 0.0 || minAccuracy >= 1.0 {
+		fmt.Println("エラー: -minAccuracy は0.0以上1.0未満で指定してください")
+		flag.Usage()
+		os.Exit(1)
 	}
 
 	// ログ・設定の初期化
@@ -94,47 +88,12 @@ func main() {
 	logr.Info("スキーマ作成成功")
 
 	// 各種リポジトリ・ユースケースの初期化
-	userRepo := repository.NewEntUserRepository(entClient)
-
-	if csvPath != "" {
-		logr.Info("CSVからのユーザー投入開始", "csv", csvPath)
-
-		users, err := userimport.LoadUsersFromCSV(csvPath)
-		if err != nil {
-			logr.Error("CSVの読み込みに失敗", "error", err, "csv", csvPath)
-			os.Exit(1)
-		}
-
-		summary, err := userimport.SeedUsers(ctx, userRepo, users)
-		if err != nil {
-			logr.Error("CSVからのユーザー投入に失敗", "error", err, "csv", csvPath)
-			os.Exit(1)
-		}
-
-		logr.Info("CSVからのユーザー投入完了", "csv", csvPath, "total", summary.Total, "created", summary.Created, "skipped", summary.Skipped)
-		return
-	}
-
 	txManager := repository.NewEntTxManager(entClient)
+	userRepo := repository.NewEntUserRepository(entClient)
 	scoreRepo := repository.NewEntScoreRepository(entClient)
 	scoreService := service.NewScoreService(scoreRepo)
 	userUseCase := usecase.NewUserUseCase(userRepo)
 	scoreUseCase := usecase.NewScoreUseCase(txManager, scoreRepo, scoreService)
-
-	seedRandomUsersAndScores(ctx, logr, userUseCase, scoreUseCase, numUsers, numScores, minKeystrokes, minAccuracy, maxConcurrent)
-}
-
-func seedRandomUsersAndScores(
-	ctx context.Context,
-	logr *slog.Logger,
-	userUseCase *usecase.UserUseCase,
-	scoreUseCase *usecase.ScoreUseCase,
-	numUsers int,
-	numScores int,
-	minKeystrokes int,
-	minAccuracy float64,
-	maxConcurrent int,
-) {
 	var wg sync.WaitGroup
 
 	// ユーザー作成とスコア登録処理を並列化
