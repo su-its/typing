@@ -1,6 +1,6 @@
 import RankingTableRow from "./RankingTableRow";
 import EmptyTableRow from "./EmptyTableRow";
-import type { components } from "@/libs/api/v0";
+import type { components } from "@/libs/api/v1";
 import type { ColumnDefinition } from "../organism/RankingTabs";
 
 export type RankingTableBodyProps = {
