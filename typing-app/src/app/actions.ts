@@ -21,7 +21,7 @@ export async function login(_: LoginActionState, formData: FormData): Promise<Lo
       },
     });
     if (error || !data) {
-      if (/not found/.test(`${error}`.toLowerCase())) {
+      if (/ユーザーが見つかりません/.test(`${error}`.toLowerCase())) {
         return { error: "見つかりませんでした" };
       }
       return { error: "もう一度お試しください" };
