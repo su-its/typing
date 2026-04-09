@@ -36,7 +36,6 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
 
   const typingQueueRef = useRef<number[]>([]);
   const typeIndexRef = useRef(stats.typeIndex);
-  const boxRef = useRef<HTMLDivElement>(null);
 
   // タイピング速度を計算
   const calculateTypingSpeed = useCallback(() => {
@@ -197,7 +196,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
   }, []);
 
   return (
-    <div tabIndex={0} ref={boxRef}>
+    <div>
       <div className={styles.box}>
         {/* TODO: Article Nameって消すんじゃなかったっけ */}
         <div className={`${styles.heading} ${styles.heading_name}`}>Article Name</div>
