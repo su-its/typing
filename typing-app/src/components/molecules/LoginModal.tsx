@@ -37,7 +37,11 @@ const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state
                   role="textbox"
                 />
                 {/* FIXME: 一度 state.error に値が入ると次にモーダルを開いたときに前の state.error が表示されてしまう */}
-                {state.error && <span><sub>{state.error}</sub></span>}
+                {state.error && (
+                  <span>
+                    <sub>{state.error}</sub>
+                  </span>
+                )}
               </div>
               <div className={styles.footer}>
                 <button className={`${styles.button} ${styles.blue}`} role="submit">
