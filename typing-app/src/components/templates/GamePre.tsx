@@ -23,7 +23,9 @@ const GamePre: React.FC<GamePreProps> = ({ nextPage }) => {
 
   return (
     <div className={styles["game-pre"]}>
-      <div className={styles.header}>操作説明</div>
+      <div className={styles.header}>
+        操作説明<span>HOW TO PLAY</span>
+      </div>
       <div className={styles.main}>
         <div className={styles.left}>
           <p>

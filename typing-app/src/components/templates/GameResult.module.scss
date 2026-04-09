@@ -22,18 +22,31 @@
     top: 70px;
     padding: 10px 15px;
   }
+  @media (max-height: 800px) {
+    height: calc(100% - 80px);
+    top: -10px;
+  }
 
   .header {
-    width: 100%;
-    padding: 10px 0;
-    margin-bottom: 20px;
+    padding-left: 14px;
+    padding-top: 6px;
+    position: absolute;
+    left: 30px;
+    top: 0;
     color: color.$white;
-    background-color: color.$blue-800;
-    border-radius: 4px;
-    font-size: 32px;
+    font-size: 48px;
     font-weight: bold;
-    text-align: center;
+    display: block;
+    justify-content: center;
+    align-items: center;
     flex-shrink: 0;
+    border-left: solid 20px color.$red-500;
+
+    span {
+      padding-left: 10px;
+      font-size: 28px;
+      color: color.$red-200;
+    }
 
     @media (max-width: 768px) {
       font-size: 24px;
@@ -43,13 +56,17 @@
   }
 
   .table {
+    margin-top: 70px;
     overflow: auto;
     flex-grow: 1;
 
     .row {
       width: 50%;
-      margin: 10px auto;
+      height: 60px;
+      margin: 0 auto;
+      padding-top: 6px;
       overflow: hidden;
+      border-bottom: solid 1px color.$gray-300;
 
       @media (max-width: 768px) {
         width: 90%;
@@ -68,12 +85,21 @@
       }
 
       .left {
+        padding-top: 14px;
         float: left;
       }
 
       .right {
         float: right;
         text-align: right;
+        font-size: 42px;
+        color: color.$blue-200;
+
+        span {
+          padding-left: 6px;
+          font-size: 28px;
+          color: color.$white;
+        }
       }
     }
   }

@@ -17,31 +17,45 @@ const GameResult: React.FC<GameResultProps> = ({ nextPage, score }) => {
 
   return (
     <div className={styles.box}>
-      <div className={styles.header}>Result</div>
+      <div className={styles.header}>
+        タイピング結果<span>RESULT</span>
+      </div>
       <div className={styles.table}>
         <div className={styles.row}>
           <div className={styles.left}>打鍵数</div>
-          <div className={styles.right}>{score.keystrokes} 回</div>
+          <div className={styles.right}>
+            {score.keystrokes}
+            <span>回</span>
+          </div>
         </div>
         <div className={styles.row}>
           <div className={styles.left}>ミス入力数</div>
-          <div className={styles.right}>{score.miss} 回</div>
+          <div className={styles.right}>
+            {score.miss}
+            <span>回</span>
+          </div>
         </div>
         <div className={styles.row}>
           <div className={styles.left}>入力時間</div>
-          <div className={styles.right}>{String(score.time)} 秒</div>
+          <div className={styles.right}>
+            {String(score.time)}
+            <span>秒</span>
+          </div>
         </div>
         <div className={styles.row}>
           <div className={styles.left}>WPM</div>
-          <div className={styles.right}>{Math.floor(score.wpm)} 字/分</div>
+          <div className={styles.right}>
+            {Math.floor(score.wpm)}
+            <span>字/分</span>
+          </div>
         </div>
         <div className={styles.row}>
           <div className={styles.left}>正打率</div>
           <div className={styles.right}>
             {new Intl.NumberFormat("en-US", {
-              style: "percent",
               maximumFractionDigits: 2,
-            }).format(score.accuracy)}
+            }).format(score.accuracy * 100)}
+            <span>%</span>
           </div>
         </div>
       </div>
