@@ -10,6 +10,7 @@ import gaugeSpeedImg from "../../../public/img/gauge_speed.png";
 import gaugeTimeImg from "../../../public/img/gauge_time.png";
 import type { User } from "@/types/user";
 import { showErrorToast } from "@/utils/toast";
+import { useWebAudio } from "@/utils/WebAudioPlayer";
 import { useRouter } from "next/navigation";
 
 // 定数の分離
@@ -20,6 +21,7 @@ const UPDATE_FREQUENCY = 100; // タイマー更新頻度（ミリ秒）
 
 const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore }) => {
   const router = useRouter();
+  const { play, stop } = useWebAudio();
 
   // ステート定義
   const [timeRemaining, setTimeRemaining] = useState(TOTAL_SECONDS);
@@ -52,6 +54,7 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
     if (isProcessingRef.current) {
       return;
     }
+    stop();
 
     // 処理開始フラグをセット
     isProcessingRef.current = true;
@@ -192,6 +195,13 @@ const GameTyping: React.FC<GameTypingProps> = ({ nextPage, subjectText, setScore
 
   // 初期フォーカス設定
   useEffect(() => {
+    const rand = Math.random();
+    if (rand >= 0.6) {
+      play("/sounds/bgm11.mp3");
+    } else {
+      play("/sounds/bgm10.mp3");
+    }
+
     if (boxRef.current) {
       boxRef.current.focus();
     }

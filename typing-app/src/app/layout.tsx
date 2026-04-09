@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Header from "../components/organism/Header";
-import Footer from "../components/organism/Footer";
+import Client from "./client";
 import Toast from "../components/organism/Toast";
 import "./globals.css";
 
@@ -17,8 +17,7 @@ export default async function RootLayout({
     <html lang="ja">
       <body>
         <Header />
-        <Footer />
-        <div className="children">{children}</div>
+        <Client>{children}</Client>
         <Toast />
       </body>
     </html>
