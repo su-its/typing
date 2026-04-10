@@ -3,7 +3,7 @@
 import RankingTable from "../organism/RankingTable";
 import { Pagination } from "../molecules/Pagination";
 import RefreshButton from "../atoms/RefreshButton";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { client } from "@/libs/api";
 import type { components } from "@/libs/api/v0";
 import { showErrorToast } from "@/utils/toast";
