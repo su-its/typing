@@ -3,232 +3,354 @@
  * Do not make direct changes to the file.
  */
 
-
 export interface paths {
-  "/health": {
-    /** サーバーの状態を取得 */
-    get: operations["healthcheck"];
-  };
-  "/users": {
-    /** ユーザー情報を取得 */
-    get: operations["getUsers"];
-  };
-  "/scores/ranking": {
-    /** スコアランキングを取得 */
-    get: operations["getScoresRanking"];
-  };
-  "/scores": {
-    /** スコアを登録 */
-    post: operations["registerScore"];
-  };
-  "/scores/{user_id}/current-rank": {
-    /** ユーザーの現在の順位を取得 */
-    get: operations["getUserCurrentRank"];
-  };
+    "/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** サーバーの状態を取得 */
+        get: operations["healthcheck"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ユーザー情報を取得 */
+        get: operations["getUsers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/scores/ranking": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** スコアランキングを取得 */
+        get: operations["getScoresRanking"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/scores": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** スコアを登録 */
+        post: operations["registerScore"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/scores/{user_id}/current-rank": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ユーザーの現在の順位を取得 */
+        get: operations["getUserCurrentRank"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
-
 export type webhooks = Record<string, never>;
-
 export interface components {
-  schemas: {
-    User: {
-      id: string;
-      student_number: string;
-      handle_name: string;
-      /** Format: date-time */
-      created_at: string;
-      /** Format: date-time */
-      updated_at: string;
+    schemas: {
+        User: {
+            id: string;
+            student_number: string;
+            handle_name: string;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
+            updated_at: string;
+        };
+        Score: {
+            id: string;
+            /** Format: uuid */
+            user_id: string;
+            keystrokes: number;
+            /** Format: float */
+            accuracy: number;
+            /** Format: date-time */
+            created_at: string;
+            user: components["schemas"]["User"];
+        };
+        ScoreRanking: {
+            rank: number;
+            score: components["schemas"]["Score"];
+        };
     };
-    Score: {
-      id: string;
-      /** Format: uuid */
-      user_id: string;
-      keystrokes: number;
-      /** Format: float */
-      accuracy: number;
-      /** Format: date-time */
-      created_at: string;
-      user: components["schemas"]["User"];
-    };
-    ScoreRanking: {
-      rank: number;
-      score: components["schemas"]["Score"];
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
-
 export type $defs = Record<string, never>;
-
-export type external = Record<string, never>;
-
 export interface operations {
-
-  /** サーバーの状態を取得 */
-  healthcheck: {
-    responses: {
-      /** @description サーバーが正常に稼働していることを示す */
-      200: {
-        content: never;
-      };
+    healthcheck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description サーバーが正常に稼働していることを示す */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
     };
-  };
-  /** ユーザー情報を取得 */
-  getUsers: {
-    parameters: {
-      query: {
-        /** @description 学生番号 */
-        student_number: string;
-      };
+    getUsers: {
+        parameters: {
+            query: {
+                /** @description 学生番号 */
+                student_number: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ユーザー情報を返す */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description student_numberがクエリパラメータに指定されていない場合 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description ユーザーが見つからない場合 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description サーバー内部エラーが発生した場合 */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": "サーバー内部でエラーが発生しました" | "レスポンスのエンコードに失敗しました";
+                };
+            };
+        };
     };
-    responses: {
-      /** @description ユーザー情報を返す */
-      200: {
-        content: {
-          "application/json": components["schemas"]["User"];
+    getScoresRanking: {
+        parameters: {
+            query: {
+                /** @description ソート対象のカラム */
+                sort_by: "keystrokes" | "accuracy";
+                /** @description ランキングの開始位置(x位 | x>0) */
+                start: number;
+                /** @description ランキングの取得件数 */
+                limit: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      /** @description student_numberがクエリパラメータに指定されていない場合 */
-      400: {
-        content: {
-          "text/plain": string;
+        requestBody?: never;
+        responses: {
+            /** @description スコアランキングを返します。 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        rankings: components["schemas"]["ScoreRanking"][];
+                        /** @description ランキングの全件数 */
+                        total_count: number;
+                    };
+                };
+            };
+            /** @description 不正なリクエストです。 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": "不正なソート対象のカラムです" | "不正なランキングの開始位置です" | "不正なランキングの取得件数です";
+                };
+            };
+            /** @description サーバー内部でエラーが発生した場合 */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
         };
-      };
-      /** @description ユーザーが見つからない場合 */
-      404: {
-        content: {
-          "text/plain": string;
-        };
-      };
-      /** @description サーバー内部エラーが発生した場合 */
-      500: {
-        content: {
-          "text/plain": "サーバー内部でエラーが発生しました" | "レスポンスのエンコードに失敗しました";
-        };
-      };
     };
-  };
-  /** スコアランキングを取得 */
-  getScoresRanking: {
-    parameters: {
-      query: {
-        /** @description ソート対象のカラム */
-        sort_by: "keystrokes" | "accuracy";
-        /** @description ランキングの開始位置(x位 | x>0) */
-        start: number;
-        /** @description ランキングの取得件数 */
-        limit: number;
-      };
+    registerScore: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * Format: uuid
+                     * @description ユーザーID
+                     */
+                    user_id: string;
+                    /** @description キーストローク数 */
+                    keystrokes: number;
+                    /**
+                     * Format: float
+                     * @description 正確性(ミスタイプ数/ストローク数)
+                     */
+                    accuracy: number;
+                };
+            };
+        };
+        responses: {
+            /** @description スコアが正常に登録された場合 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description リクエストBodyが不正である場合 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": "リクエストボディが不正です" | "ユーザーIDが不正です";
+                };
+            };
+            /** @description サーバー内部でエラーが発生した場合 */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": "スコアの登録に失敗しました" | "レスポンスのエンコードに失敗しました";
+                };
+            };
+        };
     };
-    responses: {
-      /** @description スコアランキングを返します。 */
-      200: {
-        content: {
-          "application/json": {
-            rankings: components["schemas"]["ScoreRanking"][];
-            /** @description ランキングの全件数 */
-            total_count: number;
-          };
+    getUserCurrentRank: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description ユーザーID */
+                "user-id": string;
+            };
+            cookie?: never;
         };
-      };
-      /** @description 不正なリクエストです。 */
-      400: {
-        content: {
-          "text/plain": "不正なソート対象のカラムです" | "不正なランキングの開始位置です" | "不正なランキングの取得件数です";
+        requestBody?: never;
+        responses: {
+            /** @description ユーザーの現在の順位を返す */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description ユーザーの現在の順位 */
+                        current_rank: number;
+                        /** @description 全ユーザー数 */
+                        total_users: number;
+                    };
+                };
+            };
+            /** @description ユーザーIDが不正である場合 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description ユーザーが見つからない場合 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description サーバー内部でエラーが発生した場合 */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": "サーバー内部でエラーが発生しました" | "レスポンスのエンコードに失敗しました";
+                };
+            };
         };
-      };
-      /** @description サーバー内部でエラーが発生した場合 */
-      500: {
-        content: {
-          "text/plain": string;
-        };
-      };
     };
-  };
-  /** スコアを登録 */
-  registerScore: {
-    requestBody: {
-      content: {
-        "application/json": {
-          /**
-           * Format: uuid
-           * @description ユーザーID
-           */
-          user_id: string;
-          /** @description キーストローク数 */
-          keystrokes: number;
-          /**
-           * Format: float
-           * @description 正確性(ミスタイプ数/ストローク数)
-           */
-          accuracy: number;
-        };
-      };
-    };
-    responses: {
-      /** @description スコアが正常に登録された場合 */
-      201: {
-        content: {
-          "text/plain": string;
-        };
-      };
-      /** @description リクエストBodyが不正である場合 */
-      400: {
-        content: {
-          "text/plain": "リクエストボディが不正です" | "ユーザーIDが不正です";
-        };
-      };
-      /** @description サーバー内部でエラーが発生した場合 */
-      500: {
-        content: {
-          "text/plain": "スコアの登録に失敗しました" | "レスポンスのエンコードに失敗しました";
-        };
-      };
-    };
-  };
-  /** ユーザーの現在の順位を取得 */
-  getUserCurrentRank: {
-    parameters: {
-      path: {
-        /** @description ユーザーID */
-        "user-id": string;
-      };
-    };
-    responses: {
-      /** @description ユーザーの現在の順位を返す */
-      200: {
-        content: {
-          "application/json": {
-            /** @description ユーザーの現在の順位 */
-            current_rank: number;
-            /** @description 全ユーザー数 */
-            total_users: number;
-          };
-        };
-      };
-      /** @description ユーザーIDが不正である場合 */
-      400: {
-        content: {
-          "text/plain": string;
-        };
-      };
-      /** @description ユーザーが見つからない場合 */
-      404: {
-        content: {
-          "text/plain": string;
-        };
-      };
-      /** @description サーバー内部でエラーが発生した場合 */
-      500: {
-        content: {
-          "text/plain": "サーバー内部でエラーが発生しました" | "レスポンスのエンコードに失敗しました";
-        };
-      };
-    };
-  };
 }

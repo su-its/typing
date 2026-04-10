@@ -3,7 +3,7 @@
 import RankingTable from "../organism/RankingTable";
 import { Pagination } from "../molecules/Pagination";
 import RefreshButton from "../atoms/RefreshButton";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { client } from "@/libs/api";
 import type { components } from "@/libs/api/v1";
 import { showErrorToast } from "@/utils/toast";
@@ -53,30 +53,42 @@ const RankingTabs = () => {
   const [rankingStartFrom, setRankingStartFrom] = useState(1);
   const [sortBy, setSortBy] = useState<"accuracy" | "keystrokes">("accuracy");
   const [totalRankingCount, setTotalRankingCount] = useState<number>(0);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const LIMIT = 10; //TODO: Configファイルから取得
 
-  const fetchData = useCallback(async () => {
-    const { data, error } = await client.GET("/scores/ranking", {
-      params: {
-        query: {
-          sort_by: sortBy,
-          start: rankingStartFrom,
-          limit: LIMIT,
-        },
-      },
-    });
-    if (data) {
-      setScoreRankings(data.rankings);
-      setTotalRankingCount(data.total_count);
-    } else {
-      showErrorToast(error);
-    }
-  }, [sortBy, rankingStartFrom]);
-
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    let isCancelled = false;
+
+    const fetchData = async () => {
+      const { data, error } = await client.GET("/scores/ranking", {
+        params: {
+          query: {
+            sort_by: sortBy,
+            start: rankingStartFrom,
+            limit: LIMIT,
+          },
+        },
+      });
+
+      if (isCancelled) {
+        return;
+      }
+
+      if (data) {
+        setScoreRankings(data.rankings);
+        setTotalRankingCount(data.total_count);
+      } else {
+        showErrorToast(error);
+      }
+    };
+
+    void fetchData();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [refreshKey, sortBy, rankingStartFrom]);
 
   const handleTabChange = (index: number) => {
     const sortOption = index === 0 ? "accuracy" : "keystrokes";
@@ -118,7 +130,7 @@ const RankingTabs = () => {
             <RefreshButton
               onClick={() => {
                 setRankingStartFrom(1);
-                fetchData();
+                setRefreshKey((prev) => prev + 1);
               }}
             />
           </div>
