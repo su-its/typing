@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useActionState } from "react";
+import React, { useActionState, useEffect } from "react";
 import { login } from "@/app/actions";
 import { showWarningToast } from "@/utils/toast";
 import styles from "@/assets/sass/molecules/LoginModal.module.scss";
@@ -14,18 +14,19 @@ interface LoginModalProps {
 }
 
 const LoginModalPresenter: React.FC<LoginModalProps> = ({ isOpen, onClose, state, dispatchAction, pending }) => {
+  useEffect(() => {
+    if (!pending && state.error) {
+      showWarningToast(state.error);
+    }
+  }, [pending, state.error]);
+
   return (
     <>
       {isOpen && (
         <div className={styles.modal}>
           <div className={styles.overlay}></div>
           <div className={styles.content}>
-            <form
-              action={async (formData: FormData) => {
-                await dispatchAction(formData);
-                state.error && showWarningToast(state.error);
-              }}
-            >
+            <form action={dispatchAction}>
               <div className={styles.header}>続けるにはログインが必要です</div>
               <div className={styles.body}>
                 <input
