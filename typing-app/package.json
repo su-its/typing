@@ -1,6 +1,6 @@
 {
   "name": "typing-app",
-  "version": "0.0.1",
+  "version": "1.4.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
