@@ -1,4 +1,4 @@
-.PHONY: generate seed connect up-with-build help db-drop-dev db-reset-dev db-clean-dev
+.PHONY: generate seed import-users connect up-with-build help db-drop-dev db-reset-dev db-clean-dev
 generate:
 	cd internal/infra/ent && go generate
 
@@ -7,11 +7,21 @@ seed:
 	docker compose -f docker-compose.dev.yml run --rm seed
 	@echo "シードデータの投入が完了しました"
 
+import-users:
+	@if [ -z "$(CSV)" ]; then \
+		echo "CSV=/path/to/file.csv を指定してください"; \
+		exit 1; \
+	fi
+	@echo "CSVからユーザーを投入しています..."
+	DB_ADDR=$${DB_ADDR:-127.0.0.1:3307} go run ./cmd/import-users/main.go -csv "$(CSV)"
+	@echo "CSVからのユーザー投入が完了しました"
+
 # ヘルプコマンド
 help:
 	@echo "使用可能なコマンド:"
 	@echo "  generate       - entのコード生成を実行する"
 	@echo "  seed           - 開発環境にシードデータを投入する"
+	@echo "  import-users   - CSVからユーザーを投入する（CSV=/path/to/file.csv を指定）"
 	@echo "  connect        - 開発環境に接続する"
 	@echo "  up-with-build  - 開発環境を起動する"
 	@echo "  db-drop-dev    - 開発環境のデータベースのテーブルをドロップする"

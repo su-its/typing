@@ -47,6 +47,22 @@ make up-with-build
 
 そのほかのコマンドは `Makefile` を参照するか `make help` を実行してください。
 
+## CSVからユーザーをインポートする
+
+`学籍番号,氏名` の2列CSVからユーザーを作成するコマンドを追加しています。`2026.csv` のようなヘッダーなしCSVに加えて、`student_number,handle_name` のようなヘッダー付きCSVも読み込めます。
+
+```bash
+DB_ADDR=127.0.0.1:3307 go run ./cmd/import-users/main.go -csv ~/Downloads/2026.csv
+```
+
+または `Makefile` 経由で次のように実行できます。
+
+```bash
+make import-users CSV=~/Downloads/2026.csv
+```
+
+既に存在する学籍番号はスキップし、それ以外は `UserRepository` 経由で作成します。
+
 ## ディレクトリ構造
 
 ```
