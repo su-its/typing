@@ -8,13 +8,13 @@ import soundOffImage from "@/assets/images/soundoff.svg";
 const date = new Date();
 
 type Props = {
-  isPlay: boolean;
-  setIsPlay: React.Dispatch<React.SetStateAction<boolean>>;
+  isMuted: boolean;
+  setIsMuted: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Footer: React.FC<Props> = ({ isPlay, setIsPlay }) => {
+const Footer: React.FC<Props> = ({ isMuted, setIsMuted }) => {
   const toggleSound = () => {
-    setIsPlay((prev) => !prev);
+    setIsMuted((prev) => !prev);
   };
   return (
     <div className={styles.footer}>
@@ -28,7 +28,7 @@ const Footer: React.FC<Props> = ({ isPlay, setIsPlay }) => {
       </div>
       <div className={styles.right}>
         <div className={styles.sound} onClick={toggleSound}>
-          <img src={isPlay ? soundOnImage.src : soundOffImage.src} alt={isPlay ? "SOUND ON" : "SOUND OFF"} />
+          <img src={isMuted ? soundOffImage.src : soundOnImage.src} alt={isMuted ? "SOUND OFF" : "SOUND ON"} />
         </div>
       </div>
     </div>

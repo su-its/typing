@@ -5,13 +5,13 @@ import WebAudioPlayer from "@/utils/WebAudioPlayer";
 import Footer from "../components/organism/Footer";
 
 export default function ClientLayout({ children }) {
-  const [isPlay, setIsPlay] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
 
   return (
     <>
-      <Footer isPlay={isPlay} setIsPlay={setIsPlay} />
+      <Footer isMuted={isMuted} setIsMuted={setIsMuted} />
       <div className="children">
-        <WebAudioPlayer isPlay={isPlay}>{children}</WebAudioPlayer>
+        <WebAudioPlayer isMuted={isMuted}>{children}</WebAudioPlayer>
       </div>
     </>
   );
