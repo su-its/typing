@@ -7,7 +7,7 @@ const HomePage: React.FC = () => {
   const { stop } = useWebAudio();
   useEffect(() => {
     stop();
-  });
+  }, []);
 
   return (
     <>

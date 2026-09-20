@@ -7,7 +7,7 @@ const RankingPage: React.FC = () => {
   const { play } = useWebAudio();
   useEffect(() => {
     play("/sounds/bgm0.mp3");
-  });
+  }, []);
 
   return <RankingTabs />;
 };

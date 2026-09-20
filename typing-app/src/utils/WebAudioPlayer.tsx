@@ -77,5 +77,5 @@ export default function WebAudioPlayer({ children, isMuted }: { children: ReactN
     };
   };
 
-  return <PlayerContext.Provider value={{ play, stop }}>{children}</PlayerContext.Provider>;
+  return <PlayerContext value={{ play, stop }}>{children}</PlayerContext>;
 }
